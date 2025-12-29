@@ -1,113 +1,47 @@
-# dotfiles/hosts/homie/default.nix ⮞ https://github.com/quackhack-mcblindy/dotfiles
-{ # 🦆 duck say ⮞ tiny steelcoolz fanless server 
-  config, 
-  lib,
-  pkgs,
-  self,
-  ...
-} : {
-    
-    boot = {
-        loader = {
-            systemd-boot.enable = true;
-        };  
-        initrd = {
-            kernelModules = [
-                "kvm-intel"
-                "virtio_balloon"
-                "virtio_console"
-                "virtio_rng"
-            ];
-            availableKernelModules = [
-                "9p"
-                "9pnet_virtio"
-                "ata_piix"
-                "nvme"
-                "sr_mod"
-                "uhci_hcd"
-                "virtio_blk"
-                "virtio_mmio"
-                "virtio_net"
-                "virtio_pci"
-                "virtio_scsi"
-                "xhci_pci"
-            ];
-            systemd.enable = true;
-        };
-        kernelPackages = pkgs.linuxPackages_6_1; 
-        extraModulePackages = [
-        #    config.boot.kernelPackages.broadcom_sta
-        ];
-    };
-    
-    this = {
-        home = ./../../home;
-        theme.name = "gtk3.css"; 
-        user = {       
-            enable = true;
-            me = {
-                name = "pungkula";
-                repo = "git@github.com:QuackHack-McBlindy/dotfiles.git";
-                dotfilesDir = "/home/${config.this.user.me.name}/dotfiles"; 
-                extraGroups = [ "networkmanager" "wheel" "dialout" "docker" "dockeruser" "users" "pungkula" "adbusers" "audio" ]; 
-                mobileDevices = {
-                    iphone = { wgip = "10.0.0.7"; pubkey = "UFB0T1Y/uLZi3UBtEaVhCi+QYldYGcOZiF9KKurC5Hw="; };
-                    tablet = { wgip = "10.0.0.8"; pubkey = "ETRh93SQaY+Tz/F2rLAZcW7RFd83eofNcBtfyHCBWE4="; };   
-                };
-            };
-            i18n = "sv_SE.UTF-8";
-        };
-        host = {
-            system = "x86_64-linux";
-            hostname = "homie";
-            interface = [ "eno1" ];
-            ip = "192.168.1.211";
-            wgip = "10.0.0.1";
-            modules = {
-                hardware = [ "cpu/intel" "audio" ];
-                system = [ "nix" "pkgs" ];
-                networking = [ "default" "dns" "pool" "wg-server" ];
-                services = [ "ssh" "default" "adb" "pairdrop" "zigduck" "navidrome" "ip-updater" "jelly" ];
-                programs = [ "default" ];
-                virtualisation = [ "docker-rootless" "home-assistant" ];
-            };  
-            keys.publicKeys = {
-                host = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIgxAwZZQF+fjTx4l9tfXKRyK4WqPojU1OuDshcbLAnD";
-                #ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOJ6+aLTPanIYS88EjCVtCZv6pw2jC4lIIZNRY6VrnoF";
-                ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPwZL27kGTQDIlSe03abT9F24nSAizORyjo5cI3BD92s";
-                age = "age16utg7mmk73cn3glrwthtm0p7mf6g3vrd48h3ucpn6wnf28pgxvcsh4rjjp";
-                wireguard = "BlpQEu1MJbNmx32zgTFO0Otnkb+4XA1pwVdhjHtJBiQ=";
-                builder = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINQ7c/AeIpmJS6cWQkHOe4ZEq3DXVRnjtTWuWfx6L46n";
-                cache = "cache:/pbj1Agw2OoSSDZcClS69RHa1aNcwwTOX3GIEGKYwPc=";
-                borg = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMVYczAOBSeS7WfSvzYDOS4Q9Ss+yxCf2G5MVfAALOx/";
-                iPhone = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMcmr+z7k/yCbrFg+JDgo8JCuWqNVYn10ajRbNTp8fq";
-                adb = "QAAAACEJNfsfRV4PQ9Ah87MbTVbMkbXC6CAMDOR+0K6mIpv/4TSzYMkc2qit3Kryc55IVOjwR3fJRjj/uL549gZ7nEemWtcd3AsYQBp0iIEor8nu1L/V6jfsTY6Xe/pl06xoroy6OwZRWuDbZ4wD2xQRRQjfPd+JtYnMAWneM6r1V15uR67w4ITvjk3ckyfgNeLZMUwahMRjC3wSjaU9sAdKNmg8yPd8uHZ+mK6mstxJFAGEpnnm1lE7Z2r0DF6h6MKY1++dwhU+WM5BRDNiBg+D4i6fDW4+Z1I9ENuFnjT17zAxZXch04SNlG3O94BANYP7jmKp60OvtDL6msfphntuIUzMCkndF9De0Kv4lJdQxe1d+wf+AFpmtd/xtrk45YdMV+eWCJf2OkidaHmSj4ffkAobpun0VrkZN2Z1JymmdsvUbyMjAsby3Zun0xr3EocUS8Jy5TcsK/dcpD6CB5dqzlHhsHSAWt2TDwPzZYXgV1xc+q+PqM09OVN1xActJu75UMkg5b84U15hwQvYdwB8UaopMWWk6p064c7gxYSfH7fSxwkW2Jy1CElgJa55Pp4SZG9b/3B+VcNL1WSf6v/lvJqPbrRvBqvS0+e9wcFMNZtQKTX3n5X0wW1/czZPCQX+hmM8Uu1qrtaz4rKViIEGf4YR0/9eUGYQVfuAxAh8ZmsroJlnAAEAAQA= pungkula@desktop";
-            };           
-        };    
-    };                
+{ config, lib, pkgs, self, ... }:
 
-    fileSystems."/boot" = {
-        device = "/dev/disk/by-label/boot";
-        fsType = "vfat";
+{
+  boot.loader.systemd-boot.enable = true;
+
+  this = {
+    home = ./../../home;
+
+    user = {
+      enable = true;
+      me = {
+        name = "rag";
+        repo = "git@github.com:ragton/dotfiles.git";
+        dotfilesDir = "/home/rag/dotfiles";
+        extraGroups = [ "wheel" "networkmanager" ];
+      };
+      i18n = "pt_BR.UTF-8";
     };
 
-    fileSystems."/" = {
-        device = "/dev/disk/by-label/nixos";
-        fsType = "ext4";
+    host = {
+      system = "x86_64-linux";
+      hostname = "inspiron";
+      interface = [ "wlo1" ];
+
+      modules = {
+        hardware = [ "cpu/intel" "audio" ];
+        system = [ "nix" "pkgs" ];
+        networking = [ "default" ];
+        services = [ "default" ];
+        programs = [ "default" ];
+      };
     };
+  };
 
-    swapDevices = [{ device = "/dev/disk/by-label/swap"; }];
+  imports = [
+    ./disks.nix
+  ];
 
-    hardware.enableAllFirmware = true;
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
 
-    # This value determines the NixOS release from which the default
-    # settings for stateful data, like file locations and database versions
-    # on your system were taken. It‘s perfectly fine and recommended to leave
-    # this value at the release version of the first install of this system.
-    # Before changing this value read the documentation for this option
-    # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-    system.stateVersion = "24.05"; # Did you read the comment?
+  networking.networkmanager.enable = true;
 
+  nixpkgs.config.allowUnfree = true;
 
-    }
-
+  system.stateVersion = "25.11";
+}
