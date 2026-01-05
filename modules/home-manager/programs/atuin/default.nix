@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Install atuin via home-manager module
+  # Instala o atuin via módulo do Home Manager
   programs.atuin = {
     enable = true;
     settings = {

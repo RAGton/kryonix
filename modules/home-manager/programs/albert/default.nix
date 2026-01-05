@@ -5,10 +5,10 @@
 }:
 {
   config = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    # Albert package
+    # Pacote do Albert
     home.packages = [ pkgs.albert ];
 
-    # Source albert configuration from the home-manager store
+    # Importa a configuração do Albert a partir do store do Home Manager
     xdg.configFile."albert/config".text = ''
       [General]
       frontend=widgetsboxmodel-ng

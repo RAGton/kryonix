@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Manage swaync service via Home-manager
+  # Gerencia o serviço do swaync via Home Manager
   services.swaync = {
     enable = true;
     settings = {
@@ -28,7 +28,7 @@
     };
   };
 
-  # Enable catppuccin theming for swaync.
+  # Habilita o tema Catppuccin para o swaync.
   catppuccin.swaync = {
     enable = true;
     font = "Roboto Nerd Font";

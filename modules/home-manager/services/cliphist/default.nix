@@ -1,5 +1,5 @@
 { ... }:
 {
-  # Install cliphist via home-manager module
+  # Instala/ativa o cliphist via Home Manager
   services.cliphist.enable = true;
 }

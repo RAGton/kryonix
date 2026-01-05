@@ -64,6 +64,6 @@
     };
   };
 
-  # Enable catppuccin theming for starship.
+  # Habilita o tema Catppuccin para o starship.
   catppuccin.starship.enable = true;
 }

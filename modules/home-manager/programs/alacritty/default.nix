@@ -1,6 +1,6 @@
 { pkgs, ... }:
 {
-  # Install alacritty via home-manager module
+  # Instala o alacritty via módulo do Home Manager
   programs.alacritty = {
     enable = true;
     settings = {
@@ -79,6 +79,6 @@
     };
   };
 
-  # Enable catppuccin theming for alacritty.
+  # Habilita o tema Catppuccin para o alacritty.
   catppuccin.alacritty.enable = true;
 }

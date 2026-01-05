@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Install and configure fastfetch via home-manager module
+  # Instala e configura o fastfetch via módulo do Home Manager
   programs.fastfetch = {
     enable = true;
     settings = {

@@ -5,10 +5,10 @@
 }:
 {
   config = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    # Install OBS Studio via home-manager module
+    # Instala o OBS Studio via módulo do Home Manager
     programs.obs-studio.enable = true;
 
-    # Enable catppuccin theming for OBS.
+    # Habilita o tema Catppuccin para o OBS.
     catppuccin.obs.enable = true;
   };
 }

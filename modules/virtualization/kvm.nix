@@ -19,7 +19,7 @@
         runAsRoot = false;
 
         # UEFI + Secure Boot (necessário para Windows moderno)
-        # ovmf is now enabled by default
+        # O OVMF agora vem habilitado por padrão
         swtpm.enable = true; # TPM virtual (Windows 11, Linux moderno)
       };
     };

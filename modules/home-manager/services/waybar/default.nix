@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Install and configure waybar via home-manager module
+  # Instala e configura o Waybar via módulo do Home Manager
   programs.waybar = {
     enable = true;
     systemd.enable = true;

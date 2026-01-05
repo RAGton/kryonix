@@ -2,6 +2,6 @@
 
 selected=$(find ~/Documents/repositories -mindepth 1 -maxdepth 2 -type d -not -iwholename '*.git*' | fzf)
 if [ -n "$selected" ]; then
-	# Open wezterm (warp-terminal wrapper) starting zellij in the selected directory
+	# Abre o warp-terminal (wrapper) iniciando o zellij no diretório selecionado
 	warp-terminal start --cwd "$selected" -- zellij || exit
 fi

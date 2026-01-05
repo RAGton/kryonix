@@ -35,7 +35,7 @@
     ];
   };
 
-  # source lua config from this repo
+  # Importa a configuração Lua a partir deste repositório
   xdg.configFile = {
     "nvim" = {
       source = ./lazyvim;

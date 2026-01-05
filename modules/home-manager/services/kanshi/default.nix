@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Manage kanshi service via Home-manager
+  # Gerencia o serviço do kanshi via Home Manager
   services.kanshi = {
     enable = true;
     systemdTarget = "graphical-session.target";

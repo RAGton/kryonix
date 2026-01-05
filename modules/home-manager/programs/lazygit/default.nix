@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Install lazygit via home-manager module
+  # Instala o lazygit via módulo do Home Manager
   programs.lazygit = {
     enable = true;
 

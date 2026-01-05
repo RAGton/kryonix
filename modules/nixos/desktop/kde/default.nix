@@ -3,7 +3,7 @@ let
   wallpaper = ../../../home-manager/misc/wallpaper/wallpaper.jpg;
 in
 {
-  # Enable KDE
+  # Habilita KDE
   services.displayManager.sddm = {
     enable = true;
     enableHidpi = true;
@@ -21,7 +21,7 @@ in
     '')
   ];
 
-  # Excluding some KDE applications from the default install
+  # Exclui alguns apps KDE do conjunto padrão
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     baloo-widgets
     elisa
@@ -33,7 +33,7 @@ in
     plasma-browser-integration
   ];
 
-  # Disabled redundant services
+  # Desabilita serviços redundantes
   systemd.user.services = {
     "app-org.kde.discover.notifier@autostart".enable = false;
     "app-org.kde.kalendarac@autostart".enable = false;

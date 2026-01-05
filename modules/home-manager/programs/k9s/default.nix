@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Install k9s via home-manager module
+  # Instala o k9s via módulo do Home Manager
   programs.k9s = {
     enable = true;
     settings.k9s = {
@@ -48,6 +48,6 @@
     };
   };
 
-  # Enable catppuccin theming for k9s
+  # Habilita o tema Catppuccin para o k9s
   catppuccin.k9s.enable = true;
 }

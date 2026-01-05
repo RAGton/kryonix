@@ -1,44 +1,44 @@
 { pkgs, ... }:
 {
-  # Install Zellij and provide a translated config from the previous tmux settings.
+  # Instala o Zellij e fornece uma config "traduzida" a partir do tmux.
   home.packages = [ pkgs.zellij ];
 
-  # Create a sensible default zellij config translating tmux settings:
+  # Cria uma config padrão baseada no tmux:
   # - prefix: Ctrl+q
-  # - mouse: enabled
-  # - scrollback/history: 10000
-  # - pane navigation with Ctrl-h/j/k/l
-  # - basic resize shortcuts
+  # - mouse: ligado
+  # - scrollback/histórico: 10000
+  # - navegação de painéis com Ctrl-h/j/k/l
+  # - atalhos básicos de resize
   home.file.".config/zellij/config.kdl".text = ''
-// Translated zellij configuration (generated from tmux settings).
-// Review and adapt at ~/.config/zellij/config.kdl
+// Configuração do zellij baseada no tmux (gerada automaticamente).
+// Revise e adapte em ~/.config/zellij/config.kdl
 
 general {
-  // lines of scrollback
+  // linhas de scrollback
   scrollback_lines 10000
-  // enable mouse support
+  // habilita suporte ao mouse
   enable_mouse true
 }
 
-// Keybinds: map many tmux-style bindings to zellij equivalents.
-// Note: zellij key names and commands are stable but may differ per version.
+// Keybinds: mapeia binds estilo tmux para equivalentes do zellij.
+// Nota: nomes/comandos podem variar por versão.
 keybinds {
-  // Use Ctrl-q as a leader-like single-key prefix mapping is not identical in zellij,
-  // but we can map frequently used combinations directly.
+  // Usar Ctrl-q como "leader" não é idêntico no zellij;
+  // então mapeamos combinações comuns diretamente.
   normal {
-    // Pane navigation: Ctrl-h/j/k/l
+    // Navegação de painéis: Ctrl-h/j/k/l
     "Ctrl-h" = "MoveFocusLeft"
     "Ctrl-j" = "MoveFocusDown"
     "Ctrl-k" = "MoveFocusUp"
     "Ctrl-l" = "MoveFocusRight"
 
-    // Splits similar to tmux: prefix+v / prefix+s replaced by direct combos
+    // Splits semelhantes ao tmux: substituídos por combos diretos
     "Ctrl-\\" = "SplitVertical"
     "Ctrl-|" = "SplitHorizontal"
   }
 
   pane {
-    // Resize with Shift+Arrow similar to tmux binds
+    // Resize com Shift+Seta (semelhante ao tmux)
     "Shift-Down" = "ResizePaneDown 8"
     "Shift-Up" = "ResizePaneUp 8"
     "Shift-Left" = "ResizePaneLeft 8"
@@ -46,15 +46,15 @@ keybinds {
   }
 }
 
-// Simple layout as default
+// Layout simples como padrão
 layout "default" {
   pane 1
 }
 '';
 
-  # Provide a minimal user-friendly launcher script to start zellij in a new wezterm window
+  # Script simples para iniciar o zellij
   home.file."bin/start-zellij".text = ''#!/bin/sh
 exec ${pkgs.zellij}/bin/zellij "$@"
 '';
-  # mode omitted for compatibility with older Home Manager versions
+  # mode omitido por compatibilidade com versões antigas do Home Manager
 }

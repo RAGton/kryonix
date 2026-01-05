@@ -1,22 +1,22 @@
 { pkgs, ... }:
 {
-  # Enable GDM display manager
+  # Habilita o display manager GDM
   services.displayManager.gdm.enable = true;
 
-  # Call dbus-update-activation-environment on login
+  # Chama dbus-update-activation-environment no login
   services.xserver.updateDbusEnvironment = true;
 
-  # Enable Bluetooth support
+  # Habilita suporte a Bluetooth
   services.blueman.enable = true;
 
-  # Enable Hyprland
+  # Habilita Hyprland
   programs.hyprland = {
     enable = true;
     portalPackage = pkgs.xdg-desktop-portal-wlr;
     withUWSM = true;
   };
 
-  # Enable security services
+  # Habilita serviços de segurança
   services.gnome.gnome-keyring.enable = true;
   security.polkit.enable = true;
   security.pam.services = {
@@ -24,16 +24,16 @@
     gdm.enableGnomeKeyring = true;
   };
 
-  # List of Hyprland specific packages
+  # Lista de pacotes específicos do Hyprland
   environment.systemPackages = with pkgs; [
-    file-roller # archive manager
+    file-roller # gerenciador de arquivos compactados
     gnome-calculator
     gnome-pomodoro
     gnome-text-editor
-    loupe # image viewer
-    nautilus # file manager
-    seahorse # keyring manager
-    totem # Video player
+    loupe # visualizador de imagens
+    nautilus # gerenciador de arquivos
+    seahorse # gerenciador de keyring
+    totem # player de vídeo
 
     brightnessctl
     grim

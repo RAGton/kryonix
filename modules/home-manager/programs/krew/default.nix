@@ -9,17 +9,17 @@ let
     "ns"
   ];
 
-  # Convert the list of plugins into a space-separated string
+  # Converte a lista de plugins em uma string separada por espaços
   krewPkgStr = lib.concatStringsSep " " krewPkgs;
 in
 {
-  # Ensure krew package installed
+  # Garante que o pacote krew esteja instalado
   home.packages = [ pkgs.krew ];
 
-  # Ensure krew is in the PATH
+  # Garante que o krew esteja no PATH
   home.sessionPath = [ "$HOME/.krew/bin" ];
 
-  # Install krew plugins
+  # Instala plugins do krew
   home.activation.krew = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     export PATH="$HOME/.krew/bin:${pkgs.git}/bin:${pkgs.coreutils}/bin:${pkgs.findutils}/bin:/usr/bin:$PATH";
 

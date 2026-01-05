@@ -1,10 +1,10 @@
 { ... }:
 {
-  # tmux module deprecated: functionality migrated to zellij module.
-  # Keep a harmless stub so older references don't break imports.
+  # Módulo do tmux descontinuado: a funcionalidade migrou para o módulo do zellij.
+  # Mantém um stub inofensivo para imports antigos não quebrarem.
   programs.tmux = {
     enable = false; # intentionally disabled
   };
 
-  # If you want to permanently remove this file from the repo, delete it manually.
+  # Se você quiser remover este arquivo do repo de vez, apague manualmente.
 }

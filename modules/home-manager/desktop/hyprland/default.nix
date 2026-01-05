@@ -18,7 +18,7 @@
     "${nhModules}/services/waybar"
   ];
 
-  # Consistent cursor theme across all applications.
+  # Tema de cursor consistente em todos os aplicativos.
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;
@@ -27,7 +27,7 @@
     size = 24;
   };
 
-  # Source hyprland config from the home-manager store
+  # Importa a configuração do Hyprland a partir do store do Home Manager
   xdg.configFile = {
     "hypr/hyprland.conf" = {
       source = ./hyprland.conf;

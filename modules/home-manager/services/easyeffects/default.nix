@@ -5,13 +5,13 @@
 }:
 {
   config = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    # Install easyeffects via home-manager module
+    # Instala o EasyEffects via módulo do Home Manager
     services.easyeffects = {
       enable = true;
       preset = "mic";
     };
 
-    # Source easyeffects preset from the home-manager store
+    # Importa o preset do EasyEffects a partir do store do Home Manager
     xdg.configFile = {
       "easyeffects/input/mic.json".text = ''
         {

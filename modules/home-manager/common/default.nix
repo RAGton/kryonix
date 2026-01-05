@@ -42,10 +42,10 @@
     };
   };
 
-  # Nicely reload system units when changing configs
+  # Recarrega unidades do systemd de forma suave ao mudar configs
   systemd.user.startServices = "sd-switch";
 
-  # Home-Manager configuration for the user's home environment
+  # Configuração do Home Manager para o ambiente do usuário
   home = {
     username = "${userConfig.name}";
     homeDirectory =
@@ -59,7 +59,7 @@
     GTK_USE_PORTAL = "1";
   };
 
-  # Ensure common packages are installed
+  # Garante que os pacotes comuns estejam instalados
   home.packages =
     with pkgs;
     [
@@ -95,7 +95,7 @@
       wl-clipboard
     ];
 
-  # Catpuccin flavor and accent
+  # Flavor e accent do Catppuccin
   catppuccin = {
     flavor = "macchiato";
     accent = "lavender";

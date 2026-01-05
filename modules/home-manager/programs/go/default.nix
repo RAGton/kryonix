@@ -4,13 +4,13 @@ let
   GOBIN = "${GOPATH}/bin";
 in
 {
-  # Install and configure Golang via home-manager module
+  # Instala e configura o Golang via módulo do Home Manager
   programs.go = {
     enable = true;
     env = { inherit GOBIN GOPATH; };
   };
 
-  # Ensure Go bin in the PATH
+  # Garante o bin do Go no PATH
   home.sessionPath = [
     "$HOME/go/bin"
   ];

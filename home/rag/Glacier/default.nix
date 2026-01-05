@@ -15,6 +15,8 @@
   # no nível do sistema são responsabilidade da configuração do host (NixOS).
   home.packages = with pkgs; [
     steam
+    lutris
+    heroic
     gamemode
     atlauncher
   ];

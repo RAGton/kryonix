@@ -24,7 +24,7 @@
   # Silencia aviso de mudança futura do zsh dotDir
   programs.zsh.dotDir = config.home.homeDirectory;
 
-  # Set gpg agent specific to KDE/Kwallet
+  # Define o gpg-agent específico para KDE/KWallet
   services.gpg-agent = {
     pinentry.package = lib.mkForce pkgs.kwalletcli;
     extraConfig = "pinentry-program ${pkgs.kwalletcli}/bin/pinentry-kwallet";

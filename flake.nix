@@ -1,33 +1,34 @@
 {
-  description = "NixOS and nix-darwin configs for my machines";
+  description = "Configurações NixOS e nix-darwin das minhas máquinas";
+
   inputs = {
     # Nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
 
-    # Home manager
+    # Home Manager
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # NixOS profiles to optimize settings for different hardware
+    # Módulos de hardware do NixOS (nixos-hardware)
     hardware.url = "github:nixos/nixos-hardware";
 
-    # Global catppuccin theme
+    # Tema global Catppuccin
     catppuccin.url = "github:catppuccin/nix";
 
-    # Declarative flatpak manager
+    # Gerenciador declarativo de Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak?ref=v0.6.0";
 
-    # Declarative kde plasma manager
+    # Gerenciador declarativo do KDE Plasma
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
 
-    # Nix Darwin (for MacOS machines)
+    # Nix Darwin (para máquinas macOS)
     darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,18 +47,18 @@
     let
       inherit (self) outputs;
 
-      # Define user configurations
-users = {
-  rag = {
-    avatar = ./files/avatar/face;
-    email = "g.rocha@estudante.ifmt.edu.br";
-    fullName = "Gabriel Aguiar Rocha";
-    gitKey = "";
-    name = "rag";
-  };
-};
+      # Definição de usuários
+      users = {
+        rag = {
+          avatar = ./files/avatar/face;
+          email = "g.rocha@estudante.ifmt.edu.br";
+          fullName = "Gabriel Aguiar Rocha";
+          gitKey = "";
+          name = "rag";
+        };
+      };
 
-      # Function for NixOS system configuration
+      # Função para configuração de sistema (NixOS)
       mkNixosConfiguration =
         hostname: username:
         nixpkgs.lib.nixosSystem {
@@ -69,7 +70,7 @@ users = {
           modules = [ ./hosts/${hostname} ];
         };
 
-      # Function for nix-darwin system configuration
+      # Função para configuração de sistema (nix-darwin)
       mkDarwinConfiguration =
         hostname: username:
         darwin.lib.darwinSystem {
@@ -82,7 +83,7 @@ users = {
           modules = [ ./hosts/${hostname} ];
         };
 
-      # Function for Home Manager configuration
+      # Função para configuração do Home Manager
       mkHomeConfiguration =
         system: username: hostname:
         home-manager.lib.homeManagerConfiguration {
@@ -99,15 +100,13 @@ users = {
         };
     in
     {
+      nixosConfigurations = {
+        inspiron = mkNixosConfiguration "inspiron" "rag";
+      };
 
-	nixosConfigurations = {
-	  inspiron = mkNixosConfiguration "inspiron" "rag";
-	};
-
-
-	homeConfigurations = {
-	  "rag@inspiron" = mkHomeConfiguration "x86_64-linux" "rag" "inspiron";
-	};
+      homeConfigurations = {
+        "rag@inspiron" = mkHomeConfiguration "x86_64-linux" "rag" "inspiron";
+      };
 
       overlays = import ./overlays { inherit inputs; };
     };

@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Install btop via home-manager module
+  # Instala o btop via módulo do Home Manager
   programs.btop = {
     enable = true;
     settings = {
@@ -8,6 +8,6 @@
     };
   };
 
-  # Enable catppuccin theming for btop.
+  # Habilita o tema Catppuccin para o btop.
   catppuccin.btop.enable = true;
 }

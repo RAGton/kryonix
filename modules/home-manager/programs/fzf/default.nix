@@ -3,7 +3,7 @@ let
   copyCmd = if pkgs.stdenv.isDarwin then "pbcopy" else "wl-copy";
 in
 {
-  # Install fzf via home-manager module
+  # Instala o fzf via módulo do Home Manager
   programs.fzf = {
     enable = true;
 

@@ -1,4 +1,4 @@
-# Variables (override these as needed)
+# Variáveis (sobrescreva se necessário)
 HOSTNAME ?= $(shell hostname)
 FLAKE ?= .#$(HOSTNAME)
 HOME_TARGET ?= $(FLAKE)
@@ -8,55 +8,55 @@ EXPERIMENTAL ?= --extra-experimental-features "nix-command flakes"
 	home-manager-switch nix-gc flake-update flake-check bootstrap-mac
 
 help:
-	@echo "Available targets:"
-	@echo "  install-nix          - Install the Nix package manager"
-	@echo "  install-nix-darwin   - Install nix-darwin using flake $(FLAKE)"
-	@echo "  darwin-rebuild       - Rebuild the nix-darwin configuration"
-	@echo "  nixos-rebuild        - Rebuild the NixOS configuration"
-	@echo "  home-manager-switch  - Switch the Home Manager configuration using flake $(HOME_TARGET)"
-	@echo "  nix-gc               - Run Nix garbage collection"
-	@echo "  flake-update         - Update flake inputs"
-	@echo "  flake-check          - Check the flake for issues"
-	@echo "  bootstrap-mac        - Install Nix and nix-darwin sequentially"
+	@echo "Alvos disponíveis:"
+	@echo "  install-nix          - Instala o gerenciador de pacotes Nix"
+	@echo "  install-nix-darwin   - Instala o nix-darwin usando a flake $(FLAKE)"
+	@echo "  darwin-rebuild       - Reconstrói a configuração do nix-darwin"
+	@echo "  nixos-rebuild        - Reconstrói a configuração do NixOS"
+	@echo "  home-manager-switch  - Aplica a configuração do Home Manager usando a flake $(HOME_TARGET)"
+	@echo "  nix-gc               - Executa coleta de lixo do Nix"
+	@echo "  flake-update         - Atualiza as entradas (inputs) da flake"
+	@echo "  flake-check          - Verifica a flake por problemas"
+	@echo "  bootstrap-mac        - Instala Nix e nix-darwin em sequência"
 
 install-nix:
-	@echo "Installing Nix..."
+	@echo "Instalando o Nix..."
 	@sudo curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
-	@echo "Nix installation complete."
+	@echo "Instalação do Nix concluída."
 
 install-nix-darwin:
-	@echo "Installing nix-darwin..."
+	@echo "Instalando o nix-darwin..."
 	@sudo nix run nix-darwin $(EXPERIMENTAL) -- switch --flake $(FLAKE)
-	@echo "nix-darwin installation complete."
+	@echo "Instalação do nix-darwin concluída."
 
 darwin-rebuild:
-	@echo "Rebuilding darwin configuration..."
+	@echo "Reconstruindo a configuração do Darwin..."
 	@sudo darwin-rebuild switch --flake $(FLAKE)
-	@echo "Darwin rebuild complete."
+	@echo "Reconstrução do Darwin concluída."
 
 nixos-rebuild:
-	@echo "Rebuilding NixOS configuration..."
+	@echo "Reconstruindo a configuração do NixOS..."
 	@sudo nixos-rebuild switch --flake $(FLAKE)
-	@echo "NixOS rebuild complete."
+	@echo "Reconstrução do NixOS concluída."
 
 home-manager-switch:
-	@echo "Switching Home Manager configuration..."
+	@echo "Aplicando a configuração do Home Manager..."
 	@home-manager switch --flake $(HOME_TARGET)
-	@echo "Home Manager switch complete."
+	@echo "Home Manager aplicado com sucesso."
 
 nix-gc:
-	@echo "Collecting Nix garbage..."
+	@echo "Coletando lixo do Nix..."
 	@nix-collect-garbage -d
-	@echo "Garbage collection complete."
+	@echo "Coleta de lixo concluída."
 
 flake-update:
-	@echo "Updating flake inputs..."
+	@echo "Atualizando entradas (inputs) da flake..."
 	@nix flake update
-	@echo "Flake update complete."
+	@echo "Atualização da flake concluída."
 
 flake-check:
-	@echo "Checking flake..."
+	@echo "Verificando a flake..."
 	@nix flake check
-	@echo "Flake check complete."
+	@echo "Verificação da flake concluída."
 
 bootstrap-mac: install-nix install-nix-darwin

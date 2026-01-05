@@ -5,7 +5,7 @@
   ...
 }:
 {
-  # Nixpkgs configuration
+  # Configuração do nixpkgs
   nixpkgs = {
     overlays = [
       outputs.overlays.stable-packages
@@ -16,7 +16,7 @@
     };
   };
 
-  # Nix settings
+  # Configurações do Nix
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
@@ -25,19 +25,19 @@
     package = pkgs.nix;
   };
 
-  # User configuration
+  # Configuração do usuário
   users.users.${userConfig.name} = {
     name = "${userConfig.name}";
     home = "/Users/${userConfig.name}";
   };
 
-  # Add ability to use TouchID for sudo
+  # Permite usar TouchID no sudo
   security.pam.services.sudo_local.touchIdAuth = true;
 
-  # Passwordless sudo
+  # Sudo sem senha
   security.sudo.extraConfig = "${userConfig.name}    ALL = (ALL) NOPASSWD: ALL";
 
-  # System settings
+  # Configurações do sistema
   system = {
     defaults = {
       controlcenter = {
@@ -48,7 +48,7 @@
         "com.apple.symbolichotkeys" = {
           AppleSymbolicHotKeys = {
             "163" = {
-              # Set 'Option + N' for Show Notification Center
+              # Define 'Option + N' para mostrar a Central de Notificações
               enabled = true;
               value = {
                 parameters = [
@@ -60,7 +60,7 @@
               };
             };
             "184" = {
-              # Set 'Option + Shift + R' for Screenshot and recording options
+              # Define 'Option + Shift + R' para opções de captura e gravação
               enabled = true;
               value = {
                 parameters = [
@@ -72,11 +72,11 @@
               };
             };
             "60" = {
-              # Disable '^ + Space' for selecting the previous input source
+              # Desabilita '^ + Space' para selecionar a fonte de entrada anterior
               enabled = false;
             };
             "61" = {
-              # Set 'Option + Space' for selecting the next input source
+              # Define 'Option + Space' para selecionar a próxima fonte de entrada
               enabled = 1;
               value = {
                 parameters = [
@@ -88,15 +88,15 @@
               };
             };
             "64" = {
-              # Disable 'Cmd + Space' for Spotlight Search
+              # Desabilita 'Cmd + Space' para a busca do Spotlight
               enabled = false;
             };
             "65" = {
-              # Disable 'Cmd + Alt + Space' for Finder search window
+              # Desabilita 'Cmd + Alt + Space' para a janela de busca do Finder
               enabled = false;
             };
             "238" = {
-              # Set 'Control + Command + C' to center focused window
+              # Define 'Control + Command + C' para centralizar a janela em foco
               enabled = true;
               value = {
                 parameters = [
@@ -108,7 +108,7 @@
               };
             };
             "98" = {
-              # Disable 'Show Help menu'
+              # Desabilita 'Mostrar menu Ajuda'
               enabled = false;
               value = {
                 parameters = [
@@ -206,7 +206,7 @@
     };
     keyboard = {
       enableKeyMapping = true;
-      # Remap §± to ~
+      # Remapeia §± para ~
       userKeyMapping = [
         {
           HIDKeyboardModifierMappingDst = 30064771125;
@@ -217,10 +217,10 @@
     primaryUser = "${userConfig.name}";
   };
 
-  # Zsh configuration
+  # Configuração do Zsh
   programs.zsh.enable = true;
 
-  # Fonts configuration
+  # Configuração de fontes
   fonts.packages = with pkgs; [
     nerd-fonts.meslo-lg
   ];

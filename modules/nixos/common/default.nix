@@ -15,7 +15,7 @@
     ../services/tlp
     ../services/snapper
   ];
-  # Nixpkgs configuration
+  # Configuração do nixpkgs
   nixpkgs = {
     overlays = [
       outputs.overlays.stable-packages
@@ -27,25 +27,25 @@
     };
   };
 
-  # Register flake inputs for nix commands
+  # Registra os inputs da flake para comandos do nix
   nix.registry = lib.mapAttrs (_: flake: { inherit flake; }) (
     lib.filterAttrs (_: lib.isType "flake") inputs
   );
 
-  # Add inputs to legacy channels
+  # Expõe inputs via canais legados (NIX_PATH)
   nix.nixPath = [ "/etc/nix/path" ];
   environment.etc = lib.mapAttrs' (name: value: {
     name = "nix/path/${name}";
     value.source = value.flake;
   }) config.nix.registry;
 
-  # Nix settings
+  # Ajustes do Nix
   nix.settings = {
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;
   };
 
-  # Boot settings
+  # Ajustes de boot
   boot = {
     consoleLogLevel = 0;
     initrd.verbose = false;
@@ -59,7 +59,7 @@
     loader.timeout = 0;
     plymouth.enable = true;
 
-    # v4l (virtual camera) module settings
+    # Ajustes do módulo v4l (câmera virtual)
     kernelModules = [ "v4l2loopback" ];
     extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
     extraModprobeConfig = ''
@@ -76,19 +76,19 @@
     memoryPercent = lib.mkDefault 100;
   };
 
-  # Networking
+  # Rede
   networking.networkmanager.enable = true;
 
-  # Disable systemd services that are affecting the boot time
+  # Desabilita serviços systemd que impactam o boot
   systemd.services = {
     NetworkManager-wait-online.enable = false;
     plymouth-quit-wait.enable = false;
   };
 
-  # Timezone
+  # Fuso horário
   time.timeZone = "America/Cuiaba";
 
-  # Internationalization
+  # Internacionalização
   i18n.defaultLocale = "pt_BR.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "pt_BR.UTF-8";
@@ -102,41 +102,41 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-  # Enables support for Bluetooth
+  # Habilita suporte a Bluetooth
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
   };
 
-  # Input settings
+  # Ajustes de entrada
   services.libinput.enable = true;
 
-  # xserver settings
+  # Ajustes do Xserver
   services.xserver = {
     xkb.layout = "br";
     xkb.variant = "abnt2";
     excludePackages = with pkgs; [ xterm ];
   };
 
-  # Enable Wayland support in Chromium and Electron based applications
-  # Remove decorations for QT apps
-  # Set cursor size
+  # Habilita Wayland no Chromium/Electron
+  # Remove decorações em apps Qt
+  # Define tamanho do cursor
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     XCURSOR_SIZE = "24";
   };
 
-  # PATH configuration
+  # Configuração de PATH
   environment.localBinInPath = true;
 
-  # Disable CUPS printing
+  # Desabilita impressão via CUPS
   services.printing.enable = false;
 
   # devmon depende de udevil, que frequentemente quebra build em toolchains novos.
   # Em desktops (ex.: KDE), o fluxo recomendado para dispositivos removíveis é via udisks2.
   services.devmon.enable = false;
 
-  # Enable PipeWire for sound
+  # Habilita PipeWire para áudio
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -170,7 +170,7 @@
     update.auto.enable = true;
   };
 
-  # User configuration
+  # Configuração do usuário
   users.users.${userConfig.name} = {
     description = userConfig.fullName;
     extraGroups = [
@@ -181,7 +181,7 @@
     shell = pkgs.zsh;
   };
 
-  # Set User's avatar
+  # Define o avatar do usuário
   system.activationScripts.script.text = ''
     mkdir -p /var/lib/AccountsService/{icons,users}
     cp ${userConfig.avatar} /var/lib/AccountsService/icons/${userConfig.name}
@@ -196,10 +196,10 @@
     fi
   '';
 
-  # Passwordless sudo
+  # Sudo sem senha
   security.sudo.wheelNeedsPassword = false;
 
-  # System packages
+  # Pacotes do sistema
   environment.systemPackages = with pkgs; [
     gcc
     glib
@@ -212,7 +212,7 @@
   # Regras udev para permitir acesso do OpenRGB aos dispositivos.
   services.udev.packages = with pkgs; [ openrgb-git ];
 
-  # Common container config
+  # Configuração comum de containers
   virtualisation = {
     containers.enable = true;
     podman = {
@@ -221,22 +221,22 @@
     };
   };
 
-  # Enable xwayland
+  # Habilita xwayland
   programs.xwayland.enable = true;
 
-  # Zsh configuration
+  # Configuração do Zsh
   programs.zsh.enable = true;
 
-  # Fonts configuration
+  # Configuração de fontes
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     nerd-fonts.meslo-lg
     roboto
   ];
 
-  # Additional services
+  # Serviços adicionais
   services.locate.enable = true;
 
-  # OpenSSH daemon
+  # Daemon OpenSSH
   services.openssh.enable = true;
 }

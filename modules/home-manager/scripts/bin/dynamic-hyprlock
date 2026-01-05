@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Path for the dynamically generated config
+# Caminho do arquivo de configuração gerado dinamicamente
 TMP_CONFIG="/tmp/hyprlock.conf"
 
-# Find the name of the connected DP monitor, if any
+# Encontra o monitor DP conectado (se existir)
 DP_MONITOR=$(hyprctl monitors -j | jq -r '.[] | select(.name | startswith("DP-")) | .name' | head -n 1)
 
-# Get the wallpaper path from the existing hyprpaper config
+# Obtém o wallpaper a partir da config atual do hyprpaper
 WALLPAPER=$(grep 'wallpaper = ' ~/.config/hypr/hyprpaper.conf | sed 's/wallpaper = ,//' | tr -d '\n')
 
-# --- Generate the config file ---
+# --- Gera o arquivo de configuração ---
 cat >"$TMP_CONFIG" <<EOF
 background {
     path = $WALLPAPER
@@ -76,11 +76,11 @@ label {
 }
 EOF
 
-# Append configuration for the DP-* monitor if it's
+# Anexa configurações para o monitor DP-* (se existir)
 if [[ -n "$DP_MONITOR" ]]; then
 	cat >>"$TMP_CONFIG" <<EOF
 
-# Dynamic Config for $DP_MONITOR (External Display)
+# Config dinâmica para $DP_MONITOR (monitor externo)
 input-field {
     monitor = $DP_MONITOR
     size = 250, 60
@@ -137,5 +137,5 @@ if ! pgrep -x hyprlock >/dev/null; then
 	hyprlock -c "$TMP_CONFIG"
 fi
 
-# Clean up the temporary file after unlocking
+# Remove o arquivo temporário ao final
 rm -f "$TMP_CONFIG"

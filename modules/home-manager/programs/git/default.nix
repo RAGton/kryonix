@@ -1,6 +1,6 @@
 { userConfig, ... }:
 {
-  # Install git via home-manager module
+  # Instala o git via módulo do Home Manager
   programs.git = {
     enable = true;
     settings = {
@@ -28,6 +28,6 @@
     };
   };
 
-  # Enable catppuccin theming for git delta
+  # Habilita o tema Catppuccin para o git delta
   catppuccin.delta.enable = true;
 }

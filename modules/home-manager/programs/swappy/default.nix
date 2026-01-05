@@ -1,9 +1,9 @@
 { pkgs, ... }:
 {
-  # Ensure swappy package installed
+  # Garante que o pacote swappy esteja instalado
   home.packages = [ pkgs.swappy ];
 
-  # Source swappy config from the home-manager store
+  # Importa a configuração do swappy a partir do store do Home Manager
   xdg.configFile = {
     "swappy/config".text = ''
       [Default]

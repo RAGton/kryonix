@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Set TLP power profile
+  # Ajusta o perfil de energia via TLP
   services = {
     tlp = {
       enable = true;
@@ -40,7 +40,7 @@
         SOUND_POWER_SAVE_ON_BAT = 0;
         SOUND_POWER_SAVE_CONTROLLER = "Y";
 
-        # Battery charge thresholds for on-road usage
+        # Limites de carga da bateria (uso no dia a dia)
         START_CHARGE_THRESH_BAT0 = 85;
         STOP_CHARGE_THRESH_BAT0 = 90;
       };
@@ -49,6 +49,6 @@
     power-profiles-daemon.enable = false;
   };
 
-  # Disable fingerprint reader
+  # Desabilita leitor de digital
   services.fprintd.enable = false;
 }

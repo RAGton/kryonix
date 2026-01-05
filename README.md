@@ -1,8 +1,8 @@
-# NixOS and nix-darwin Configurations for My Machines
+# Configurações NixOS e nix-darwin das minhas máquinas
 
-This repository contains NixOS and nix-darwin configurations for my machines, managed through [Nix Flakes](https://nixos.wiki/wiki/Flakes).
+Este repositório contém as configurações de NixOS e nix-darwin das minhas máquinas, gerenciadas via [Nix Flakes](https://nixos.wiki/wiki/Flakes).
 
-It is structured to easily accommodate multiple machines and user configurations, leveraging [nixpkgs](https://github.com/NixOS/nixpkgs), [home-manager](https://github.com/nix-community/home-manager), [nix-darwin](https://github.com/LnL7/nix-darwin), and various other community contributions for a seamless experience across NixOS and macOS.
+Idioma: PT-BR (este arquivo) | [English](README-en.md)
 
 ## Showcase
 
@@ -18,99 +18,124 @@ It is structured to easily accommodate multiple machines and user configurations
 
 ![macos](./files/screenshots/mac.png)
 
-## Structure
+## Estrutura
 
-- `flake.nix`: The flake itself, defining inputs and outputs for NixOS, nix-darwin, and Home Manager configurations.
-- `hosts/`: NixOS and nix-darwin configurations for each machine (`energy`, `PL-OLX-KCGXHGK3PY`).
-- `home/`: Home Manager configurations for each user on each machine.
-- `files/`: Miscellaneous configuration files, scripts, avatars, and screenshots.
-- `modules/`: Reusable platform-specific modules:
-  - `nixos/`: NixOS-specific modules for system configuration.
-  - `darwin/`: macOS-specific (nix-darwin) modules.
-  - `home-manager/`: User-space configuration modules for applications and services.
-- `overlays/`: Custom Nix overlays for package modifications or additions.
-- `flake.lock`: Lock file ensuring reproducible builds by pinning input versions.
+- `flake.nix`: a flake (fonte única de verdade), declarando `inputs` e `outputs` de NixOS, nix-darwin e Home Manager.
+- `hosts/`: configuração por máquina (ex.: `inspiron`) — deve conter o mínimo possível (imports + hardware).
+- `home/`: configuração por usuário e host (Home Manager).
+- `files/`: arquivos auxiliares (scripts, wallpapers, screenshots, avatar etc.).
+- `modules/`: módulos reutilizáveis por responsabilidade:
+  - `modules/nixos/`: módulos de sistema (Linux).
+  - `modules/darwin/`: módulos de sistema (macOS).
+  - `modules/home-manager/`: módulos de usuário.
+- `overlays/`: overlays Nix.
+- `flake.lock`: lockfile para builds reprodutíveis.
 
-### Key Inputs
+### Principais inputs
 
-- **nixpkgs**: Points to the `nixos-unstable` channel for access to the latest packages.
-- **nixpkgs-stable**: Points to the `nixos-25.11` channel for stable packages.
-- **home-manager**: Manages user-specific configurations.
-- **darwin**: Enables nix-darwin for macOS system configuration.
-- **hardware**: Provides NixOS modules to optimize settings for different hardware.
-- **catppuccin**: Provides global Catppuccin theme integration.
-- **nix-flatpak**: Provides a declarative way to manage Flatpaks.
-- **plasma-manager**: A declarative manager for the KDE Plasma desktop environment.
+- **nixpkgs**: aponta para `nixos-unstable` (pacotes mais novos).
+- **nixpkgs-stable**: aponta para `nixos-25.11` (base estável).
+- **home-manager**: gerencia a configuração do usuário.
+- **darwin**: habilita nix-darwin no macOS.
+- **hardware**: módulos de hardware do nixos-hardware.
+- **catppuccin**: tema global Catppuccin.
+- **nix-flatpak**: gerenciamento declarativo de Flatpaks.
+- **plasma-manager**: gerenciamento declarativo do KDE Plasma.
 
-## Usage
+## Uso
 
-### Adding a New Machine with a New User
+### Aplicando as configurações (NixOS)
 
-To add a new machine with a new user to your NixOS or nix-darwin configuration, follow these steps:
+- Sistema:
 
-1. **Update `flake.nix`**:
+```sh
+sudo nixos-rebuild switch --flake .#inspiron
+```
 
-   a. Add the new user to the `users` attribute set:
+- Usuário (Home Manager):
+
+```sh
+home-manager switch --flake .#rag@inspiron
+```
+
+### Atalhos via Makefile
+
+O [Makefile](Makefile) oferece alvos prontos (assume que o hostname local bate com o output da flake):
+
+```sh
+make nixos-rebuild
+make home-manager-switch
+make flake-check
+make flake-update
+```
+
+### Adicionando uma nova máquina com um novo usuário
+
+Para adicionar uma nova máquina com um novo usuário (NixOS ou nix-darwin), siga os passos abaixo:
+
+1. **Atualize o `flake.nix`**:
+
+  a. Adicione o novo usuário ao attribute set `users`:
 
    ```nix
    users = {
-     # Existing users...
+    # Usuários existentes...
      newuser = {
        avatar = ./files/avatar/face;
        email = "newuser@example.com";
-       fullName = "New User";
+      fullName = "Novo Usuário";
        gitKey = "YOUR_GIT_KEY";
        name = "newuser";
      };
    };
    ```
 
-   b. Add the new machine to the appropriate configuration set:
+  b. Adicione a nova máquina no conjunto de configurações apropriado:
 
-   For NixOS:
+  Para NixOS:
 
    ```nix
    nixosConfigurations = {
-     # Existing configurations...
+    # Configurações existentes...
      newmachine = mkNixosConfiguration "newmachine" "newuser";
    };
    ```
 
-   For nix-darwin:
+  Para nix-darwin:
 
    ```nix
    darwinConfigurations = {
-     # Existing configurations...
+    # Configurações existentes...
      newmachine = mkDarwinConfiguration "newmachine" "newuser";
    };
    ```
 
-   c. Add the new home configuration:
+  c. Adicione a configuração do Home Manager:
 
    ```nix
    homeConfigurations = {
-     # Existing configurations...
+    # Configurações existentes...
      "newuser@newmachine" = mkHomeConfiguration "x86_64-linux" "newuser" "newmachine";
    };
    ```
 
-2. **Create System Configuration**:
+1. **Crie a configuração do sistema**:
 
-   a. Create a new directory under `hosts/` for your machine:
+  a. Crie um novo diretório em `hosts/` para a máquina:
 
    ```sh
    mkdir -p hosts/newmachine
    ```
 
-   b. Create `default.nix` in this directory:
+  b. Crie o `default.nix` nesse diretório:
 
    ```sh
    touch hosts/newmachine/default.nix
    ```
 
-   c. Add the basic configuration to `default.nix`:
+  c. Adicione a configuração base no `default.nix`:
 
-   For NixOS:
+  Para NixOS:
 
    ```nix
    { inputs, hostname, nixosModules, ... }:
@@ -126,7 +151,7 @@ To add a new machine with a new user to your NixOS or nix-darwin configuration, 
    }
    ```
 
-   For nix-darwin:
+  Para nix-darwin:
 
    ```nix
    { darwinModules, ... }:
@@ -134,138 +159,138 @@ To add a new machine with a new user to your NixOS or nix-darwin configuration, 
      imports = [
        "${darwinModules}/common"
      ];
-     # Add machine-specific configurations here
+    # Adicione configurações específicas da máquina aqui
    }
    ```
 
-   d. For NixOS, generate `hardware-configuration.nix`:
+  d. Para NixOS, gere o `hardware-configuration.nix`:
 
    ```sh
    sudo nixos-generate-config --show-hardware-config > hosts/newmachine/hardware-configuration.nix
    ```
 
-3. **Create Home Manager Configuration**:
+1. **Crie a configuração do Home Manager**:
 
-   a. Create a new directory for the user's host-specific configuration:
+  a. Crie um diretório para a configuração do usuário nesse host:
 
    ```sh
    mkdir -p home/newuser/newmachine
    touch home/newuser/newmachine/default.nix
    ```
 
-   b. Add basic home configuration:
+  b. Adicione uma configuração base:
 
    ```nix
    { nhModules, ... }:
    {
      imports = [
        "${nhModules}/common"
-       # Add other home-manager modules
+      # Adicione outros módulos do home-manager
      ];
    }
    ```
 
-4. **Building and Applying Configurations**:
+1. **Build e aplicação das configurações**:
 
-   a. Commit new files to git:
+  a. Versione os novos arquivos:
 
    ```sh
    git add .
    ```
 
-   b. Build and switch to the new system configuration:
+  b. Build e switch para a configuração de sistema:
 
-   For NixOS:
+  Para NixOS:
 
    ```sh
    sudo nixos-rebuild switch --flake .#newmachine
    ```
 
-   For nix-darwin (requires Nix and nix-darwin installation first):
+  Para nix-darwin (requer Nix e nix-darwin instalados):
 
    ```sh
    darwin-rebuild switch --flake .#newmachine
    ```
 
-   c. Build and switch to the new Home Manager configuration:
+  c. Build e switch para a configuração do Home Manager:
 
 > [!IMPORTANT]
-> On fresh systems, bootstrap Home Manager first:
+> Em sistemas novos, faça o bootstrap do Home Manager primeiro:
 
 ```sh
 nix-shell -p home-manager
 home-manager switch --flake .#newuser@newmachine
 ```
 
-After this initial setup, you can rebuild configurations separately and home-manager will be available without additional steps
+Depois desse setup inicial, você pode reconstruir separadamente; o `home-manager` ficará disponível sem passos extras.
 
-## Updating Flakes
+## Atualizando a flake
 
-To update all flake inputs to their latest versions:
+Para atualizar todos os inputs para as versões mais recentes:
 
 ```sh
 nix flake update
 ```
 
-## Modules and Configurations
+## Módulos e configurações
 
-### System Modules (in `modules/nixos/`)
+### Módulos de sistema (em `modules/nixos/`)
 
-- **`common`**: Common system configurations including bootloader, networking, PipeWire, fonts, and user settings.
-- **`desktop/hyprland`**: Hyprland window manager with GDM, Bluetooth, and required system packages.
-- **`desktop/kde`**: KDE Plasma desktop environment with SDDM.
-- **`programs/steam`**: Steam gaming platform configuration.
-- **`services/tlp`**: TLP configuration for advanced power management on laptops.
+- **`common`**: configurações comuns (bootloader, rede, PipeWire, fontes e usuário).
+- **`desktop/hyprland`**: Hyprland com GDM/Bluetooth e pacotes de suporte.
+- **`desktop/kde`**: KDE Plasma com SDDM.
+- **`programs/steam`**: Steam no nível do sistema.
+- **`services/tlp`**: TLP (gerenciamento de energia em notebooks).
 
-### Darwin Modules (in `modules/darwin/`)
+### Módulos Darwin (em `modules/darwin/`)
 
-- **`common`**: Common macOS configurations including system defaults, keyboard remapping, and user settings.
+- **`common`**: configurações comuns do macOS (defaults, remapeamento de teclado e usuário).
 
-### Home Manager Modules (in `modules/home-manager/`)
+### Módulos do Home Manager (em `modules/home-manager/`)
 
-- **`common`**: Common user-space configurations that import most other modules.
-- **`desktop/hyprland`**: User-level settings for Hyprland, including keybindings and related services like Waybar and Swaync.
-- **`desktop/kde`**: User-level settings for KDE Plasma, managed declaratively with `plasma-manager`.
-- **`misc/gtk`**: GTK3/4 theming (Tela icons, Yaru cursor, Roboto font) and Catppuccin theme.
-- **`misc/qt`**: Qt theming using Kvantum and Catppuccin on Linux.
-- **`misc/wallpaper`**: Defines the default wallpaper path for desktops.
-- **`misc/xdg`**: Manages XDG user directories and default MIME type associations.
-- **`programs/aerospace` (Darwin):** Tiling window manager for macOS with custom keybindings and workspace rules.
-- **`programs/alacritty`:** GPU-accelerated terminal emulator, configured for tmux integration and platform-specific settings.
-- **`programs/albert` (Linux):** Application launcher and productivity tool.
-- **`programs/atuin`:** Enhanced shell history with cloud sync capabilities.
-- **`programs/bat`:** `cat` clone with syntax highlighting and Git integration.
-- **`programs/brave`:** Web browser with XDG MIME type associations (Linux).
-- **`programs/btop`:** Resource monitor with Vim keys.
-- **`programs/fastfetch`:** Customized system information tool.
-- **`programs/fzf`:** Command-line fuzzy finder with preview capabilities.
-- **`programs/git`:** Version control system, configured with user details, GPG signing, and `delta` for diffs.
-- **`programs/go`:** Golang development environment setup.
-- **`programs/gpg`:** GnuPG settings and GPG agent configuration.
-- **`programs/k9s`:** Kubernetes CLI to manage clusters, with custom hotkeys.
-- **`programs/krew`:** Kubectl plugin manager with a predefined list of plugins.
-- **`programs/lazygit`:** Terminal UI for Git.
-- **`programs/neovim`:** Highly customized Neovim setup based on LazyVim.
-- **`programs/obs-studio` (Linux):** Streaming and screen recording software.
-- **`programs/saml2aws`:** For AWS authentication via SAML.
-- **`programs/starship`:** Cross-shell prompt with custom configuration.
-- **`programs/swappy` (Linux/Hyprland):** A tool for editing screenshots.
-- **`programs/telegram`:** Desktop client for Telegram.
-- **`programs/tmux`:** Terminal multiplexer with custom keybindings and Catppuccin theme.
-- **`programs/wofi` (Linux/Hyprland):** Application launcher for Wayland.
-- **`programs/zsh`:** Zsh shell with extensive aliases, completions, and custom keybindings.
-- **`scripts`**: Deploys a collection of custom utility scripts to `~/.local/bin`.
-- **`services/cliphist` (Linux/Hyprland):** Clipboard manager.
-- **`services/easyeffects` (Linux):** Audio effects processor with a custom "mic" preset.
-- **`services/flatpak` (Linux):** Declarative management of Flatpak applications.
-- **`services/kanshi` (Linux/Hyprland):** Dynamic display output configuration.
-- **`services/swaync` (Linux/Hyprland):** Notification daemon.
-- **`services/waybar` (Linux/Hyprland):** Highly customized Wayland status bar.
+- **`common`**: base do ambiente do usuário, importando a maior parte dos módulos.
+- **`desktop/hyprland`**: ajustes do Hyprland (binds e serviços como Waybar e Swaync).
+- **`desktop/kde`**: ajustes do KDE Plasma, gerenciados declarativamente com `plasma-manager`.
+- **`misc/gtk`**: tema GTK3/4 (ícones Tela, cursor Yaru, fonte Roboto) + Catppuccin.
+- **`misc/qt`**: tema Qt via Kvantum + Catppuccin (Linux).
+- **`misc/wallpaper`**: define o wallpaper padrão.
+- **`misc/xdg`**: diretórios XDG e associações MIME.
+- **`programs/aerospace` (Darwin):** gerenciador tiling no macOS com regras/binds.
+- **`programs/alacritty`:** terminal acelerado por GPU, com integrações.
+- **`programs/albert` (Linux):** launcher e ferramenta de produtividade.
+- **`programs/atuin`:** histórico de shell com sync/backup.
+- **`programs/bat`:** alternativa ao `cat` com syntax highlighting e integração com Git.
+- **`programs/brave`:** navegador com associações MIME via XDG (Linux).
+- **`programs/btop`:** monitor de recursos com teclas estilo Vim.
+- **`programs/fastfetch`:** ferramenta de informações do sistema (customizada).
+- **`programs/fzf`:** fuzzy finder com preview.
+- **`programs/git`:** Git com detalhes do usuário, assinatura GPG e `delta`.
+- **`programs/go`:** ambiente de desenvolvimento Go.
+- **`programs/gpg`:** configuração do GnuPG e agent.
+- **`programs/k9s`:** TUI para Kubernetes com hotkeys.
+- **`programs/krew`:** gerenciador de plugins do `kubectl`.
+- **`programs/lazygit`:** TUI para Git.
+- **`programs/neovim`:** Neovim baseado no LazyVim.
+- **`programs/obs-studio` (Linux):** gravação/streaming.
+- **`programs/saml2aws`:** autenticação AWS via SAML.
+- **`programs/starship`:** prompt multi-shell.
+- **`programs/swappy` (Linux/Hyprland):** editor de screenshots.
+- **`programs/telegram`:** cliente desktop do Telegram.
+- **`programs/tmux`:** multiplexador de terminal (neste repo, migrado para zellij).
+- **`programs/wofi` (Linux/Hyprland):** launcher para Wayland.
+- **`programs/zsh`:** Zsh com aliases, completions e keybindings.
+- **`scripts`**: instala scripts utilitários em `~/.local/bin`.
+- **`services/cliphist` (Linux/Hyprland):** gerenciador de área de transferência.
+- **`services/easyeffects` (Linux):** efeitos de áudio (preset de microfone).
+- **`services/flatpak` (Linux):** gerenciamento declarativo de Flatpaks.
+- **`services/kanshi` (Linux/Hyprland):** configuração dinâmica de monitores.
+- **`services/swaync` (Linux/Hyprland):** daemon de notificações.
+- **`services/waybar` (Linux/Hyprland):** barra de status do Wayland.
 
-## Contributing
+## Contribuindo
 
-Contributions are welcome! If you have improvements or suggestions, please open an issue or submit a pull request.
+Contribuições são bem-vindas! Se tiver melhorias/sugestões, abra uma issue ou envie um pull request.
 
-## License
+## Licença
 
-This repository is licensed under the MIT License. Feel free to use, modify, and distribute according to the license terms.
+Este repositório está sob licença MIT. Sinta-se à vontade para usar, modificar e distribuir conforme os termos.

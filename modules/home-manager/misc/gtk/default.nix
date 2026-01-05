@@ -4,7 +4,7 @@
   ...
 }:
 {
-  # GTK theme configuration
+  # Configuração de tema GTK
   gtk = {
     enable = true;
     colorScheme = "dark";

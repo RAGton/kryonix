@@ -1,10 +1,10 @@
 { ... }:
 {
-  # Install bat via home-manager module
+  # Instala o bat via Home Manager
   programs.bat = {
     enable = true;
   };
 
-  # Enable catppuccin theming for bat.
+  # Habilita tema Catppuccin para o bat
   catppuccin.bat.enable = true;
 }

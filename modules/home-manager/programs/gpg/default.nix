@@ -4,7 +4,7 @@
   ...
 }:
 {
-  # Install gpg via home-manager module
+  # Instala o gpg via módulo do Home Manager
   programs.gpg = {
     enable = true;
     settings = {

@@ -1,6 +1,6 @@
 { ... }:
 {
-  # Install wofi via home-manager module
+  # Instala o wofi via módulo do Home Manager
   programs.wofi = {
     enable = true;
     settings = {
