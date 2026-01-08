@@ -53,7 +53,7 @@
           avatar = ./files/avatar/face;
           email = "g.rocha@estudante.ifmt.edu.br";
           fullName = "Gabriel Aguiar Rocha";
-          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINAFi1/wOXb839pka/DhBlk0FfJWDy2M6r1ho7ejkNuu gabriel.rag@proton.me";
+          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLt1vJ3bluf8Df37jUUktr1MwMzQctci8wi3z4O9AGP gabriel.rag@proton.me";
           name = "rag";
         };
       };
