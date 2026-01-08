@@ -1,5 +1,6 @@
 {
   outputs,
+  lib,
   userConfig,
   pkgs,
   ...
