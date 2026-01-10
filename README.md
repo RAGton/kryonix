@@ -66,6 +66,129 @@ home-manager news --flake .#rag@inspiron
 
 > Se você rodar `home-manager news` sem `--flake`, ele tenta usar a config padrão em `~/.config/home-manager/home.nix`.
 
+## Atalhos (Home Manager)
+
+Esta seção lista os atalhos de teclado declarados pelo Home Manager (principalmente via `plasma-manager` e Hyprland).
+
+> Observação: alguns atalhos podem conflitar (ex.: `Meta+Space` aparece em mais de um lugar). Se notar que um não funciona, é quase sempre conflito/precedência no próprio KDE.
+
+### KDE Plasma (plasma-manager)
+
+Fonte: [modules/home-manager/desktop/kde/default.nix](modules/home-manager/desktop/kde/default.nix)
+
+**Hotkeys (comandos)**
+
+| Tecla | Ação |
+|---|---|
+| `Meta+Shift+Backspace` | Limpar notificações do Plasma (`clear-kde-notifications`) |
+| `Meta+Return` | Abrir terminal (`warp-terminal`) |
+| `Meta+Shift+B` | Abrir Zen Browser (`app.zen_browser.zen`) |
+| `Meta+Shift+T` | Abrir Telegram |
+| `Meta+E` | Abrir Dolphin |
+| `Meta+A` | Mostrar apps no Albert |
+| `Meta+Space` | Alternar Albert (pode conflitar com layout do teclado) |
+| `Alt+@` | OCR (`ocr`) |
+| `Print` | Screenshot região (`spectacle --region`) |
+| `Meta+Ctrl+S` | Screenshot tela inteira (`spectacle --fullscreen`) |
+| `Meta+!` | Mover janela + focar Desktop 1 |
+| `Meta+@` | Mover janela + focar Desktop 2 |
+| `Meta+#` | Mover janela + focar Desktop 3 |
+| `Meta+$` | Mover janela + focar Desktop 4 |
+| `Meta+%` | Mover janela + focar Desktop 5 |
+
+**KWin / Áreas de trabalho**
+
+| Tecla | Ação |
+|---|---|
+| `Meta+1..7` | Trocar para Desktop 1..7 |
+| `Meta+Q` | Fechar janela |
+| `Meta+M` | Tela cheia |
+| `Ctrl+Alt+C` | Centralizar janela |
+
+**Sessão**
+
+| Tecla | Ação |
+|---|---|
+| `Ctrl+Alt+L` | Bloquear sessão |
+| `Ctrl+Alt+Q` | Logout |
+
+**Outros**
+
+| Tecla | Ação |
+|---|---|
+| `Meta+N` | Atalho global de notificações (plasmoid) |
+| `Meta+Shift+F` | Dolphin (atalho do desktop entry do Dolphin) |
+| `Meta+Shift+R` | Gravar região (Spectacle) |
+| `Meta+Ctrl+R` | Gravar tela (Spectacle) |
+
+### Hyprland
+
+Fonte: [modules/home-manager/desktop/hyprland/hyprland.conf](modules/home-manager/desktop/hyprland/hyprland.conf)
+
+> `$mainMod = SUPER`.
+
+**Apps**
+
+| Tecla | Ação |
+|---|---|
+| `SUPER+Shift+Return` | Abrir terminal (`warp-terminal`) |
+| `SUPER+Shift+B` | Abrir navegador (`brave`) |
+| `SUPER+Shift+F` | Abrir arquivos (`nautilus`) |
+| `SUPER+Shift+T` | Abrir Telegram |
+| `SUPER+A` | Menu de apps (Albert) |
+| `Ctrl+Space` | Toggle Albert |
+| `Ctrl+Alt+P` | Pomodoro start/stop |
+
+**Janelas**
+
+| Tecla | Ação |
+|---|---|
+| `SUPER+Q` | Fechar janela ativa |
+| `SUPER+F` | Toggle floating |
+| `SUPER+M` | Fullscreen |
+| `Ctrl+Alt+C` | Centralizar janela |
+| `SUPER+Return` | `swapwithmaster` (layout) |
+| `SUPER+R` | `orientationcycle` (layout) |
+
+**Workspaces**
+
+| Tecla | Ação |
+|---|---|
+| `SUPER+1..9` | Ir para workspace 1..9 |
+| `SUPER+0` | Ir para workspace 10 |
+| `SUPER+Shift+1..9` | Mover janela para workspace 1..9 |
+| `SUPER+Shift+0` | Mover janela para workspace 10 |
+| `SUPER+mouse wheel` | Navegar workspaces (e+1/e-1) |
+| `SUPER+Shift+P` | Toggle workspace especial |
+| `SUPER+Shift+M` | Mover janela para workspace especial (silencioso) |
+
+**Foco / resize**
+
+| Tecla | Ação |
+|---|---|
+| `SUPER+h/j/k/l` | Mover foco (direções) |
+| `SUPER+Shift+Arrows` | Redimensionar janela ativa |
+
+**Captura / utilitários**
+
+| Tecla | Ação |
+|---|---|
+| `SUPER+Shift+S` | Screenshot área (grimblast + swappy) |
+| `SUPER+Ctrl+S` | Screenshot tela (grimblast) |
+| `SUPER+Shift+R` | Screen recorder |
+| `Alt+Shift+2` | OCR |
+| `Ctrl+Alt+L` | Bloquear (dynamic-hyprlock) |
+| `SUPER+Shift+Backspace` | Limpar notificações (swaync) |
+| `Alt+Shift+V` | Clipboard menu (cliphist + wofi) |
+
+**Teclas multimídia**
+
+| Tecla | Ação |
+|---|---|
+| `XF86MonBrightnessUp/Down` | Ajustar brilho |
+| `XF86AudioRaise/Lower/Mute` | Ajustar volume |
+| `XF86AudioMicMute` | Mute microfone |
+
 ### Atalhos via Makefile
 
 O [Makefile](Makefile) oferece alvos prontos.
