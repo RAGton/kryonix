@@ -5,6 +5,15 @@
   
   # Só aplica se o root for Btrfs
   config = lib.mkIf ((config.fileSystems."/".fsType or "") == "btrfs") {
+    # App(s) para gerenciar snapshots no KDE.
+    # - btrfs-assistant: interface moderna e prática (funciona muito bem com snapper)
+    # - snapper-gui: GUI clássica do snapper
+    environment.systemPackages = with pkgs; [
+      btrfs-assistant
+      snapper
+      snapper-gui
+    ];
+
     # Snapper usa `/.snapshots` por padrão; garanta que o diretório exista
     # mesmo quando não há subvolume/mount dedicado para snapshots.
     systemd.tmpfiles.rules = [
@@ -70,5 +79,22 @@
         };
       };
     };
+
+    # Snapshot no boot também para /home (o snapper do NixOS cobre apenas root).
+    systemd.services.snapper-home-boot = {
+      description = "Snapper snapshot for /home on boot";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "local-fs.target" "snapperd.service" ];
+      wants = [ "snapperd.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.snapper}/bin/snapper -c home create -d 'boot' -c timeline";
+      };
+    };
+
+    # Limpeza semanal (fim de semana) em vez de diária.
+    # Ajuste o horário se quiser; usamos domingo à noite por padrão.
+    systemd.timers.snapper-cleanup.timerConfig.OnCalendar = lib.mkForce "Sun *-*-* 23:30:00";
+    systemd.timers.snapper-cleanup.timerConfig.Persistent = lib.mkForce true;
   };
 }
