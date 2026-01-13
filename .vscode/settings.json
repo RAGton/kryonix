@@ -1,3 +1,5 @@
 {
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "editor.fontFamily": "CaskaydiaCove Nerd Font Mono, monospace",
+    "terminal.integrated.fontFamily": "CaskaydiaCove Nerd Font Mono"
 }

@@ -42,4 +42,50 @@
       '';
     });
   };
+
+  # Workaround: o DrKonqi aborta ao gerar backtrace quando algum mapeamento ELF
+  # no core não tem Build-ID (ex.: libxcb-damage). A gente ignora esses módulos
+  # em vez de falhar toda a coleta.
+  drkonqi-ignore-missing-buildid = final: prev: {
+    kdePackages = prev.kdePackages.overrideScope (kfinal: kprev: {
+      drkonqi = kprev.drkonqi.overrideAttrs (old: {
+        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ prev.python3 ];
+        postPatch = (old.postPatch or "") + ''
+          p="src/data/gdb_preamble/preamble.py"
+          if [ -f "$p" ]; then
+            ${prev.python3}/bin/python - <<'PY'
+from pathlib import Path
+
+path = Path("src/data/gdb_preamble/preamble.py")
+txt = path.read_text(encoding="utf-8")
+
+old = (
+    "    for line in output.splitlines():\n"
+    "        image = CoreImage(line)\n"
+    "        if image.valid:\n"
+    "            core_images.append(image)\n"
+)
+
+new = (
+    "    for line in output.splitlines():\n"
+    "        try:\n"
+    "            image = CoreImage(line)\n"
+    "        except NoBuildIdException:\n"
+    "            # Alguns mapeamentos ELF no core podem não ter Build-ID.\n"
+    "            # Não abortar a geração do backtrace por isso.\n"
+    "            continue\n"
+    "        if image.valid:\n"
+    "            core_images.append(image)\n"
+)
+
+if old not in txt:
+    raise SystemExit("drkonqi-ignore-missing-buildid: snippet não encontrado; o upstream mudou")
+
+path.write_text(txt.replace(old, new, 1), encoding="utf-8")
+PY
+          fi
+        '';
+      });
+    });
+  };
 }

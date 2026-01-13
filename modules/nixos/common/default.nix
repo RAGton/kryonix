@@ -21,6 +21,7 @@
     overlays = [
       outputs.overlays.stable-packages
       outputs.overlays.openrgb-git
+      outputs.overlays.drkonqi-ignore-missing-buildid
     ];
 
     config = {

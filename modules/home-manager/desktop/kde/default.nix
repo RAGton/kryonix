@@ -217,8 +217,13 @@
         location = "top";
         # Menor = ícones menores (inclui system tray)
         height = 36;
-        floating = false;
+        floating = true;
         opacity = "translucent";
+        alignment = "center";
+        lengthMode = "custom";
+        # Limita a largura do painel para não encostar nas laterais.
+        # Em telas menores, o Plasma limita automaticamente ao espaço disponível.
+        maxLength = 1500;
         widgets = [
           # Seletor de usuário (igual ao appletsrc)
           {

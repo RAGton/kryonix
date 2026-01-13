@@ -87,7 +87,6 @@
     kubectl
     eza
     fastfetch
-
     zsh-powerlevel10k
     zsh-autosuggestions
     zsh-syntax-highlighting
