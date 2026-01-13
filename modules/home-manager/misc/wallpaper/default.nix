@@ -1,10 +1,27 @@
+#+#+#+#+####################################################################
+# Home Manager: Wallpaper
+# Autor: rag
+#
+# O que é
+# - Define um wallpaper padrão e uma lista (galeria) de wallpapers do usuário.
+#
+# Por quê
+# - Padroniza wallpaper entre ambientes (KDE/Hyprland) de forma declarativa.
+#
+# Como
+# - Expõe `options.wallpaper` e `options.wallpapers`.
+# - Publica o wallpaper padrão em `~/.config/wallpaper.png`.
+# - Publica a galeria em `~/.local/share/wallpapers/*`.
+#
+# Riscos
+# - `wallpapers` com nomes (basename) repetidos vão colidir no destino.
 { lib, config, ... }:
 
 {
   options.wallpaper = lib.mkOption {
     type = lib.types.path;
     default = ../../../../files/wallpaper/wallpaper.png;
-    description = "Default wallpaper image path";
+    description = "Caminho do wallpaper padrão.";
   };
 
   options.wallpapers = lib.mkOption {

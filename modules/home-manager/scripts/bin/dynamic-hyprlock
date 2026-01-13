@@ -1,6 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Script que gera uma configuração temporária do `hyprlock` com base no ambiente atual.
+# - Ajusta campos/labels para o monitor interno (eDP-1) e, se existir, um monitor externo (DP-*).
+#
+# Por quê:
+# - Evita manter múltiplos arquivos de config; adapta automaticamente ao setup de monitores.
+# - Reaproveita o wallpaper configurado no hyprpaper.
+#
+# Como:
+# - Detecta monitor DP via `hyprctl monitors -j | jq`.
+# - Lê o wallpaper do `~/.config/hypr/hyprpaper.conf`.
+# - Escreve `hyprlock.conf` em `/tmp` e chama `hyprlock -c` se ainda não estiver rodando.
+#
+# Riscos:
+# - Depende de `hyprctl`, `jq`, `hyprpaper` e `hyprlock`.
+# - Se o arquivo do hyprpaper mudar de formato, a extração de wallpaper pode falhar.
+# =============================================================================
+
 # Caminho do arquivo de configuração gerado dinamicamente
 TMP_CONFIG="/tmp/hyprlock.conf"
 

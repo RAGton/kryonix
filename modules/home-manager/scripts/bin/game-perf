@@ -1,6 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Wrapper para executar um comando (jogo/launcher) com ajustes de performance.
+# - Integra GameMode (se disponível) e MangoHud (quando apropriado).
+#
+# Por quê:
+# - Padroniza um “modo jogo” rápido sem lembrar flags/variáveis toda vez.
+# - Evita quebrar launchers onde MangoHud pode causar problemas (EGL/overlay).
+#
+# Como:
+# - Usa `GAME_FPS_LIMIT` e `GAME_MANGOHUD_CONFIG` para compor `MANGOHUD_CONFIG`.
+# - Desliga MangoHud para alguns launchers (heroic/steam) e permite override com `GAME_FORCE_MANGOHUD`.
+# - Se existir `gamemoderun`, usa ele como wrapper.
+#
+# Riscos:
+# - Dependências opcionais: `gamemoderun` e `mangohud`.
+# - Overlays podem causar incompatibilidades com alguns jogos/anti-cheat.
+# =============================================================================
+
 if [[ $# -lt 1 ]]; then
   echo "uso: game-perf <comando...>" >&2
   exit 2

@@ -1,9 +1,27 @@
+# Módulo NixOS: Snapper (Btrfs)
+# Autor: rag
+#
+# O que é
+# - Habilita e configura Snapper automaticamente quando `/` é Btrfs.
+# - Garante subvolumes de snapshots esperados pelo Snapper (`/.snapshots` e `/home/.snapshots`).
+# - Instala GUI(s) para gerenciamento de snapshots.
+#
+# Por quê
+# - Snapshots reduzem risco operacional (rollback/recuperação).
+# - Evita falhas comuns no boot/rebuild quando `.snapshots` existe só como diretório.
+# - Padroniza retenção (timeline + cleanup) de forma declarativa.
+#
+# Como
+# - Condicionado a `config.fileSystems."/".fsType == "btrfs"`.
+# - Usa activation script para garantir *subvolume* (não apenas diretório).
+# - Cria snapshot no boot para `/` e também para `/home` via unit dedicada.
+#
+# Riscos
+# - Se `/.snapshots` (ou `/home/.snapshots`) existir como diretório não-vazio, a ativação aborta
+#   por segurança (para não destruir dados). Nesse caso, mover/limpar manualmente antes do rebuild.
 { config, lib, pkgs, userConfig, ... }:
 {
-  # Habilita Snapper automaticamente em sistemas com root Btrfs
-  # usando subvolumes existentes para / e /home.
-  
-  # Só aplica se o root for Btrfs
+  # Condição de ativação: só aplica quando o root filesystem é Btrfs.
   config = lib.mkIf ((config.fileSystems."/".fsType or "") == "btrfs") {
     # App(s) para gerenciar snapshots no KDE.
     # - btrfs-assistant: interface moderna e prática (funciona muito bem com snapper)
@@ -14,20 +32,23 @@
       snapper-gui
     ];
 
-    # Snapper usa `/.snapshots` por padrão; garanta que o diretório exista
-    # mesmo quando não há subvolume/mount dedicado para snapshots.
+    # Garante os diretórios de mountpoints.
+    # Importante: Snapper precisa que esses paths sejam *subvolumes* Btrfs.
+    # O tmpfiles ajuda a garantir o path, mas o activation script abaixo garante o subvolume.
     systemd.tmpfiles.rules = [
       "d /.snapshots 0755 root root -"
       "d /home/.snapshots 0755 root root -"
     ];
 
-    # O snapper exige que `/.snapshots` seja um *subvolume* Btrfs.
-    # Se ele existir apenas como diretório (como o tmpfiles cria), o
-    # `snapper-boot.service` falha durante o `nixos-rebuild switch`.
+    # Garantia de subvolume (não apenas diretório).
     #
-    # Aqui garantimos de forma declarativa (na ativação) que `/.snapshots`
-    # seja um subvolume. Por segurança, só substituímos se for um diretório
-    # vazio; caso contrário, abortamos para não perder dados.
+    # Por quê
+    # - `snapper-boot.service` e o funcionamento normal do Snapper assumem subvolume.
+    # - Se existir apenas diretório, o serviço pode falhar em rebuild/boot.
+    #
+    # Como
+    # - Se não for subvolume, substitui apenas quando for diretório vazio.
+    # - Se houver conteúdo, aborta com instruções para evitar perda de dados.
     system.activationScripts.snapperEnsureSnapshotsSubvolume = {
       deps = [ "users" ];
       text = ''
@@ -48,7 +69,7 @@
             ${pkgs.btrfs-progs}/bin/btrfs subvolume create /.snapshots >/dev/null
           fi
 
-          # Para o config "home" (SUBVOLUME=/home), o snapper usa /home/.snapshots por padrão.
+          # Config "home" (SUBVOLUME=/home): por padrão o snapper usa /home/.snapshots.
           if ! ${pkgs.btrfs-progs}/bin/btrfs subvolume show /home/.snapshots >/dev/null 2>&1; then
             if [ -e /home/.snapshots ] && [ ! -d /home/.snapshots ]; then
               echo "snapper: /home/.snapshots existe mas não é diretório; não é possível criar subvolume." >&2
@@ -98,7 +119,8 @@
       };
     };
 
-    # Snapshot no boot também para /home (o snapper do NixOS cobre apenas root).
+    # Snapshot no boot também para /home.
+    # Motivo: o `snapshotRootOnBoot` cobre apenas `/` por padrão.
     systemd.services.snapper-home-boot = {
       description = "Snapper snapshot for /home on boot";
       wantedBy = [ "multi-user.target" ];

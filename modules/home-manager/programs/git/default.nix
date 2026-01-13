@@ -1,3 +1,23 @@
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Módulo Home Manager para configurar `git` e `delta`.
+# - Habilita assinatura de commits via chave SSH quando `userConfig.gitKey` for do tipo `ssh-*`.
+#
+# Por quê:
+# - Centraliza identidade (nome/email), preferências e assinatura em todos os hosts.
+# - Evita falhas ao habilitar assinatura quando a chave não é SSH.
+#
+# Como:
+# - Cria `~/.config/git/allowed_signers` somente quando a chave é SSH.
+# - Configura `programs.git.signing` apenas quando existe chave.
+# - Habilita `delta` para pager/diff melhorado.
+#
+# Riscos:
+# - Se `userConfig.gitKey` estiver incorreta, a assinatura pode falhar e o `git` vai recusar commits.
+# - `allowed_signers` é gerado a partir de email/chave; mantenha `userConfig` consistente.
+# =============================================================================
 { lib, userConfig, ... }:
 {
   home.file =
@@ -9,7 +29,7 @@
       ".config/git/allowed_signers".text = "${userConfig.email} ${userConfig.gitKey}\n";
     };
 
-  # Instala o git via módulo do Home Manager
+  # Git: identidade e preferências globais do usuário.
   programs.git = {
     enable = true;
     settings =

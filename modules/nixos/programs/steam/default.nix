@@ -4,7 +4,20 @@
   ...
 }:
 {
-  # Configuração do Steam (nível do sistema)
+  # Módulo NixOS: Steam (nível do sistema)
+  # Autor: rag
+  #
+  # O que é
+  # - Habilita Steam e integrações (firewall para Remote Play/transferências, hardware support).
+  #
+  # Por quê
+  # - Deixa Steam/Proton prontos sem configuração manual após rebuild.
+  #
+  # Como
+  # - `programs.steam.*` + `hardware.steam-hardware.enable`.
+  #
+  # Riscos
+  # - Abrir portas no firewall aumenta superfície de rede; manter apenas o necessário.
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;

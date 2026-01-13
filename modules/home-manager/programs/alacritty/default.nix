@@ -1,6 +1,21 @@
+#+#+#+#+####################################################################
+# Home Manager: Alacritty
+# Autor: rag
+#
+# O que é
+# - Configuração do terminal Alacritty do usuário.
+#
+# Por quê
+# - Mantém terminal consistente (fonte, shell, comportamento) entre máquinas.
+#
+# Como
+# - Usa `programs.alacritty.settings` para gerar o arquivo de config.
+#
+# Riscos
+# - Alterar fonte/shell pode impactar UX e integração com multiplexer (zellij).
 { pkgs, ... }:
 {
-  # Instala o alacritty via módulo do Home Manager
+  # Instala e configura o Alacritty via Home Manager.
   programs.alacritty = {
     enable = true;
     settings = {

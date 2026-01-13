@@ -1,3 +1,22 @@
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Módulo Home Manager para instalar e configurar o `albert` (launcher) no Linux.
+# - Define config via XDG e serviço systemd user para iniciar junto da sessão gráfica.
+#
+# Por quê:
+# - Padroniza o launcher e comandos de sistema sem depender de configuração manual.
+# - Mantém autostart declarativo e reproduzível.
+#
+# Como:
+# - Ativa somente fora do Darwin via `lib.mkIf (!pkgs.stdenv.isDarwin)`.
+# - Instala `pkgs.albert`, escreve `~/.config/albert/config` e cria `systemd.user.services.albert`.
+#
+# Riscos:
+# - A string `command_logout` depende de ferramentas do ambiente (hyprctl/jq/kdotool).
+# - Mudanças no desktop session podem exigir ajuste nos comandos.
+# =============================================================================
 {
   pkgs,
   lib,
@@ -5,10 +24,10 @@
 }:
 {
   config = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    # Pacote do Albert
+    # Pacote do Albert.
     home.packages = [ pkgs.albert ];
 
-    # Importa a configuração do Albert a partir do store do Home Manager
+    # Importa a configuração do Albert a partir do store do Home Manager.
     xdg.configFile."albert/config".text = ''
       [General]
       frontend=widgetsboxmodel-ng
@@ -55,6 +74,7 @@
       showCentered=true
     '';
 
+    # Serviço systemd user para iniciar o Albert na sessão gráfica.
     systemd.user.services.albert = {
       Unit = {
         Description = "Albert Launcher";

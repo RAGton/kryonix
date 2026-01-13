@@ -1,3 +1,21 @@
+# Flake principal do repo
+# Autor: rag
+#
+# O que é
+# - Fonte única de verdade (flakes) para NixOS e nix-darwin das máquinas.
+# - Centraliza inputs, overlays e outputs (nixosConfigurations/homeConfigurations).
+#
+# Por quê
+# - Reprodutibilidade: mesmos inputs -> mesmo resultado.
+# - Portabilidade: mesma base para Linux e macOS.
+# - Manutenção: entradas e saídas claras num único lugar.
+#
+# Como
+# - Inputs: nixpkgs (unstable + stable), home-manager, plasma-manager, nix-darwin etc.
+# - Outputs: funções `mkNixosConfiguration`/`mkDarwinConfiguration` para montar hosts.
+#
+# Riscos
+# - Atualizar pins (nixpkgs/home-manager) pode introduzir regressões; prefira atualizar de forma incremental.
 {
   description = "Configurações NixOS e nix-darwin das minhas máquinas";
 

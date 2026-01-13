@@ -1,6 +1,22 @@
+#+#+#+#+####################################################################
+# Home Manager: Waybar
+# Autor: rag
+#
+# O que é
+# - Configura a barra (Waybar) usada no Hyprland.
+#
+# Por quê
+# - Deixa o status bar declarativo e versionado.
+#
+# Como
+# - `programs.waybar.settings` define layout/módulos.
+# - `programs.waybar.style` define CSS.
+#
+# Riscos
+# - Módulos dependem de binários externos (swaync-client, wf-recorder etc.).
 { ... }:
 {
-  # Instala e configura o Waybar via módulo do Home Manager
+  # Instala e configura o Waybar via Home Manager.
   programs.waybar = {
     enable = true;
     systemd.enable = true;

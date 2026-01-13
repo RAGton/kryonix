@@ -1,6 +1,22 @@
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Módulo Home Manager para habilitar e configurar o `wofi` (launcher para Wayland).
+#
+# Por quê:
+# - Padroniza atalhos e tamanho do launcher entre máquinas.
+# - Facilita navegação por teclado (Ctrl-j/Ctrl-k) no estilo Vim.
+#
+# Como:
+# - Habilita `programs.wofi` e define `settings`.
+#
+# Riscos:
+# - Alguns settings podem variar por versão/tema; ajuste se necessário.
+# =============================================================================
 { ... }:
 {
-  # Instala o wofi via módulo do Home Manager
+  # Instala e configura o wofi via Home Manager.
   programs.wofi = {
     enable = true;
     settings = {

@@ -1,22 +1,39 @@
+# Módulo NixOS: Desktop Hyprland
+# Autor: rag
+#
+# O que é
+# - Habilita Hyprland (Wayland compositor) e integrações de sessão (GDM, portals, polkit, keyring).
+# - Instala um conjunto de ferramentas comuns para uso diário no Hyprland.
+#
+# Por quê
+# - Deixa o ambiente Wayland completo e consistente logo após `nixos-rebuild`.
+# - Evita configurar manualmente serviços essenciais (portal/polkit/keyring).
+#
+# Como
+# - Ativa GDM e atualiza ambiente DBus no login.
+# - Configura `programs.hyprland` e pacotes auxiliares.
+#
+# Riscos
+# - `xdg-desktop-portal-wlr` pode conflitar com outros portals dependendo do stack; validar em upgrades.
 { pkgs, ... }:
 {
-  # Habilita o display manager GDM
+  # Display manager.
   services.displayManager.gdm.enable = true;
 
-  # Chama dbus-update-activation-environment no login
+  # Mantém variáveis do ambiente exportadas para a sessão via DBus.
   services.xserver.updateDbusEnvironment = true;
 
-  # Habilita suporte a Bluetooth
+  # Bluetooth.
   services.blueman.enable = true;
 
-  # Habilita Hyprland
+  # Hyprland.
   programs.hyprland = {
     enable = true;
     portalPackage = pkgs.xdg-desktop-portal-wlr;
     withUWSM = true;
   };
 
-  # Habilita serviços de segurança
+  # Segurança/integração da sessão.
   services.gnome.gnome-keyring.enable = true;
   security.polkit.enable = true;
   security.pam.services = {
@@ -24,7 +41,7 @@
     gdm.enableGnomeKeyring = true;
   };
 
-  # Lista de pacotes específicos do Hyprland
+  # Pacotes auxiliares do stack Hyprland.
   environment.systemPackages = with pkgs; [
     file-roller # gerenciador de arquivos compactados
     gnome-calculator

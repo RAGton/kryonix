@@ -1,3 +1,20 @@
+# Home Manager: Desktop Hyprland (config do usuário)
+# Autor: rag
+#
+# O que é
+# - Configuração do ambiente Hyprland do usuário (configs em ~/.config/hypr, serviços e tema).
+# - Integra módulos auxiliares (gtk/qt/wallpaper/xdg, waybar, swaync, kanshi etc.).
+#
+# Por quê
+# - Mantém o setup Wayland consistente e reprodutível em máquinas novas.
+# - Centraliza o “stack” do Hyprland no Home Manager.
+#
+# Como
+# - Importa módulos do repo via `nhModules`.
+# - Publica arquivos de config do Hyprland via `xdg.configFile`.
+#
+# Riscos
+# - Alterações em portals/serviços podem impactar notificações/clipboard/idle/lock.
 {
   config,
   lib,
@@ -27,7 +44,7 @@
     size = 24;
   };
 
-  # Importa a configuração do Hyprland a partir do store do Home Manager
+  # Publica a configuração do Hyprland a partir do store do Home Manager.
   xdg.configFile = {
     "hypr/hyprland.conf" = {
       source = ./hyprland.conf;

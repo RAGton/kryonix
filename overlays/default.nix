@@ -1,3 +1,21 @@
+# Overlays do repo (extensões/alterações de pacotes)
+# Autor: rag
+#
+# O que é
+# - Conjunto de overlays reutilizáveis aplicados via `nixpkgs.overlays`.
+# - Aqui ficam overrides pontuais (ex.: pin de pacote, patch temporário).
+#
+# Por quê
+# - Mantém customizações isoladas do restante dos módulos.
+# - Facilita reuso entre hosts e evita duplicação.
+#
+# Como
+# - Cada overlay é uma função `final: prev: { ... }`.
+# - Hosts/módulos escolhem quais overlays aplicar (ordem importa).
+#
+# Riscos
+# - Overlays podem mascarar bugs do upstream e dificultar upgrades.
+# - Patches temporários devem ser revisados/removidos quando o upstream corrigir.
 { inputs, ... }:
 {
   # Quando aplicado, o conjunto estável do nixpkgs (declarado nos inputs da flake)
@@ -43,9 +61,22 @@
     });
   };
 
-  # Workaround: o DrKonqi aborta ao gerar backtrace quando algum mapeamento ELF
-  # no core não tem Build-ID (ex.: libxcb-damage). A gente ignora esses módulos
-  # em vez de falhar toda a coleta.
+  # Workaround (DrKonqi): evita falha na coleta de backtrace.
+  #
+  # O que é
+  # - Um override do `kdePackages.drkonqi` para tolerar módulos sem Build-ID no core.
+  #
+  # Por quê
+  # - Em alguns cores (Qt/Wayland/X11), pode existir mapeamento ELF sem Build-ID
+  #   (ex.: libxcb-damage). O DrKonqi abortava a coleta por causa disso.
+  #
+  # Como
+  # - Ajusta `src/data/gdb_preamble/preamble.py` no `postPatch` para ignorar
+  #   `NoBuildIdException` durante `resolve_modules()`.
+  #
+  # Riscos
+  # - Se o upstream mudar o trecho alvo, o build falha com mensagem explícita,
+  #   evitando aplicar uma alteração incorreta silenciosamente.
   drkonqi-ignore-missing-buildid = final: prev: {
     kdePackages = prev.kdePackages.overrideScope (kfinal: kprev: {
       drkonqi = kprev.drkonqi.overrideAttrs (old: {

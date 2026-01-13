@@ -1,3 +1,19 @@
+# Host: Glacier (NixOS)
+# Autor: rag
+#
+# O que é
+# - Configuração do sistema para a máquina Glacier (imports + ajustes específicos do host).
+#
+# Por quê
+# - Mantém o host “fino”: só hardware/host-specific e imports de módulos reutilizáveis.
+# - Facilita replicar/alterar comportamento sem duplicar lógica.
+#
+# Como
+# - Importa nixos-hardware + hardware-configuration.
+# - Importa módulos comuns do repo (common/desktop/kernel/virtualização).
+#
+# Riscos
+# - Parâmetros de kernel e drivers (NVIDIA/AMD) são sensíveis: mudanças podem afetar boot e Wayland.
 {
   inputs,
   hostname,
@@ -30,9 +46,9 @@
 
   system.stateVersion = "25.11";
 
-  ## -------------------------
-  ## Boot / Kernel
-  ## -------------------------
+  # =========================
+  # Boot / Kernel
+  # =========================
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -42,17 +58,17 @@
       };
     };
 
-    # Kernel params globais
+    # Kernel params globais.
     kernelParams = [
       "rootflags=subvol=@,compress=zstd,noatime"
 
-      # AMD / performance (espelha /etc/nixos)
+      # AMD / performance (espelha /etc/nixos).
       "amd_pstate=active"
       "processor.max_cstate=5"
       "idle=nomwait"
       "threadirqs"
 
-      # NVIDIA (espelha /etc/nixos)
+      # NVIDIA (espelha /etc/nixos).
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
     ];
@@ -61,9 +77,9 @@
     initrd.systemd.enable = true;
   };
 
-  ## -------------------------
-  ## NVIDIA (RTX 4060)
-  ## -------------------------
+  # =========================
+  # NVIDIA (RTX 4060)
+  # =========================
   services.xserver.enable = lib.mkDefault true;
   services.xserver.videoDrivers = [ "nvidia" ];
 

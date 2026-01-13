@@ -1,6 +1,25 @@
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Módulo Home Manager para configurar `swaync` (notification daemon) no Wayland.
+#
+# Por quê:
+# - Centraliza preferências de notificações (tamanho, agrupamento, filtros).
+# - Inclui ação para focar a janela do app a partir da notificação (Hyprland).
+#
+# Como:
+# - Habilita `services.swaync` e define `settings`.
+# - Usa `notification-action-filter` para esconder notificações específicas.
+# - Define script `focus-window` que chama `hyprctl`.
+#
+# Riscos:
+# - O script de foco depende de Hyprland (`hyprctl`); em outros DE/WM pode não funcionar.
+# - Filtros por texto/id podem quebrar se o app mudar strings.
+# =============================================================================
 { ... }:
 {
-  # Gerencia o serviço do swaync via Home Manager
+  # Gerencia o serviço do swaync via Home Manager.
   services.swaync = {
     enable = true;
     settings = {

@@ -1,3 +1,22 @@
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Módulo Home Manager para habilitar o `EasyEffects` e publicar presets.
+# - Define um preset padrão para microfone (ex.: rnnoise/compressor/limiter).
+#
+# Por quê:
+# - Mantém a cadeia de áudio do microfone consistente entre máquinas.
+# - Evita reconfigurar filtros manualmente após reinstalar/rebuild.
+#
+# Como:
+# - Em Linux, habilita `services.easyeffects` e seleciona `preset = "mic"`.
+# - Escreve `~/.config/easyeffects/input/mic.json` via `xdg.configFile`.
+#
+# Riscos:
+# - Presets podem ser específicos do hardware (microfone/ganho) e precisar ajuste por host.
+# - Mudanças no formato de preset entre versões podem exigir atualização do JSON.
+# =============================================================================
 {
   lib,
   pkgs,
@@ -5,13 +24,13 @@
 }:
 {
   config = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    # Instala o EasyEffects via módulo do Home Manager
+    # Instala o EasyEffects via módulo do Home Manager.
     services.easyeffects = {
       enable = true;
       preset = "mic";
     };
 
-    # Importa o preset do EasyEffects a partir do store do Home Manager
+    # Importa o preset do EasyEffects a partir do store do Home Manager.
     xdg.configFile = {
       "easyeffects/input/mic.json".text = ''
         {

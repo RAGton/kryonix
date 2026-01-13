@@ -1,6 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Script para restaurar um backup do perfil do Zen Browser (Flatpak).
+#
+# Por quê:
+# - Recupera rapidamente perfil/sessão sem reconfigurar tudo do zero.
+#
+# Como:
+# - Valida argumento (arquivo `.tgz`), garante que o Zen está fechado.
+# - Faz backup do estado atual (rename) antes de sobrescrever.
+# - Extrai o tarball para `~/.var/app`.
+#
+# Riscos:
+# - Pode sobrescrever/perder o perfil atual (apesar do backup `.bak.*`).
+# - Backup inválido pode deixar o perfil incompleto.
+# =============================================================================
+
 # Restaura um backup do perfil do Zen Browser (Flatpak).
 # Uso: zen-profile-restore /caminho/para/zen-profile-YYYYmmdd-HHMMSS.tgz
 

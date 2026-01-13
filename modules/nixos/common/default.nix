@@ -1,3 +1,20 @@
+# Módulo NixOS: base comum (todos os hosts)
+# Autor: rag
+#
+# O que é
+# - Configuração “base” do sistema: nixpkgs/overlays, boot defaults, locale, rede, variáveis de sessão e pacotes comuns.
+# - Importa módulos de serviços e programas compartilhados (Steam, gaming, TLP, Snapper).
+#
+# Por quê
+# - Evita duplicação entre hosts.
+# - Mantém os hosts finos (imports + hardware/ajustes específicos).
+#
+# Como
+# - Usa `nixpkgs.overlays` do repo.
+# - Configura `nix.registry`/`NIX_PATH` para facilitar comandos e compat.
+#
+# Riscos
+# - Alterações aqui impactam todas as máquinas; mudanças devem ser testadas em pelo menos um host antes de propagar.
 {
   inputs,
   outputs,
@@ -16,7 +33,7 @@
     ../services/tlp
     ../services/snapper
   ];
-  # Configuração do nixpkgs
+  # nixpkgs: overlays e allowUnfree no nível do sistema.
   nixpkgs = {
     overlays = [
       outputs.overlays.stable-packages
@@ -29,25 +46,25 @@
     };
   };
 
-  # Registra os inputs da flake para comandos do nix
+  # Registra inputs da flake no registry (melhora UX com comandos `nix ...`).
   nix.registry = lib.mapAttrs (_: flake: { inherit flake; }) (
     lib.filterAttrs (_: lib.isType "flake") inputs
   );
 
-  # Expõe inputs via canais legados (NIX_PATH)
+  # Compat: expõe inputs via NIX_PATH (canais legados).
   nix.nixPath = [ "/etc/nix/path" ];
   environment.etc = lib.mapAttrs' (name: value: {
     name = "nix/path/${name}";
     value.source = value.flake;
   }) config.nix.registry;
 
-  # Ajustes do Nix
+  # Nix: ajustes globais.
   nix.settings = {
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;
   };
 
-  # Ajustes de boot
+  # Boot: defaults pensados para reduzir ruído e melhorar UX.
   boot = {
     consoleLogLevel = 0;
     initrd.verbose = false;

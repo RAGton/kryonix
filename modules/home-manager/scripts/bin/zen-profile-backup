@@ -1,6 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Script de backup do perfil do Zen Browser (Flatpak) em um tarball.
+#
+# Por quê:
+# - Permite migrar/restaurar sessão, extensões e preferências rapidamente.
+#
+# Como:
+# - Verifica se o Zen está instalado em `~/.var/app/app.zen_browser.zen`.
+# - Garante que o Zen não está rodando.
+# - Cria um `.tgz` com o diretório do app dentro de `~/Backups/zen-browser/`.
+#
+# Riscos:
+# - Inclui dados sensíveis (cookies/tokens/sessões); não versionar e preferir armazenamento criptografado.
+# =============================================================================
+
 # Backup do perfil do Zen Browser (Flatpak).
 # ATENÇÃO: isso inclui cookies/tokens/sessões (contas logadas). NÃO coloque o arquivo gerado no git.
 

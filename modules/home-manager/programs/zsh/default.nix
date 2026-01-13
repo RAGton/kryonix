@@ -1,3 +1,22 @@
+#+#+#+#+####################################################################
+# Home Manager: Zsh + Powerlevel10k
+# Autor: rag
+#
+# O que é
+# - Define Zsh como shell do usuário com plugins via Nix.
+# - Carrega Powerlevel10k e uma configuração P10k versionada no repo.
+# - Exibe `fastfetch` no primeiro prompt de cada sessão interativa.
+#
+# Por quê
+# - Padroniza o shell entre hosts.
+# - Evita drift: o `.p10k.zsh` vem do Nix store e não depende de arquivos locais não-versionados.
+#
+# Como
+# - Gera `~/.config/zsh/.p10k.zsh` via `home.file`.
+# - Inicializa P10k e plugins no `initContent`.
+#
+# Riscos
+# - Se `fastfetch` falhar, ele é ignorado (`|| true`) para não quebrar o shell.
 { pkgs, lib, ... }:
 
 {

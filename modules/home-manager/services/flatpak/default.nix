@@ -1,3 +1,22 @@
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Módulo Home Manager para habilitar `flatpak` e declarar uma lista de apps.
+# - Ajusta `xdg.systemDirs.data` para expor exports do Flatpak ao desktop.
+#
+# Por quê:
+# - Alguns apps (ex.: Zen Browser) são instalados via Flatpak por conveniência/compat.
+# - Mantém a lista de apps e updates de forma declarativa e reproduzível.
+#
+# Como:
+# - Importa `inputs.nix-flatpak.homeManagerModules.nix-flatpak`.
+# - Em Linux, habilita `services.flatpak`, instala `pkgs.flatpak` e configura XDG.
+#
+# Riscos:
+# - Flatpaks são estado fora do Nix store; podem falhar sem rede/repo.
+# - `uninstallUnmanaged = true` remove flatpaks não declarados (cuidado com apps instalados manualmente).
+# =============================================================================
 {
   config,
   inputs,

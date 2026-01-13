@@ -1,3 +1,20 @@
+# Home Manager: Desktop KDE Plasma (config do usuário)
+# Autor: rag
+#
+# O que é
+# - Configuração do KDE Plasma via `plasma-manager` (painéis, KWin, fontes, atalhos, etc.).
+# - Instala pacotes auxiliares do desktop (plasmoids, temas, utilitários).
+#
+# Por quê
+# - Mantém o desktop 100% declarativo e reprodutível (sem depender de cliques na GUI).
+# - Evita regressões: `overrideConfig = true` reaplica o estado conhecido.
+#
+# Como
+# - Importa `inputs.plasma-manager.homeModules.plasma-manager`.
+# - Usa `programs.plasma.*` para gerar os arquivos de config do Plasma.
+#
+# Riscos
+# - Com `overrideConfig = true`, mudanças via GUI serão sobrescritas no próximo `home-manager switch`.
 {
   config,
   inputs,
@@ -7,7 +24,7 @@
   ...
 }:
 {
-    imports = [
+  imports = [
     inputs.plasma-manager.homeModules.plasma-manager
     "${nhModules}/misc/wallpaper"
   ];
@@ -23,7 +40,7 @@
     nordzy-cursor-theme
   ];
 
-  # Silencia aviso de mudança futura do zsh dotDir
+  # Silencia aviso de mudança futura do zsh dotDir.
   programs.zsh.dotDir = config.home.homeDirectory;
 
   # Define o gpg-agent específico para KDE/KWallet

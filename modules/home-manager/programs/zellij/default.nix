@@ -1,3 +1,23 @@
+# =============================================================================
+# Autor: rag
+#
+# O que é:
+# - Módulo Home Manager que instala o `zellij` e gera uma configuração base.
+# - Inclui um script simples para iniciar o zellij pelo PATH.
+#
+# Por quê:
+# - Substitui o uso do tmux, mantendo atalhos e fluxo parecidos.
+# - Evita dependência de configuração manual em `~/.config/zellij`.
+#
+# Como:
+# - Instala `pkgs.zellij` via `home.packages`.
+# - Gera `~/.config/zellij/config.kdl` via `home.file.*.text`.
+# - Publica `~/bin/start-zellij` para facilitar execução.
+#
+# Riscos:
+# - Como a config é gerada, alterações manuais em `~/.config/zellij/config.kdl` podem ser sobrescritas.
+# - Atalhos/comandos podem mudar entre versões do zellij.
+# =============================================================================
 { pkgs, ... }:
 {
   # Instala o Zellij e fornece uma config "traduzida" a partir do tmux.

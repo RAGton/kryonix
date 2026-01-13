@@ -1,3 +1,18 @@
+# Host: inspiron (NixOS)
+# Autor: rag
+#
+# O que é
+# - Configuração do sistema para a máquina inspiron (imports + ajustes específicos do host).
+#
+# Por quê
+# - Mantém o host “fino”: hardware + integrações específicas, reaproveitando módulos do repo.
+#
+# Como
+# - Importa nixos-hardware + hardware-configuration.
+# - Importa módulos comuns (common/desktop/kernel/virtualização).
+#
+# Riscos
+# - Ajustes de kernel/energia/filesystem podem afetar boot e estabilidade; revisar após upgrades.
 {
   inputs,
   hostname,
@@ -27,7 +42,7 @@
 
   networking.hostName = hostname;
 
-  # UniFi Network Application (Controller)
+  # UniFi Network Application (Controller).
   services.unifi = {
     enable = true;
     openFirewall = true;
@@ -35,9 +50,9 @@
 
   system.stateVersion = "25.11";
 
-  ## -------------------------
-  ## Boot / Kernel
-  ## -------------------------
+  # =========================
+  # Boot / Kernel
+  # =========================
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -47,7 +62,7 @@
       };
     };
 
-    # Kernel params globais
+    # Kernel params globais.
     kernelParams = [
       "rootflags=subvol=@,compress=zstd,noatime"
     ];
@@ -56,16 +71,16 @@
     initrd.systemd.enable = true;
   };
 
-  ## -------------------------
-  ## Kernel Zen (ajustado)
-  ## -------------------------
+  # =========================
+  # Kernel Zen (ajustado)
+  # =========================
   kernelZen = {
     enable = true;
 
     kernel = "xanmod";
     forceLocalBuild = true;
 
-    # ⚠️ só recomendo isso se for desktop single-user
+    # ⚠️ só recomendo isso se for desktop single-user.
     disableMitigations = lib.mkDefault false;
 
     extraKernelParams = [
@@ -74,9 +89,9 @@
     ];
   };
 
-  ## -------------------------
-  ## Filesystem (Btrfs)
-  ## -------------------------
+  # =========================
+  # Filesystem (Btrfs)
+  # =========================
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/a551eedc-61b1-458b-8d4d-99e7ddcc0b1a";
     fsType = "btrfs";

@@ -1,3 +1,20 @@
+# Home Manager: módulo comum (base do usuário)
+# Autor: rag
+#
+# O que é
+# - Ponto de entrada de configuração do Home Manager para o usuário.
+# - Agrega imports de programas/serviços e define variáveis de sessão comuns.
+#
+# Por quê
+# - Mantém os `home/*/default.nix` (por-host) pequenos e focados.
+# - Centraliza defaults consistentes entre máquinas.
+#
+# Como
+# - Importa módulos em `modules/home-manager/**`.
+# - Define `home.username`, `home.homeDirectory`, `home.sessionVariables`.
+#
+# Riscos
+# - Variáveis de sessão podem afetar apps Electron/Qt; mudanças devem ser testadas em Wayland/X11.
 {
   outputs,
   userConfig,
@@ -32,7 +49,7 @@
     ../scripts
   ];
 
-  # Nixpkgs configuration
+  # Nixpkgs (Home Manager): overlays e allowUnfree no escopo do usuário.
   nixpkgs = {
     overlays = [
       outputs.overlays.stable-packages
@@ -43,25 +60,25 @@
     };
   };
 
-  # Recarrega unidades do systemd de forma suave ao mudar configs
+  # Recarrega unidades do systemd de forma suave ao mudar configs.
   systemd.user.startServices = "sd-switch";
 
-  # Configuração do Home Manager para o ambiente do usuário
+  # Identidade do usuário (paths variam entre Linux e macOS).
   home = {
     username = "${userConfig.name}";
     homeDirectory =
       if pkgs.stdenv.isDarwin then "/Users/${userConfig.name}" else "/home/${userConfig.name}";
   };
 
-  # Ajustes de sessão (principalmente Electron/VS Code em Wayland)
+  # Ajustes de sessão (principalmente Electron/VS Code em Wayland).
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
     GTK_USE_PORTAL = "1";
 
-    # Kvantum é um estilo de Qt Widgets, não um estilo de Qt Quick.
-    # Se Qt Quick Controls tentar carregar "kvantum" como módulo QML,
-    # o Plasma quebra (wallpaper/overview) e pode ficar tudo preto.
+    # Qt Quick Controls: evitar estilos QML incompatíveis.
+    # Kvantum é para Qt Widgets; se Qt Quick tentar carregar "kvantum" como QML,
+    # o Plasma pode quebrar (wallpaper/overview) e ficar com tela preta.
     QT_QUICK_CONTROLS_STYLE = "org.kde.desktop";
   };
 
