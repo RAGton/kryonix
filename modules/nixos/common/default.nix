@@ -154,6 +154,17 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
+
+    # Baixa latência (bom para games + uso "studio").
+    # Mantido com mkDefault para facilitar override por host.
+    extraConfig.pipewire."92-low-latency" = {
+      context.properties = {
+        default.clock.rate = lib.mkDefault 48000;
+        default.clock.quantum = lib.mkDefault 128;
+        default.clock.min-quantum = lib.mkDefault 64;
+        default.clock.max-quantum = lib.mkDefault 2048;
+      };
+    };
   };
 
   # Flatpak (sistema) + gerenciamento declarativo via nix-flatpak
@@ -217,6 +228,8 @@
     killall
     mesa
     openrgb-git
+    podman
+    distrobox
   ];
 
   # Regras udev para permitir acesso do OpenRGB aos dispositivos.
@@ -227,6 +240,7 @@
     containers.enable = true;
     podman = {
       enable = true;
+      dockerCompat = true;
       defaultNetwork.settings.dns_enabled = true;
     };
   };

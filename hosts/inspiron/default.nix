@@ -27,6 +27,12 @@
 
   networking.hostName = hostname;
 
+  # UniFi Network Application (Controller)
+  services.unifi = {
+    enable = true;
+    openFirewall = true;
+  };
+
   system.stateVersion = "25.11";
 
   ## -------------------------

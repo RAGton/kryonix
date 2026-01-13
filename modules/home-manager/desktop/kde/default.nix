@@ -220,16 +220,6 @@
         floating = false;
         opacity = "translucent";
         widgets = [
-          # Logo do NixOS (sem launcher/menu)
-          {
-            name = "org.kde.plasma.icon";
-            config = {
-              General = {
-                icon = "nixos";
-              };
-            };
-          }
-
           # Seletor de usuário (igual ao appletsrc)
           {
             name = "org.kde.plasma.userswitcher";

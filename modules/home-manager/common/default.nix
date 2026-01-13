@@ -96,6 +96,10 @@
     ]
     ++ lib.optionals (!stdenv.isDarwin) [
       anki
+      helvum
+      postman
+      pavucontrol
+      qpwgraph
       tesseract
       unzip
       wl-clipboard
