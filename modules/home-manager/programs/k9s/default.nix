@@ -47,7 +47,4 @@
       };
     };
   };
-
-  # Habilita o tema Catppuccin para o k9s
-  catppuccin.k9s.enable = true;
 }

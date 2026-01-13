@@ -51,7 +51,4 @@
       width = 280;
     };
   };
-
-  # Habilita o tema Catppuccin para o git delta
-  catppuccin.delta.enable = true;
 }

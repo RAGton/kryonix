@@ -6,22 +6,18 @@
 }:
 with lib;
 let
-  variant = config.catppuccin.flavor;
-  accent = config.catppuccin.accent;
-
-  catppuccin-kvantum-pkg = pkgs.catppuccin-kvantum.override { inherit variant accent; };
-  catppuccin-theme-name = "catppuccin-${variant}-${accent}";
-
+  iconThemeName = lib.attrByPath [ "gtk" "iconTheme" "name" ] null config;
+  plasmaEnabled = lib.attrByPath [ "programs" "plasma" "enable" ] false config;
   qtCtAppearanceConfig = generators.toINI { } {
     Appearance = {
-      icon_theme = config.gtk.iconTheme.name;
+      icon_theme = if iconThemeName != null then iconThemeName else "kora";
     };
   };
 
 in
 {
   home.packages = [
-    catppuccin-kvantum-pkg
+    pkgs.kdePackages.qtstyleplugin-kvantum
     pkgs.libsForQt5.qtstyleplugin-kvantum
     pkgs.qt6Packages.qtstyleplugin-kvantum
     pkgs.libsForQt5.qt5ct
@@ -30,18 +26,16 @@ in
 
   qt = {
     enable = true;
-    platformTheme.name = "qtct";
-    style.name = "kvantum";
+    # Em KDE Plasma, evite qt5ct/qt6ct como platform theme (pode quebrar integração
+    # e causar comportamento estranho no Plasma/Qt Quick). Fora do Plasma, qtct é útil.
+    platformTheme.name = if plasmaEnabled then "kde" else "qtct";
+    # Não force Kvantum globalmente: o Plasma (Qt Quick/Kirigami) pode tentar
+    # carregar "kvantum" como estilo QML e quebrar (tela preta, wallpaper).
+    # Kvantum continua instalado e configurado em ~/.config/Kvantum/kvantum.kvconfig.
+    style.name = "breeze";
   };
 
   xdg.configFile = {
-    "Kvantum/${catppuccin-theme-name}".source =
-      "${catppuccin-kvantum-pkg}/share/Kvantum/${catppuccin-theme-name}";
-
-    "Kvantum/kvantum.kvconfig".source = (pkgs.formats.ini { }).generate "kvantum.kvconfig" {
-      General.theme = catppuccin-theme-name;
-    };
-
     qt5ct = {
       target = "qt5ct/qt5ct.conf";
       text = qtCtAppearanceConfig;
@@ -50,6 +44,17 @@ in
     qt6ct = {
       target = "qt6ct/qt6ct.conf";
       text = qtCtAppearanceConfig;
+    };
+
+    # Kvantum: o tema em si (ex.: Edna) normalmente vem do KDE Store ou de
+    # ~/.config/Kvantum/<Tema>. Aqui só selecionamos o nome do tema.
+    kvantum = {
+      target = "Kvantum/kvantum.kvconfig";
+      text = generators.toINI { } {
+        General = {
+          theme = "Edna";
+        };
+      };
     };
   };
 }

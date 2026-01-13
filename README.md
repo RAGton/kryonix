@@ -38,7 +38,6 @@ Idioma: PT-BR (este arquivo) | [English](README-en.md)
 - **home-manager**: gerencia a configuração do usuário.
 - **darwin**: habilita nix-darwin no macOS.
 - **hardware**: módulos de hardware do nixos-hardware.
-- **catppuccin**: tema global Catppuccin.
 - **nix-flatpak**: gerenciamento declarativo de Flatpaks.
 - **plasma-manager**: gerenciamento declarativo do KDE Plasma.
 
@@ -436,8 +435,9 @@ nix flake update
 - **`common`**: base do ambiente do usuário, importando a maior parte dos módulos.
 - **`desktop/hyprland`**: ajustes do Hyprland (binds e serviços como Waybar e Swaync).
 - **`desktop/kde`**: ajustes do KDE Plasma, gerenciados declarativamente com `plasma-manager`.
-- **`misc/gtk`**: tema GTK3/4 (ícones Tela, cursor Yaru, fonte Roboto) + Catppuccin.
-- **`misc/qt`**: tema Qt via Kvantum + Catppuccin (Linux).
+- Manual rápido de painéis (plasma-manager): `docs/plasma-manager-panels-pt_BR.md`
+- **`misc/gtk`**: configuração GTK3/4 (ícones, cursor, fonte) e preferência por modo escuro.
+- **`misc/qt`**: configuração Qt via QtCt + Kvantum (Linux).
 - **`misc/wallpaper`**: define o wallpaper padrão.
 - **`misc/xdg`**: diretórios XDG e associações MIME.
 - **`programs/aerospace` (Darwin):** gerenciador tiling no macOS com regras/binds.

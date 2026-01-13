@@ -78,7 +78,4 @@
       };
     };
   };
-
-  # Habilita o tema Catppuccin para o alacritty.
-  catppuccin.alacritty.enable = true;
 }

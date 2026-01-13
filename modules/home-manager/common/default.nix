@@ -11,6 +11,7 @@
     ../programs/albert
     ../programs/atuin
     ../programs/bat
+    ../programs/mangohud
     ../programs/zen-browser
     ../programs/btop
     ../programs/fastfetch
@@ -57,6 +58,11 @@
     NIXOS_OZONE_WL = "1";
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
     GTK_USE_PORTAL = "1";
+
+    # Kvantum é um estilo de Qt Widgets, não um estilo de Qt Quick.
+    # Se Qt Quick Controls tentar carregar "kvantum" como módulo QML,
+    # o Plasma quebra (wallpaper/overview) e pode ficar tudo preto.
+    QT_QUICK_CONTROLS_STYLE = "org.kde.desktop";
   };
 
   # Garante que os pacotes comuns estejam instalados
@@ -94,10 +100,4 @@
       unzip
       wl-clipboard
     ];
-
-  # Flavor e accent do Catppuccin
-  catppuccin = {
-    flavor = "macchiato";
-    accent = "lavender";
-  };
 }

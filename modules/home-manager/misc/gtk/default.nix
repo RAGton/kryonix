@@ -8,14 +8,6 @@
   gtk = {
     enable = true;
     colorScheme = "dark";
-    theme = {
-      name = "catppuccin-macchiato-lavender-compact";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "lavender" ];
-        variant = "macchiato";
-        size = "compact";
-      };
-    };
     iconTheme = {
       name = "kora";
       package = pkgs.kora-icon-theme;

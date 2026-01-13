@@ -206,36 +206,10 @@
 
     overrideConfig = true;
 
-    # Painéis flutuantes, widgets profissionais (CPU, RAM, Data)
-    # Altere os widgets conforme desejar, tudo declarativo
+    # Layout mais estável: painel superior de monitores + barra de tarefas embaixo.
+    # Ajuste via Nix para não "resetar" após rebuild (overrideConfig = true).
     panels = [
-      # Painel esquerdo (atalhos, menu, etc)
-      {
-        location = "top";
-        height = 36;
-        floating = true;
-        opacity = "translucent";
-        alignment = "left";
-        lengthMode = "fit";
-        widgets = [
-          {
-            name = "org.dhruv8sh.kara";
-            config = {
-              general = {
-                animationDuration = 0;
-                highlightType = 1;
-                spacing = 3;
-                type = 1;
-              };
-              type1 = {
-                fixedLen = 3;
-                labelSource = 0;
-              };
-            };
-          }
-        ];
-      }
-      # Painel central: CPU (por núcleo), RAM, Data/Hora
+      # Painel superior: monitores (CPU e Memória)
       {
         alignment = "center";
         height = 36;
@@ -244,7 +218,6 @@
         location = "top";
         opacity = "translucent";
         widgets = [
-          # CPU (uso individual do núcleo) - espelhado do appletsrc
           {
             name = "org.kde.plasma.systemmonitor.cpucore";
             config = {
@@ -272,26 +245,6 @@
               };
             };
           }
-          # Data/Hora (mantido entre CPU e Memória conforme applet)
-          {
-            name = "org.kde.plasma.digitalclock";
-            config = {
-              PreloadWeight = 65;
-              popupHeight = 451;
-              popupWidth = 560;
-              Appearance = {
-                autoFontAndSize = false;
-                customDateFormat = "ddd MMM d";
-                dateDisplayFormat = "BesideTime";
-                dateFormat = "custom";
-                fontSize = 11;
-                fontStyleName = "Regular";
-                fontWeight = 400;
-                use24hFormat = 2;
-              };
-            };
-          }
-          # Memória (pie chart) - espelhado do appletsrc
           {
             name = "org.kde.plasma.systemmonitor.memory";
             config = {
@@ -314,15 +267,32 @@
           }
         ];
       }
-      # Painel direito (system tray)
+
+      # Barra de tarefas: menu + tarefas + tray + relógio
       {
-        location = "top";
-        height = 36;
-        floating = true;
+        location = "bottom";
+        height = 44;
+        floating = false;
         opacity = "translucent";
-        alignment = "right";
-        lengthMode = "fit";
         widgets = [
+          {
+            name = "org.kde.plasma.kickoff";
+          }
+          {
+            name = "org.kde.plasma.icontasks";
+            config = {
+              General = {
+                # comportamento mais previsível e compatível
+                separateLaunchers = true;
+                showOnlyCurrentScreen = true;
+                showOnlyCurrentDesktop = false;
+                groupMode = 0;
+              };
+            };
+          }
+          {
+            name = "org.kde.plasma.panelspacer";
+          }
           {
             systemTray = {
               icons.scaleToFit = true;
@@ -350,6 +320,24 @@
                     };
                   };
                 };
+              };
+            };
+          }
+          {
+            name = "org.kde.plasma.digitalclock";
+            config = {
+              PreloadWeight = 65;
+              popupHeight = 451;
+              popupWidth = 560;
+              Appearance = {
+                autoFontAndSize = false;
+                customDateFormat = "ddd MMM d";
+                dateDisplayFormat = "BesideTime";
+                dateFormat = "custom";
+                fontSize = 11;
+                fontStyleName = "Regular";
+                fontWeight = 400;
+                use24hFormat = 2;
               };
             };
           }
@@ -553,10 +541,18 @@
     workspace = {
       enableMiddleClickPaste = false;
       clickItemTo = "select";
-      colorScheme = "EdnaDark"; # ou EdnaLight para modo claro
+      # Plasma 6 (plasma-manager): IDs vêm de
+      # - plasma-apply-lookandfeel --list
+      # - plasma-apply-desktoptheme --list-themes
+      # - plasma-apply-colorscheme --list-schemes
+      theme = "Edna";
+      colorScheme = "Edna";
+      # Aurorae (decoração de janelas) - Tema: https://store.kde.org/p/1528961
+      windowDecorations = {
+        library = "org.kde.kwin.aurorae";
+        theme = "__aurorae__svg__Edna";
+      };
       cursor.theme = "Nordzy-cursors";
-      splashScreen.engine = "none";
-      splashScreen.theme = "none";
       tooltipDelay = 1;
       wallpaper = config.wallpaper;
     };
@@ -589,7 +585,7 @@
         Plugins = {
           blurEnabled = false;        # Edna é clean
           dimscreenEnabled = false;
-          krohnkiteEnabled = true;
+          krohnkiteEnabled = false;
           screenedgeEnabled = false;
         };
         "Round-Corners" = {
@@ -651,6 +647,23 @@
       "dolphin/view_properties/global/.directory"."Settings"."HiddenFilesShown" = true;
     };
   };
+
+  # Mitigação: alguns plasmoids instalados manualmente (KDE Store) quebram no Plasma 6
+  # e podem causar crashes/bug no diálogo de configuração de widgets.
+  # Aqui nós só movemos para uma pasta "disabled" (sem apagar) para recuperar estabilidade.
+  home.activation.disable-broken-plasmoids = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    disabled_dir="$HOME/.local/share/plasma/plasmoids-disabled"
+    mkdir -p "$disabled_dir"
+
+    for name in org.kpple.kppleMenu Weather.IntiSol.kde org.dhruv8sh.kara; do
+      src="$HOME/.local/share/plasma/plasmoids/$name"
+      if [ -d "$src" ]; then
+        ts="$(date +%Y%m%d-%H%M%S)"
+        dst="$disabled_dir/$name-$ts"
+        mv "$src" "$dst"
+      fi
+    done
+  '';
 
   # Hardening: evita falhas do plasma-manager quando não há sessão gráfica ativa.
   # Isso reduz "user systemd degraded" e previne timeouts no sd-switch.

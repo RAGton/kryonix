@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Wrapper para rodar Steam com variáveis "seguras" pro Proton.
+# Útil para evitar regressões com HDR/Wayland em alguns jogos.
+
+if command -v proton-safe >/dev/null 2>&1; then
+  exec proton-safe steam "$@"
+fi
+
+export PROTON_ENABLE_WAYLAND=0
+export PROTON_ENABLE_HDR=0
+export DXVK_HDR=0
+
+exec steam "$@"

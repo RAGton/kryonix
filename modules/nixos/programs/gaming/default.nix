@@ -22,6 +22,8 @@
     vkbasalt
     vulkan-tools
     mesa-demos
+    nvtopPackages.nvidia
+    umu-launcher
     protonup-qt
     protontricks
   ];

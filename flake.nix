@@ -15,9 +15,6 @@
     # Módulos de hardware do NixOS (nixos-hardware)
     hardware.url = "github:nixos/nixos-hardware";
 
-    # Tema global Catppuccin
-    catppuccin.url = "github:catppuccin/nix";
-
     # Gerenciador declarativo de Flatpak
     nix-flatpak.url = "github:gmodena/nix-flatpak?ref=v0.6.0";
 
@@ -38,7 +35,6 @@
   outputs =
     {
       self,
-      catppuccin,
       darwin,
       home-manager,
       nixpkgs,
@@ -95,7 +91,6 @@
           };
           modules = [
             ./home/${username}/${hostname}
-            catppuccin.homeModules.catppuccin
           ];
         };
     in

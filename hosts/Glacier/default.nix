@@ -2,6 +2,7 @@
   inputs,
   hostname,
   nixosModules,
+  config,
   lib,
   ...
 }:
@@ -70,6 +71,12 @@
     modesetting.enable = lib.mkDefault true;
     powerManagement.enable = lib.mkDefault true;
     nvidiaSettings = lib.mkDefault true;
+
+    # Maximiza compat/perf no NixOS: mantém driver sempre alinhado ao kernel atual.
+    package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.latest;
+
+    # Mantém o driver carregado e reduz custo/oscilações ao abrir jogos.
+    nvidiaPersistenced = lib.mkDefault true;
 
     # Obrigatório em drivers >= 560 (configurado explicitamente)
     open = lib.mkDefault false;

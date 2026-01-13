@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Força desligar Wayland + HDR no Proton/DXVK.
+# Útil para contornar crashes (ex.: NVIDIA + HDR/Wayland) em launchers como Heroic/Steam.
+
+export PROTON_ENABLE_WAYLAND=0
+export PROTON_ENABLE_HDR=0
+export DXVK_HDR=0
+
+exec "$@"

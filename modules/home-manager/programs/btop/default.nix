@@ -7,7 +7,4 @@
       vim_keys = true;
     };
   };
-
-  # Habilita o tema Catppuccin para o btop.
-  catppuccin.btop.enable = true;
 }
