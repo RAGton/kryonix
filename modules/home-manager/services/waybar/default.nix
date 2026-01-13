@@ -225,7 +225,7 @@
     };
     style = ''
       * {
-        font-family: "JetBrainsMono Nerd Font";
+        font-family: "CaskaydiaCove Nerd Font";
         font-weight: bold;
         min-height: 0;
         font-size: 100%;

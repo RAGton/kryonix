@@ -37,7 +37,7 @@
 
     fonts = {
       fixedWidth = {
-        family = "JetBrainsMono Nerd Font Mono";
+        family = "CaskaydiaCove Nerd Font Mono";
         pointSize = 11;
       };
       general = {

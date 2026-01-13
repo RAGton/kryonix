@@ -55,19 +55,19 @@
       font = {
         size = if pkgs.stdenv.isDarwin then 15 else 12;
         normal = {
-          family = "MesloLGS Nerd Font";
+          family = "CaskaydiaCove Nerd Font Mono";
           style = "Regular";
         };
         bold = {
-          family = "MesloLGS Nerd Font";
+          family = "CaskaydiaCove Nerd Font Mono";
           style = "Bold";
         };
         italic = {
-          family = "MesloLGS Nerd Font";
+          family = "CaskaydiaCove Nerd Font Mono";
           style = "Italic";
         };
         bold_italic = {
-          family = "MesloLGS Nerd Font";
+          family = "CaskaydiaCove Nerd Font Mono";
           style = "Italic";
         };
       };

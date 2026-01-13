@@ -1,6 +1,17 @@
 { pkgs, lib, ... }:
 
 {
+  home.activation.create-p10k-dir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/.config/zsh"
+  '';
+
+  home.file.".config/zsh/.p10k.zsh" = {
+    # Fonte global compartilhada entre hosts.
+    # Importante: este arquivo precisa estar rastreado no Git para flakes enxergarem.
+    source = ../../../../.p10k.zsh;
+    force = true;
+  };
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -27,6 +38,15 @@
     };
 
     initContent = ''
+      # =========================
+      # Startup (interativo)
+      # =========================
+      if [[ -o interactive ]] && [[ -t 1 ]] && [[ -z "''${RAG_ZSH_STARTUP_BANNER_DONE-}" ]]; then
+        export RAG_ZSH_STARTUP_BANNER_DONE=1
+        clear
+        fastfetch || true
+      fi
+
       # =========================
       # Completion
       # =========================
