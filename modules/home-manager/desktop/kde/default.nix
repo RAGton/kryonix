@@ -681,9 +681,11 @@
       After = [ "graphical-session.target" ];
       Wants = [ "graphical-session.target" ];
       PartOf = [ "graphical-session.target" ];
-      ConditionEnvironment = "WAYLAND_DISPLAY";
     };
     Service = {
+      # O plasma-manager precisa de uma sessão gráfica real.
+      # Em Wayland ele expõe WAYLAND_DISPLAY; em X11 ele expõe DISPLAY.
+      ExecCondition = "${pkgs.runtimeShell} -lc 'test -n \"$WAYLAND_DISPLAY\" || test -n \"$DISPLAY\"'";
       TimeoutStartSec = "20s";
       Nice = 10;
       IOSchedulingClass = "idle";

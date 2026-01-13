@@ -30,6 +30,7 @@
     inputs.nix-flatpak.nixosModules.nix-flatpak
     ../programs/steam
     ../programs/gaming
+    ../programs/wallpaper-engine-kde
     ../services/tlp
     ../services/snapper
   ];
