@@ -17,20 +17,32 @@ let
     else
       null;
 
-  baseKernelPackages =
-    if cfg.kernel == "xanmod" then xanmodKernelPackages else pkgs.linuxPackages_zen;
+  baseKernel =
+    if cfg.kernel == "xanmod" then xanmodKernelPackages.kernel else pkgs.linux_zen;
 
-  kernelPackages =
-    if cfg.forceLocalBuild then
-      baseKernelPackages
-      // {
-        kernel = baseKernelPackages.kernel.overrideAttrs (old: {
-          preferLocalBuild = true;
-          allowSubstitutes = false;
-        });
-      }
+  tunedKernel =
+    if (!cfg.useLLVMStdenv && cfg.extraMakeFlags == [ ]) then
+      baseKernel
     else
-      baseKernelPackages;
+      baseKernel.override (
+        (lib.optionalAttrs cfg.useLLVMStdenv {
+          stdenv = pkgs.llvmPackages_latest.stdenv;
+        })
+        // {
+          extraMakeFlags = cfg.extraMakeFlags;
+        }
+      );
+
+  tunedKernelLocal =
+    if cfg.forceLocalBuild then
+      tunedKernel.overrideAttrs (_old: {
+        preferLocalBuild = true;
+        allowSubstitutes = false;
+      })
+    else
+      tunedKernel;
+
+  kernelPackages = pkgs.linuxPackagesFor tunedKernelLocal;
 in
 {
   ############################
@@ -59,6 +71,30 @@ in
         `allowSubstitutes = false`.
 
         Isso aumenta bastante o tempo de rebuild.
+      '';
+    };
+
+    useLLVMStdenv = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Quando `true`, usa o `stdenv` do LLVM (clang/lld) para build do kernel.
+
+        Útil para tuning de performance e builds com toolchain mais moderna.
+        Pode aumentar tempo de build e, dependendo da versão do nixpkgs/kernel,
+        exigir ajustes adicionais.
+      '';
+    };
+
+    extraMakeFlags = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = ''
+        Flags extras passadas para o `make` do kernel.
+
+        Exemplo (tuning por host):
+        - "KCFLAGS=-march=native -O3"
+        - "KCPPFLAGS=-march=native -O3"
       '';
     };
 
@@ -97,7 +133,7 @@ in
         }
       ];
 
-    # Kernel Zen como padrão (permitindo override)
+    # Kernel como padrão (permitindo override)
     boot.kernelPackages = lib.mkDefault kernelPackages;
 
     # Parâmetros de kernel

@@ -77,8 +77,13 @@
   kernelZen = {
     enable = true;
 
-    kernel = "xanmod";
+    kernel = "zen";
     forceLocalBuild = true;
+    useLLVMStdenv = false;
+    extraMakeFlags = [
+      "KCFLAGS=-march=native"
+      "KCPPFLAGS=-march=native"
+    ];
 
     # ⚠️ só recomendo isso se for desktop single-user.
     disableMitigations = lib.mkDefault false;
@@ -108,6 +113,10 @@
   ## Performance básica
   ## -------------------------
   powerManagement.cpuFreqGovernor = "performance";
+
+  # Gaming/stabilidade: evita serviços que brigam por perfil de energia.
+  services.power-profiles-daemon.enable = lib.mkForce false;
+  services.tlp.enable = lib.mkForce false;
 
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="block", KERNEL=="nvme*", ATTR{queue/scheduler}="none"

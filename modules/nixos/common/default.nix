@@ -63,6 +63,8 @@
   nix.settings = {
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;
+    max-jobs = lib.mkDefault "auto";
+    cores = lib.mkDefault 0;
   };
 
   # Boot: defaults pensados para reduzir ruído e melhorar UX.
@@ -85,6 +87,12 @@
     extraModprobeConfig = ''
       options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
     '';
+
+    # Tuning leve e seguro para desktop/games.
+    kernel.sysctl = {
+      "vm.swappiness" = lib.mkDefault 10;
+      "kernel.sched_latency_ns" = lib.mkDefault 6000000;
+    };
   };
 
   # Mitigação prática contra travamentos por pressão de memória.
@@ -204,6 +212,12 @@
       "com.rtosta.zapzap"
       "org.libreoffice.LibreOffice"
       "org.gimp.GIMP"
+
+      # NVIDIA (Glacier): sem essas extensões, Flatpaks Electron/GUI acabam
+      # usando Mesa sem driver para a GPU e falham com erros tipo:
+      # "egl: failed to create dri2 screen".
+      "org.freedesktop.Platform.GL.nvidia-580-119-02"
+      "org.freedesktop.Platform.GL32.nvidia-580-119-02"
     ];
 
     uninstallUnmanaged = true;

@@ -20,6 +20,7 @@
   nixosModules,
   config,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -71,6 +72,11 @@
       # NVIDIA (espelha /etc/nixos).
       "nvidia-drm.modeset=1"
       "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
+
+      # Jogos (ex: Hogwarts Legacy) podem disparar muitos bus locks e, com
+      # split lock detection ativa, isso vira uma enxurrada de traps (#DB)
+      # que degrada performance e parece "travamento".
+      "split_lock_detect=off"
     ];
 
     # Evita builds inúteis
@@ -88,8 +94,10 @@
     powerManagement.enable = lib.mkDefault true;
     nvidiaSettings = lib.mkDefault true;
 
-    # Maximiza compat/perf no NixOS: mantém driver sempre alinhado ao kernel atual.
-    package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.latest;
+    # Estabilidade (KDE Wayland): o ramo `latest` costuma trazer regressões no EGL
+    # (vimos coredumps do kwin_wayland/plasmashell em libnvidia-eglcore/libEGL_nvidia).
+    # O ramo `production` tende a ser mais estável para desktop.
+    package = lib.mkDefault config.boot.kernelPackages.nvidiaPackages.production;
 
     # Mantém o driver carregado e reduz custo/oscilações ao abrir jogos.
     nvidiaPersistenced = lib.mkDefault true;
@@ -103,14 +111,35 @@
     prime.sync.enable = lib.mkForce false;
   };
 
+  # O nvidia-persistenced às vezes é reiniciado durante `nixos-rebuild switch`.
+  # Dependendo do timing, ele pode subir antes dos nodes `/dev/nvidia*` existirem,
+  # falhar, e isso faz o switch abortar.
+  systemd.services.nvidia-persistenced = {
+    after = [ "systemd-udev-settle.service" ];
+    wants = [ "systemd-udev-settle.service" ];
+    serviceConfig = {
+      RuntimeDirectory = "nvidia-persistenced";
+      RuntimeDirectoryMode = "0755";
+      ExecStartPre = [
+        # Espera (até ~5s) pelos device nodes do driver NVIDIA.
+        "${pkgs.runtimeShell} -lc 'for i in $(seq 1 50); do [ -e /dev/nvidiactl ] && [ -e /dev/nvidia0 ] && exit 0; sleep 0.1; done; exit 1'"
+      ];
+    };
+  };
+
   ## -------------------------
   ## Kernel Zen (ajustado)
   ## -------------------------
   kernelZen = {
     enable = true;
 
-    kernel = "xanmod";
+    kernel = "zen";
     forceLocalBuild = true;
+    useLLVMStdenv = false;
+    extraMakeFlags = [
+      "KCFLAGS=-march=native"
+      "KCPPFLAGS=-march=native"
+    ];
 
     # ⚠️ só recomendo isso se for desktop single-user
     disableMitigations = lib.mkDefault true;
@@ -126,8 +155,8 @@
   ## -------------------------
   powerManagement.cpuFreqGovernor = "performance";
 
-  # No /etc/nixos você usa power-profiles-daemon; o módulo TLP desabilita.
-  services.power-profiles-daemon.enable = lib.mkForce true;
+  # Gaming/stabilidade: evita serviços que brigam por perfil de energia.
+  services.power-profiles-daemon.enable = lib.mkForce false;
 
   # Evita conflito: o módulo comum habilita TLP por padrão.
   services.tlp.enable = lib.mkForce false;

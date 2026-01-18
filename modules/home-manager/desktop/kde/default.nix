@@ -27,6 +27,7 @@
   imports = [
     inputs.plasma-manager.homeModules.plasma-manager
     "${nhModules}/misc/wallpaper"
+    "${nhModules}/programs/rofi"
   ];
 
   home.packages = with pkgs; [
@@ -151,9 +152,9 @@
         command = "spectacle --fullscreen --nonotify";
       };
       show-all-applications = {
-        name = "Show all applications in Albert";
+        name = "Show all applications (Rofi)";
         key = "Meta+A";
-        command = ''albert show "apps "'';
+        command = "rofi -modi drun,run -show drun";
       };
     };
 
@@ -585,7 +586,16 @@
         Effect-overview.BorderActivate = 9;
         Plugins = {
           # Transparência/efeitos
-          blurEnabled = true;
+          # Estabilidade (NVIDIA/Wayland): o BlurEffect tem histórico de crashar
+          # o compositor (kwin_wayland) em alguns drivers/combinações de efeitos.
+          blurEnabled = false;
+
+          # Estabilidade: o efeito de cantos arredondados via ShapeCorners
+          # (`kwin4_effect_shapecorners`) aparece nos coredumps do kwin_wayland.
+          # Desabilitamos de forma explícita para evitar que o KWin carregue o plugin.
+          kwin4_effect_shapecornersEnabled = false;
+          shapecornersEnabled = false;
+
           dimscreenEnabled = false;
           krohnkiteEnabled = false;
           screenedgeEnabled = false;

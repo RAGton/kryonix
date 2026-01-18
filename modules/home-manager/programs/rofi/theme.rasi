@@ -1,0 +1,11 @@
+/*
+  Tema mínimo do Rofi.
+
+  - Este arquivo existe para tornar o tema declarativo (via Home Manager).
+  - Você pode substituir por um tema completo (.rasi) quando quiser.
+*/
+
+configuration {
+  show-icons: true;
+  drun-display-format: "{name}";
+}
