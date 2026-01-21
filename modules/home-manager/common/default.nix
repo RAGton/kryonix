@@ -80,6 +80,9 @@
     # Kvantum é para Qt Widgets; se Qt Quick tentar carregar "kvantum" como QML,
     # o Plasma pode quebrar (wallpaper/overview) e ficar com tela preta.
     QT_QUICK_CONTROLS_STYLE = "org.kde.desktop";
+
+    # Evita cair no libvirt rootless (qemu:///session), que não consegue criar bridges.
+    LIBVIRT_DEFAULT_URI = "qemu:///system";
   };
 
   # Garante que os pacotes comuns estejam instalados

@@ -23,6 +23,39 @@
   pkgs,
   ...
 }:
+let
+  kdeShowClipboardHistory = pkgs.writeShellApplication {
+    name = "kde-show-clipboard-history";
+    runtimeInputs = [
+      pkgs.qt6.qttools
+      pkgs.systemd
+    ];
+    text = ''
+      set -euo pipefail
+
+      dbus_cmd="$(command -v qdbus6 2>/dev/null || command -v qdbus 2>/dev/null || true)"
+      if [ -z "$dbus_cmd" ]; then
+        exit 0
+      fi
+
+      # Plasma 6 expõe métodos diferentes dependendo da versão.
+      if "$dbus_cmd" org.kde.klipper /klipper org.kde.klipper.klipper.showKlipperPopupMenu >/dev/null 2>&1; then
+        exit 0
+      fi
+      if "$dbus_cmd" org.kde.klipper /klipper org.kde.klipper.klipper.popupMenu >/dev/null 2>&1; then
+        exit 0
+      fi
+
+      # Se o serviço não estiver ativo, tenta subir e reexecutar.
+      systemctl --user start plasma-klipper.service >/dev/null 2>&1 || true
+      sleep 0.2
+
+      "$dbus_cmd" org.kde.klipper /klipper org.kde.klipper.klipper.showKlipperPopupMenu >/dev/null 2>&1 \
+        || "$dbus_cmd" org.kde.klipper /klipper org.kde.klipper.klipper.popupMenu >/dev/null 2>&1 \
+        || true
+    '';
+  };
+in
 {
   imports = [
     inputs.plasma-manager.homeModules.plasma-manager
@@ -90,16 +123,7 @@
       show-clipboard-history = {
         name = "Show clipboard history";
         key = "Meta+V";
-        command = "${pkgs.runtimeShell} -lc ${lib.escapeShellArg ''
-          dbus_cmd="$(command -v qdbus6 2>/dev/null || command -v qdbus 2>/dev/null || true)"
-          if [ -n "$dbus_cmd" ]; then
-            "$dbus_cmd" org.kde.klipper /klipper org.kde.klipper.klipper.showKlipperPopupMenu >/dev/null 2>&1 \
-              || "$dbus_cmd" org.kde.klipper /klipper org.kde.klipper.klipper.popupMenu >/dev/null 2>&1 \
-              || true
-          else
-            (klipper >/dev/null 2>&1 &)
-          fi
-        ''}";
+        command = "${kdeShowClipboardHistory}/bin/kde-show-clipboard-history";
       };
       clear-notifications = {
         name = "Clear all KDE Plasma notifications";

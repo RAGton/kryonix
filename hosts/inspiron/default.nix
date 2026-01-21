@@ -38,6 +38,7 @@
     # Kernel e virtualização
     ../../modules/kernel/zen.nix
     ../../modules/virtualization/kvm.nix
+    ../../modules/virtualization/net-ragthink.nix
   ];
 
   networking.hostName = hostname;
