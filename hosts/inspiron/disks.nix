@@ -1,27 +1,25 @@
 # Layout de disco para o host "inspiron" (modo documentação/disko)
 #
-# Este arquivo NÃO é importado pelo NixOS em runtime. Ele serve para:
-# - Documentar o particionamento atual
-# - Ser usado como base para dizo/disko em reinstalações futuras
+# Este arquivo é usado pelo `disko` SOMENTE quando a ISO instaladora chama ele.
+# Em runtime, quem monta os FS é o `hardware-configuration.nix`.
 #
-# Baseado em:
-#   nvme0n1p1  -> /boot (vfat, UUID 954A-B524)
-#   nvme0n1p2  -> btrfs RAIZ-NIXOS (UUID a551eedc-61b1-458b-8d4d-99e7ddcc0b1a)
-#                  subvol=@ (/)  subvol=@home (/home)
-#   nvme0n1p3  -> swap (UUID 6e5e19fc-82c8-4436-89c3-da8ed8cfb12b)
-#   sda1       -> btrfs NIXOS-DATA (UUID 06b5fe17-f758-4172-98e7-04287590a710)
+# Estado atual (hardware-configuration.nix):
+# - /boot: vfat (UUID AF09-FA74)
+# - /, /home, /nix, /var/log, /var/cache, /var/lib/containers, /var/libvirt,
+#   /.snapshots, /persist, /tmp: btrfs no mesmo UUID 4d5e25fc-322d-4993-99f5-85e7e299a184
+# - /RAG-DATA: btrfs separado (UUID ec9d75cd-877d-4f66-9a6b-cfe7eb5ca9f0) — não automatizado aqui
+# - swap: UUID 5ccb5cb3-75b1-4e05-918e-5000bed16da3 — não automatizado aqui
 #
-# Exemplo de configuração no estilo disko (ajuste /dev/disk/by-id conforme sua máquina):
+# Observação importante:
+# - Este `disks.nix` NÃO cria /RAG-DATA nem swap — ele foca no disco do sistema.
 
 { lib, ... }:
 {
-  # Esta seção é reconhecida por módulos como nix-community/disko,
-  # mas é inócua se não houver nenhum módulo lendo `disko.devices`.
   disko.devices = {
     disk."nvme0n1" = {
       type = "disk";
       # Dica: trocar pelo caminho estável correto, ex:
-      # device = "/dev/disk/by-id/nvme-SAMSUNG_MZVLB512...";
+      # device = "/dev/disk/by-id/nvme-...";
       device = "/dev/nvme0n1";
       content = {
         type = "gpt";
@@ -33,6 +31,7 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
+              mountOptions = [ "fmask=0022" "dmask=0022" ];
             };
           };
 
@@ -41,7 +40,7 @@
             type = "8300"; # Linux filesystem
             content = {
               type = "btrfs";
-               extraArgs = [ "-L" "RAIZ-NIXOS" ]; # opcional
+              extraArgs = [ "-L" "RAIZ-NIXOS" ];
               subvolumes = {
                 "@" = {
                   mountpoint = "/";
@@ -53,49 +52,45 @@
                   mountOptions = [ "subvol=@home" "compress=zstd" "autodefrag" "noatime" ];
                 };
 
-                # Subvolume dedicado para snapshots manuais/snapper, se quiser
+                "@nix" = {
+                  mountpoint = "/nix";
+                  mountOptions = [ "subvol=@nix" "compress=zstd" "noatime" ];
+                };
+
+                "@log" = {
+                  mountpoint = "/var/log";
+                  mountOptions = [ "subvol=@log" "compress=zstd" "noatime" ];
+                };
+
+                "@cache" = {
+                  mountpoint = "/var/cache";
+                  mountOptions = [ "subvol=@cache" "compress=zstd" "noatime" ];
+                };
+
+                "@containers" = {
+                  mountpoint = "/var/lib/containers";
+                  mountOptions = [ "subvol=@containers" "compress=zstd" "noatime" ];
+                };
+
+                "@libvirt" = {
+                  mountpoint = "/var/libvirt";
+                  mountOptions = [ "subvol=@libvirt" "compress=zstd" "noatime" ];
+                };
+
                 "@snapshots" = {
                   mountpoint = "/.snapshots";
                   mountOptions = [ "subvol=@snapshots" "compress=zstd" "noatime" ];
                 };
-              };
-            };
-          };
 
-          swap = {
-            # Em instalações novas dá pra trocar para tamanho fixo (ex: "8G");
-            # aqui deixamos como comentário porque o swap atual já existe.
-            # size = "8G";
-            type = "8200"; # Linux swap
-            content = {
-              type = "swap";
-            };
-          };
-        };
-      };
-    };
+                "@persist" = {
+                  mountpoint = "/persist";
+                  mountOptions = [ "subvol=@persist" "compress=zstd" "noatime" ];
+                };
 
-    # Disco de dados (NIXOS-DATA) opcional, bom para backups/jogos pesados
-    disk."sda" = {
-      type = "disk";
-      device = "/dev/sda";
-      content = {
-        type = "gpt";
-        partitions.data = {
-          size = "100%";
-          type = "8300";
-          content = {
-            type = "btrfs";
-             extraArgs = [ "-L" "NIXOS-DATA" ];
-            subvolumes = {
-              "@data" = {
-                mountpoint = "/mnt/data";
-                mountOptions = [ "subvol=@data" "compress=zstd" "noatime" ];
-              };
-
-              "@games" = {
-                mountpoint = "/mnt/games";
-                mountOptions = [ "subvol=@games" "compress=zstd" "noatime" ];
+                "@tmp" = {
+                  mountpoint = "/tmp";
+                  mountOptions = [ "subvol=@tmp" "compress=zstd" "noatime" ];
+                };
               };
             };
           };

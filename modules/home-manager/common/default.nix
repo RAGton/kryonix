@@ -35,6 +35,7 @@
     ../programs/fzf
     ../programs/git
     ../programs/go
+    ../programs/rust
     ../programs/gpg
     ../programs/k9s
     ../programs/krew
@@ -44,6 +45,8 @@
     ../programs/saml2aws
     ../programs/starship
     ../programs/telegram
+    ../programs/vscode
+    ../programs/virt-manager
     ../programs/zellij
     ../programs/zsh
     ../scripts
@@ -90,7 +93,26 @@
       pipenv
       podman-compose
       podman-tui
+
+      # =========================
+      # Python (interpretador)
+      # =========================
+      # O que é
+      # - Runtime Python para uso no terminal/IDE.
+      # - Tooling básico: pip e virtualenv para ambientes isolados.
+      #
+      # Como usar
+      # - Criar venv: `python -m venv .venv`
+      # - Ativar: `source .venv/bin/activate`
+      #
+      # Nota
+      # - Alguns tools/IDEs ainda chamam o comando `python`.
+      # - No nixpkgs atual, o pacote `python3` pode expor `python` e `python3`.
+      #   Se o seu editor ainda reclamar, use um venv no projeto e aponte para `.venv/bin/python`.
       python3
+      python3Packages.pip
+      python3Packages.virtualenv
+
       ripgrep
-    ]
+    ];
 }

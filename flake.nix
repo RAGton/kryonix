@@ -48,6 +48,12 @@
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Particionamento declarativo (usado na ISO instaladora)
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -125,6 +131,19 @@
       nixosConfigurations = {
         inspiron = mkNixosConfiguration "inspiron" "rag";
         Glacier = mkNixosConfiguration "Glacier" "rag";
+
+        # Live ISO instaladora (multi-host)
+        iso = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          specialArgs = {
+            inherit inputs outputs;
+            hostname = "iso";
+            isDarwin = false;
+            nixosModules = "${self}/modules/nixos";
+            # A ISO não precisa de userConfig; se algum módulo exigir, ajustamos no host iso.
+          };
+          modules = [ ./hosts/iso ];
+        };
       };
 
       homeConfigurations = {

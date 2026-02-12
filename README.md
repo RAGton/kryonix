@@ -8,7 +8,7 @@ Idioma: PT-BR (este arquivo) | [English](README-en.md)
 
 ### Hyprland
 
-![hyprland](./files/screenshots/hyprland.png)
+![hyprland](./files/screenshots/kde.png)
 
 ### KDE
 
@@ -16,7 +16,7 @@ Idioma: PT-BR (este arquivo) | [English](README-en.md)
 
 ### macOS
 
-![macos](./files/screenshots/mac.png)
+![macos](./files/screenshots/RAGOS-WALPAPER.png)
 
 ## Estrutura
 
@@ -261,7 +261,7 @@ Para adicionar uma nova máquina com um novo usuário (NixOS ou nix-darwin), sig
 
   a. Adicione o novo usuário ao attribute set `users`:
 
-   ```nix
+   ```text
    users = {
     # Usuários existentes...
      newuser = {
@@ -278,7 +278,7 @@ Para adicionar uma nova máquina com um novo usuário (NixOS ou nix-darwin), sig
 
   Para NixOS:
 
-   ```nix
+   ```text
    nixosConfigurations = {
     # Configurações existentes...
      newmachine = mkNixosConfiguration "newmachine" "newuser";
@@ -287,7 +287,7 @@ Para adicionar uma nova máquina com um novo usuário (NixOS ou nix-darwin), sig
 
   Para nix-darwin:
 
-   ```nix
+   ```text
    darwinConfigurations = {
     # Configurações existentes...
      newmachine = mkDarwinConfiguration "newmachine" "newuser";
@@ -296,7 +296,7 @@ Para adicionar uma nova máquina com um novo usuário (NixOS ou nix-darwin), sig
 
   c. Adicione a configuração do Home Manager:
 
-   ```nix
+   ```text
    homeConfigurations = {
     # Configurações existentes...
      "newuser@newmachine" = mkHomeConfiguration "x86_64-linux" "newuser" "newmachine";
@@ -321,7 +321,7 @@ Para adicionar uma nova máquina com um novo usuário (NixOS ou nix-darwin), sig
 
   Para NixOS:
 
-   ```nix
+   ```text
    { inputs, hostname, nixosModules, ... }:
    {
      imports = [
@@ -337,7 +337,7 @@ Para adicionar uma nova máquina com um novo usuário (NixOS ou nix-darwin), sig
 
   Para nix-darwin:
 
-   ```nix
+   ```text
    { darwinModules, ... }:
    {
      imports = [

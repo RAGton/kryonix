@@ -29,6 +29,11 @@
   imports = [
     inputs.nix-flatpak.nixosModules.nix-flatpak
     ../../shared/nixpkgs
+
+    # Branding global (RagOS).
+    # Mantemos aqui para que todos os hosts herdem o mesmo "nome do sistema".
+    ../branding/ragos
+
     ../programs/steam
     ../programs/gaming
     ../programs/wallpaper-engine-kde
@@ -144,9 +149,16 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
-    settings.General = {
-      Name = lib.mkDefault hostname;
-      Alias = lib.mkDefault hostname;
+
+    # BlueZ: ajustes para melhorar compatibilidade/qualidade (BT audio)
+    # - Experimental habilita suporte a recursos/códigos mais novos quando disponíveis.
+    # - Manter como mkDefault para facilitar override.
+    settings = {
+      General = {
+        Name = lib.mkDefault hostname;
+        Alias = lib.mkDefault hostname;
+        Experimental = lib.mkDefault true;
+      };
     };
   };
 
@@ -191,14 +203,37 @@
     pulse.enable = true;
     jack.enable = true;
 
-    # Baixa latência (bom para games + uso "studio").
-    # Mantido com mkDefault para facilitar override por host.
-    extraConfig.pipewire."92-low-latency" = {
-      context.properties = {
-        default.clock.rate = lib.mkDefault 48000;
-        default.clock.quantum = lib.mkDefault 128;
-        default.clock.min-quantum = lib.mkDefault 64;
-        default.clock.max-quantum = lib.mkDefault 2048;
+    # Melhorias de qualidade/volume (seguras)
+    # - Resampler de melhor qualidade para reduzir "som abafado" em alguns hardwares.
+    # - Headroom no layer Pulse (permite aumentar acima de 100% quando necessário).
+    extraConfig = {
+      pipewire."92-low-latency" = {
+        context.properties = {
+          default.clock.rate = lib.mkDefault 48000;
+          default.clock.quantum = lib.mkDefault 128;
+          default.clock.min-quantum = lib.mkDefault 64;
+          default.clock.max-quantum = lib.mkDefault 2048;
+        };
+      };
+
+      pipewire."95-audio-quality" = {
+        context.properties = {
+          # Resampler: qualidade melhor (custa um pouco mais de CPU, mas costuma valer a pena no desktop)
+          default.clock.allowed-rates = lib.mkDefault [ 44100 48000 96000 ];
+          resample.quality = lib.mkDefault 10;
+        };
+      };
+
+      pipewire-pulse."95-pulse-headroom" = {
+        stream.properties = {
+          # Permite volume acima de 1.0 (100%). Útil quando o hardware é baixo.
+          # Isso NÃO melhora a qualidade por si só, mas aumenta o ganho disponível.
+          pulse.min.quantum = lib.mkDefault 64;
+        };
+        context.properties = {
+          pulse.min.req = lib.mkDefault 64;
+          pulse.default.req = lib.mkDefault 128;
+        };
       };
     };
   };
@@ -267,15 +302,21 @@
     gcc
     glib
     gnumake
+    nodejs_20
     killall
     mesa
     openrgb-git
     podman
     distrobox
+
+    # Rust (global): `rustup` gerencia toolchains; `cargo`/`rustc` úteis para uso imediato.
+    rustup
+    cargo
+    rustc
+
     jetbrains.idea-oss
     jetbrains.pycharm-oss
     jetbrains.rust-rover
-    winbox
   ];
 
   # Regras udev para permitir acesso do OpenRGB aos dispositivos.
@@ -297,6 +338,12 @@
   # Configuração do Zsh
   programs.zsh.enable = true;
 
+  # Winbox (MikroTik): o nixpkgs já fornece `programs.winbox`.
+  # Habilite por-host (ex.: `hosts/inspiron/default.nix`) com `programs.winbox.enable = true`.
+
+  # Permite carregar binários fora do Nix com GLIBC/linker compatível (útil p/ plugins JetBrains/VSCode)
+  programs.nix-ld.enable = true;
+
   # Configuração de fontes
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
@@ -311,3 +358,4 @@
   # Daemon OpenSSH
   services.openssh.enable = true;
 }
+

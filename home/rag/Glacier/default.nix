@@ -23,6 +23,13 @@
   # Habilita home-manager
   programs.home-manager.enable = true;
 
+  # Editor: VSCode via nix (evita flatpak/manual e garante atualização com `nix flake update`).
+  rag.vscode = {
+    enable = true;
+    channel = "unstable";
+    flavor = "vscode";
+  };
+
   # Nota: GameMode é instalado aqui como pacote; ativar serviços de sistema
   # (daemons) deve ser feito na configuração do host (NixOS).
 

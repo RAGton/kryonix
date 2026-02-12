@@ -10,7 +10,7 @@ It is structured to scale across multiple machines and users, leveraging [nixpkg
 
 ### Hyprland
 
-![hyprland](./files/screenshots/hyprland.png)
+![hyprland](./files/screenshots/kde.png)
 
 ### KDE
 
@@ -18,7 +18,7 @@ It is structured to scale across multiple machines and users, leveraging [nixpkg
 
 ### macOS
 
-![macos](./files/screenshots/mac.png)
+![macos](./files/screenshots/RAGOS-WALPAPER.png)
 
 ## Structure
 
@@ -207,3 +207,9 @@ gpg --list-secret-keys --keyid-format=long
 ```
 
 > Important: never commit private keys or put them in the Nix store. `gitKey` here is just an identifier for Git.
+
+## Docs
+
+- Virtualization (KVM/libvirt/virt-manager): [docs/virtualization/libvirt-virt-manager-pt_BR.md](docs/virtualization/libvirt-virt-manager-pt_BR.md)
+- ZRAM (compressed swap): [docs/performance/zram-pt_BR.md](docs/performance/zram-pt_BR.md)
+- Rust (cargo/rustup): [docs/development/rust-pt_BR.md](docs/development/rust-pt_BR.md)

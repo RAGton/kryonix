@@ -39,15 +39,31 @@
     ../../modules/kernel/zen.nix
     ../../modules/virtualization/kvm.nix
     ../../modules/virtualization/net-ragthink.nix
+
+    # Branding (RagOS)
+    "${nixosModules}/branding/ragos"
   ];
 
   networking.hostName = hostname;
 
+  # =========================
+  # MikroTik Winbox
+  # =========================
+  # O que é
+  # - Habilita o Winbox (GUI de gerenciamento MikroTik).
+  #
+  # Por quê
+  # - Facilita administrar RouterOS/SwOS direto do desktop.
+  #
+  # Como
+  # - `programs.winbox.enable = true` instala o Winbox.
+  programs.winbox.enable = true;
+
   # UniFi Network Application (Controller).
- # services.unifi = {
-  #  enable = true;
-  #  openFirewall = true;
-  #};
+  # services.unifi = {
+  #   enable = true;
+  #   openFirewall = true;
+  # };
 
   system.stateVersion = "25.11";
 
@@ -123,5 +139,15 @@
   boot.extraModprobeConfig = ''
     options kvm_intel nested=1
   '';
-}
 
+  # =========================
+  # RagOS (branding do sistema)
+  # =========================
+  # Mantém o mesmo número de versão do seu `system.stateVersion` para exibição.
+  # Obs.: `system.stateVersion` continua sendo a chave de compat do NixOS.
+  ragos = {
+    enable = true;
+    prettyName = "RagOS";
+    versionId = "25.11";
+  };
+}

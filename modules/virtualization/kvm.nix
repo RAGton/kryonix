@@ -16,11 +16,14 @@
 
       qemu = {
         package = pkgs.qemu_kvm;
-        runAsRoot = false;
 
-        # UEFI + Secure Boot (necessário para Windows moderno)
-        # O OVMF agora vem habilitado por padrão
-        swtpm.enable = true; # TPM virtual (Windows 11, Linux moderno)
+        # Virt-manager costuma usar `qemu:///system`.
+        # Para isso funcionar sem fricção (e sem depender de qemu:///session),
+        # mantemos o modelo padrão do system libvirt.
+        runAsRoot = true;
+
+        # TPM virtual (Windows 11, Linux moderno)
+        swtpm.enable = true;
       };
     };
 
@@ -40,6 +43,11 @@
   # Usuário e permissões
   ############################
   users.groups.libvirtd.members = [
+    userConfig.name
+  ];
+
+  # A maioria das distros usa `kvm` para acesso a /dev/kvm; no NixOS isso também ajuda.
+  users.groups.kvm.members = [
     userConfig.name
   ];
 
@@ -68,5 +76,6 @@
   ############################
   # Ajustes extras recomendados
   ############################
-  boot.kernelModules = [ "kvm-intel" "kvm-amd" ];
+  # Evita forçar módulos de CPU errados; cada host define o seu (Intel/AMD).
+  boot.kernelModules = lib.mkDefault [ "kvm" ];
 }

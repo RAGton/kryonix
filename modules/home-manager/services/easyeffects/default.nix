@@ -28,6 +28,10 @@
     services.easyeffects = {
       enable = true;
       preset = "mic";
+
+      # Preset padrão para a SAÍDA (melhora percepção de volume e clareza)
+      # Obs.: o nome precisa existir em `~/.config/easyeffects/output/<nome>.json`.
+      outputPreset = "speakers";
     };
 
     # Importa o preset do EasyEffects a partir do store do Home Manager.
@@ -105,7 +109,59 @@
           }
         }
       '';
+
+      # Preset de saída: ganho automático + compressor + limiter + EQ leve
+      # Objetivo: deixar o som mais alto/cheio sem distorcer.
+      "easyeffects/output/speakers.json".text = ''
+        {
+          "output": {
+            "blocklist": [],
+            "plugins_order": [
+              "equalizer#0",
+              "autogain#0",
+              "compressor#0",
+              "limiter#0"
+            ],
+            "equalizer#0": {
+              "bypass": false,
+              "input-gain": 0.0,
+              "output-gain": 0.0,
+              "mode": "IIR",
+              "split-channels": false,
+              "bands": [
+                { "type": "lowshelf", "frequency": 140.0, "quality": 0.7, "gain": 3.0 },
+                { "type": "peaking",  "frequency": 900.0, "quality": 1.0, "gain": -1.5 },
+                { "type": "highshelf","frequency": 6500.0, "quality": 0.7, "gain": 2.5 }
+              ]
+            },
+            "autogain#0": {
+              "bypass": false,
+              "target": -16.0,
+              "max-gain": 12.0,
+              "min-gain": -12.0,
+              "reset": false
+            },
+            "compressor#0": {
+              "bypass": false,
+              "mode": "Downward",
+              "threshold": -18.0,
+              "ratio": 3.0,
+              "attack": 10.0,
+              "release": 120.0,
+              "knee": -6.0,
+              "makeup": 3.0,
+              "dry": -100.0,
+              "wet": 0.0
+            },
+            "limiter#0": {
+              "bypass": false,
+              "threshold": -1.0,
+              "lookahead": 5.0,
+              "release": 50.0
+            }
+          }
+        }
+      '';
     };
   };
 }
-
