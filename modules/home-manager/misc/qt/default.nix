@@ -8,9 +8,18 @@ with lib;
 let
   iconThemeName = lib.attrByPath [ "gtk" "iconTheme" "name" ] null config;
   plasmaEnabled = lib.attrByPath [ "programs" "plasma" "enable" ] false config;
+
+  # Detecta se tema Bart está habilitado
+  bartEnabled = lib.attrByPath [ "rag" "theme" "bart" "enable" ] false config;
+  kvantumThemeName =
+    if bartEnabled then
+      lib.attrByPath [ "rag" "theme" "bart" "kvantumTheme" ] "Bart" config
+    else
+      "breeze";
+
   qtCtAppearanceConfig = generators.toINI { } {
     Appearance = {
-      icon_theme = if iconThemeName != null then iconThemeName else "kora";
+      icon_theme = if iconThemeName != null then iconThemeName else "breeze";
     };
   };
 
@@ -46,13 +55,13 @@ in
       text = qtCtAppearanceConfig;
     };
 
-    # Kvantum: o tema em si (ex.: Edna) normalmente vem do KDE Store ou de
-    # ~/.config/Kvantum/<Tema>. Aqui só selecionamos o nome do tema.
-    kvantum = {
+    # Kvantum: configuração é gerenciada pelo módulo do tema (bart/edna)
+    # Este arquivo só é criado se nenhum tema estiver ativo
+    kvantum = lib.mkIf (!bartEnabled) {
       target = "Kvantum/kvantum.kvconfig";
       text = generators.toINI { } {
         General = {
-          theme = "Edna";
+          theme = kvantumThemeName;
         };
       };
     };

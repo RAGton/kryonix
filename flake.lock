@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "bart-theme": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767386343,
+        "narHash": "sha256-ip4Nk3EUGyjxcvng+IFEh8XP3A8aUFymqiXJCqHYDDM=",
+        "ref": "refs/heads/main",
+        "rev": "cff02734ea4150fea9d4c177be523036ab2e9b9e",
+        "revCount": 4,
+        "type": "git",
+        "url": "https://gitlab.com/jomada/bart"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.com/jomada/bart"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -164,6 +180,7 @@
     },
     "root": {
       "inputs": {
+        "bart-theme": "bart-theme",
         "darwin": "darwin",
         "disko": "disko",
         "edna-theme": "edna-theme",

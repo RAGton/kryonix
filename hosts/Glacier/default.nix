@@ -147,10 +147,9 @@
     # ⚠️ só recomendo isso se for desktop single-user
     disableMitigations = lib.mkDefault true;
 
-    extraKernelParams = [
-      "sched_latency_ns=4000000"
-      "sched_min_granularity_ns=500000"
-    ];
+    # Removido: parâmetros agressivos do scheduler podem causar travamentos
+    # O kernel Zen já vem otimizado para desktop
+    extraKernelParams = [ ];
   };
 
   ## -------------------------

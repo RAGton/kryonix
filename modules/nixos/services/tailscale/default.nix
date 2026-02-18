@@ -31,7 +31,7 @@ let
     ++ lib.optionals cfg.ssh [ "--ssh" ]
     ++ lib.optionals cfg.advertiseExitNode [ "--advertise-exit-node" ]
     ++ lib.optionals (cfg.advertiseRoutes != [ ]) [ "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}" ]
-    ++ lib.optionals cfg.extraUpFlags cfg.extraUpFlags
+    ++ cfg.extraUpFlags
   );
   needsForwarding = cfg.advertiseExitNode || cfg.advertiseRoutes != [ ];
 in

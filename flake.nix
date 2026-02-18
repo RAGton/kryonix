@@ -62,6 +62,14 @@
       url = "git+https://gitlab.com/jomada/edna";
       flake = false;
     };
+
+    # Tema (Plasma/GTK/Icons): Bart
+    # Repo: https://gitlab.com/jomada/bart
+    # Obs.: usamos flake=false porque é um repositório de assets, não um flake Nix.
+    bart-theme = {
+      url = "git+https://gitlab.com/jomada/bart";
+      flake = false;
+    };
   };
 
   outputs =

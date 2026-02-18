@@ -3,6 +3,7 @@
   imports = [
     "${nhModules}/common"
     "${nhModules}/desktop/kde"
+    "${nhModules}/desktop/themes/bart"
   ];
 
   # Habilita home-manager
@@ -34,17 +35,20 @@
     flavor = "vscode";
   };
 
-  # Tema: Edna Dark (Plasma + GTK + ícones)
-  rag.theme.edna = {
+  # Tema: Bart (Plasma + GTK + ícones + Kvantum + Aurorae)
+  rag.theme.bart = {
     enable = true;
-    # Se o nome exato no Plasma/GTK/Icons for diferente, ajuste aqui.
-    name = "Edna";
-    gtkName = "Edna";
-    iconName = "Edna";
-    plasmaLookAndFeel = null;
+    # Configuração completa do tema Bart
+    name = "Bart";
+    gtkName = "Bart";
+    iconName = "Bart";
+    kvantumTheme = "Bart";
+    auroraeTheme = "__aurorae__svg__Bart";
+    plasmaLookAndFeel = "Bart";
   };
 
   # Nota: GameMode é instalado aqui como pacote; ativar serviços de sistema
+  # (daemons) deve ser feito na configuração do host (NixOS).
   # (daemons) deve ser feito na configuração do host (NixOS).
 
   # Pacotes de jogos (ambiente do usuário). Drivers e ajustes de kernel/performance

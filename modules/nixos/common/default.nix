@@ -59,6 +59,11 @@
   nix.settings = {
     experimental-features = "nix-command flakes";
     auto-optimise-store = true;
+
+    # Build paralelo (conservador para evitar travamentos):
+    # - max-jobs: máximo de derivations simultâneas
+    # - cores: 0 = usa todos os cores disponíveis POR JOB (mas respeitando load)
+    # - auto = deixa Nix decidir baseado em RAM/CPU disponíveis
     max-jobs = lib.mkDefault "auto";
     cores = lib.mkDefault 0;
   };
@@ -103,10 +108,19 @@
       options v4l2loopback exclusive_caps=1 card_label="Virtual Camera"
     '';
 
-    # Tuning leve e seguro para desktop/games.
+    # Tuning balanceado para desktop/games (evita OOM e travamentos).
     kernel.sysctl = {
-      "vm.swappiness" = lib.mkDefault 10;
+      # swappiness 60 = padrão Linux, balanceado entre RAM e swap
+      # Valor muito baixo pode causar OOM kills e travamentos
+      "vm.swappiness" = lib.mkDefault 60;
+
+      # Latência do scheduler (6ms é seguro para desktop)
       "kernel.sched_latency_ns" = lib.mkDefault 6000000;
+
+      # Proteção contra OOM: permite usar mais swap antes de matar processos
+      "vm.vfs_cache_pressure" = lib.mkDefault 50;
+      "vm.dirty_ratio" = lib.mkDefault 10;
+      "vm.dirty_background_ratio" = lib.mkDefault 5;
     };
   };
 
@@ -115,8 +129,26 @@
   zramSwap = {
     enable = lib.mkDefault true;
     algorithm = lib.mkDefault "zstd";
-    # Em máquinas com ~16GB RAM, 100% resulta em ~16GB de zram.
-    memoryPercent = lib.mkDefault 100;
+    # 50% é mais conservador e trabalha melhor com swap em disco
+    # Evita pressão excessiva quando a RAM está cheia
+    memoryPercent = lib.mkDefault 50;
+    # Prioridade alta: tenta usar zram antes do swap em disco
+    priority = lib.mkDefault 10;
+  };
+
+  # earlyoom: proteção crítica contra travamentos por OOM
+  # Mata processos ANTES do sistema travar completamente
+  services.earlyoom = {
+    enable = lib.mkDefault true;
+    enableNotifications = lib.mkDefault true;
+    # Mata processos quando RAM livre < 5% E swap livre < 5%
+    freeMemThreshold = lib.mkDefault 5;
+    freeSwapThreshold = lib.mkDefault 5;
+    # Evita matar processos críticos do sistema
+    extraArgs = [
+      "--avoid '^(Xorg|kwin_wayland|plasmashell|sddm)$'"
+      "--prefer '^(firefox|chromium|chrome|electron)$'"
+    ];
   };
 
   # Rede
@@ -319,6 +351,13 @@
     rustup
     cargo
     rustc
+
+    # =========================
+    # Java (global)
+    # =========================
+    # JDK para apps Java (TLauncher, Minecraft, etc.)
+    # jdk21 é LTS e compatível com a maioria dos apps modernos
+    jdk21
 
     jetbrains.idea-oss
     jetbrains.pycharm-oss
