@@ -1,5 +1,5 @@
 # Home Manager: Tema Bart (Plasma + GTK + Ícones)
-# Repo: https://gitlab.com/jomada/bart
+# Tema da KDE Store
 #
 # Objetivo
 # - Instalar e aplicar automaticamente o tema Bart no Plasma (plasma-manager)
@@ -7,69 +7,18 @@
 #
 # Notas
 # - Cursor você já gerencia em outro lugar (Nordzy), então não mexemos.
-# - O repositório Bart é um conjunto de assets; empacotamos via symlinks.
+# - O tema Bart pode ser instalado manualmente via: System Settings > Appearance > Get New...
+# - Este módulo aplica as configurações depois que o tema está instalado
 {
-  inputs,
   lib,
   pkgs,
   config,
   ...
 }:
 let
-  # Fonte upstream (git)
-  src = inputs.bart-theme;
-
-  # Heurísticas (estrutura típica de temas)
-  # Sem assumir nomes exatos: instalamos o que existir.
-  installIfExists = rel: destRel:
-    if builtins.pathExists (src + ("/" + rel)) then
-      { name = destRel; value.source = src + ("/" + rel); }
-    else
-      null;
-
-  # Tentativas comuns: Plasma Look-and-Feel / plasma theme / color schemes / icons / GTK / Kvantum / Aurorae
-  candidates = lib.filter (x: x != null) [
-    (installIfExists "plasma" "plasma")
-    (installIfExists "Plasma" "plasma")
-
-    (installIfExists "look-and-feel" "plasma/look-and-feel")
-    (installIfExists "Look-and-Feel" "plasma/look-and-feel")
-
-    (installIfExists "color-schemes" "color-schemes")
-    (installIfExists "colorschemes" "color-schemes")
-    (installIfExists "color_schemes" "color-schemes")
-
-    (installIfExists "icons" "icons")
-    (installIfExists "Icons" "icons")
-
-    (installIfExists "gtk" "themes")
-    (installIfExists "GTK" "themes")
-    (installIfExists "themes" "themes")
-
-    (installIfExists "kvantum" "Kvantum")
-    (installIfExists "Kvantum" "Kvantum")
-
-    (installIfExists "aurorae" "aurorae/themes")
-    (installIfExists "Aurorae" "aurorae/themes")
-    (installIfExists "window-decorations" "aurorae/themes")
-    (installIfExists "Window-Decorations" "aurorae/themes")
-  ];
-
-  # Converte em xdg.dataFile attrs (aponta pra ~/.local/share)
-  dataFiles =
-    lib.listToAttrs (
-      map (x: {
-        name = x.name;
-        value = {
-          source = x.value.source;
-          recursive = true;
-        };
-      }) candidates
-    );
-
-  # Nome do tema: pode variar (Bart, Bart-dark, etc.).
-  # Vamos permitir override futuro via option, mas default = "Bart".
   cfg = config.rag.theme.bart;
+
+
 
 in
 {
@@ -118,8 +67,25 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Instala assets do tema em ~/.local/share para o Plasma/GTK detectar.
-    xdg.dataFile = dataFiles;
+    # Script para instalar o tema Bart da KDE Store
+    home.activation.installBartTheme = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      $DRY_RUN_CMD ${pkgs.bash}/bin/bash -c '
+        echo "Verificando tema Bart..."
+
+        # Verifica se o tema já está instalado
+        if [ ! -d "$HOME/.local/share/plasma/look-and-feel/Bart" ] && \
+           [ ! -d "$HOME/.local/share/plasma/look-and-feel/com.gitlab.jomada.bart" ]; then
+          echo "Tema Bart não encontrado. Para instalar:"
+          echo "1. Abra System Settings > Appearance > Global Theme"
+          echo "2. Clique em 'Get New Global Themes...'"
+          echo "3. Procure por 'Bart' e instale"
+          echo ""
+          echo "Ou instale manualmente baixando de: https://store.kde.org"
+        else
+          echo "Tema Bart já está instalado!"
+        fi
+      '
+    '';
 
     # GTK
     gtk = {

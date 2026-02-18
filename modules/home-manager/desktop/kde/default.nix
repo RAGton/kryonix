@@ -61,9 +61,6 @@ in
     inputs.plasma-manager.homeModules.plasma-manager
     "${nhModules}/misc/wallpaper"
     "${nhModules}/programs/rofi"
-
-    # Temas
-    "${nhModules}/desktop/themes/edna"
   ];
 
   home.packages = with pkgs; [
@@ -73,9 +70,11 @@ in
     kdePackages.wallpaper-engine-plugin
     kdotool
     libnotify
-    kora-icon-theme
     nordzy-cursor-theme
     qt6.qttools
+    # Breeze é o tema padrão do KDE
+    kdePackages.breeze-gtk
+    kdePackages.breeze-icons
   ];
 
   # Silencia aviso de mudança futura do zsh dotDir.
@@ -580,7 +579,7 @@ in
       }
     ];
 
-    # Tema visual: Edna (dark)
+    # Tema visual: configurável via módulos de tema (ex: bart, edna)
     workspace = {
       enableMiddleClickPaste = false;
       clickItemTo = "select";
@@ -588,13 +587,7 @@ in
       # - plasma-apply-lookandfeel --list
       # - plasma-apply-desktoptheme --list-themes
       # - plasma-apply-colorscheme --list-schemes
-      theme = "Edna";
-      colorScheme = "Edna";
-      # Aurorae (decoração de janelas) - Tema: https://store.kde.org/p/1528961
-      windowDecorations = {
-        library = "org.kde.kwin.aurorae";
-        theme = "__aurorae__svg__Edna";
-      };
+      # Temas são configurados via módulos específicos (modules/home-manager/desktop/themes/)
       cursor.theme = "Nordzy-cursors";
       tooltipDelay = 1;
       wallpaper = config.wallpaper;
