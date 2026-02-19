@@ -1,14 +1,24 @@
-# Home Manager: Tema Bart (Plasma + GTK + Ícones)
+# Home Manager: Tema Bart (KDE Plasma ONLY)
 # Tema da KDE Store
+#
+# ⚠️  IMPORTANTE: Este tema é EXCLUSIVO do KDE Plasma
+# Não funciona em Hyprland, GNOME, ou outros desktops
 #
 # Objetivo
 # - Instalar e aplicar automaticamente o tema Bart no Plasma (plasma-manager)
 # - Aplicar tema GTK e ícones (via Home Manager)
+# - Configurar Kvantum (engine de temas Qt/KDE)
+# - Configurar Aurorae (decoração de janelas KDE)
 #
 # Notas
 # - Cursor você já gerencia em outro lugar (Nordzy), então não mexemos.
 # - O tema Bart pode ser instalado manualmente via: System Settings > Appearance > Get New...
 # - Este módulo aplica as configurações depois que o tema está instalado
+#
+# Dependências
+# - plasma-manager (programs.plasma)
+# - Kvantum
+# - KDE Plasma desktop environment
 {
   lib,
   pkgs,

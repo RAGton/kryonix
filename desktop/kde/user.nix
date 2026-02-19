@@ -1,20 +1,26 @@
-# Home Manager: Desktop KDE Plasma (config do usuário)
+# =============================================================================
+# Desktop: KDE Plasma 6 (User-level)
 # Autor: rag
 #
-# O que é
+# O que é:
 # - Configuração do KDE Plasma via `plasma-manager` (painéis, KWin, fontes, atalhos, etc.).
 # - Instala pacotes auxiliares do desktop (plasmoids, temas, utilitários).
 #
-# Por quê
+# Por quê:
 # - Mantém o desktop 100% declarativo e reprodutível (sem depender de cliques na GUI).
 # - Evita regressões: `overrideConfig = true` reaplica o estado conhecido.
 #
-# Como
+# Como:
 # - Importa `inputs.plasma-manager.homeModules.plasma-manager`.
 # - Usa `programs.plasma.*` para gerar os arquivos de config do Plasma.
 #
-# Riscos
+# Riscos:
 # - Com `overrideConfig = true`, mudanças via GUI serão sobrescritas no próximo `home-manager switch`.
+#
+# Migração v2:
+# - Movido de modules/home-manager/desktop/kde/default.nix (Phase 2.3)
+# - User-level config separado de system-level (desktop/kde/system.nix)
+# =============================================================================
 {
   config,
   inputs,
@@ -748,3 +754,4 @@ in
   # (`modules/nixos/desktop/kde/default.nix`). Mantemos isso centralizado no NixOS
   # para evitar conflito/typos com a API do Home Manager.
 }
+

@@ -1,9 +1,11 @@
 { pkgs, nhModules, lib, ... }:
 {
   imports = [
-    "${nhModules}/common"
-    "${nhModules}/desktop/kde"
-    "${nhModules}/desktop/themes/bart"
+    ../../../modules/home-manager/common
+    # Desktop user config (v2 migration: moved to desktop/)
+    ../../../desktop/kde/user.nix
+    # Bart theme (KDE-specific)
+    ../../../desktop/kde/themes/bart
   ];
 
   # Habilita home-manager

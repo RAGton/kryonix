@@ -35,13 +35,37 @@
     # Base do sistema
     "${nixosModules}/common"
 
-    # Desktop
-    "${nixosModules}/desktop/kde"
+    # Desktop: gerenciado via opção (v2 migration)
+    # Features: gerenciadas via opções (v2 migration)
 
-    # Kernel e virtualização
+    # Kernel
     ../../modules/kernel/zen.nix
-    ../../modules/virtualization/kvm.nix
   ];
+
+  # =========================
+  # RagOS Options (v2)
+  # =========================
+
+  # Desktop
+  rag.desktop.environment = "kde";
+
+  # Features
+  rag.features = {
+    gaming.enable = true;
+    virtualization = {
+      enable = true;
+      kvm.enable = true;
+      libvirt.enable = true;
+      docker.enable = true;
+    };
+    development = {
+      enable = true;
+      languages = {
+        nix.enable = true;
+        python.enable = true;
+      };
+    };
+  };
 
   networking.hostName = hostname;
 

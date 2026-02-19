@@ -394,11 +394,16 @@
   services.udev.packages = with pkgs; [ openrgb-git ];
 
   # Configuração comum de containers
+  # Nota: não habilitamos `podman.dockerCompat` por padrão porque conflita com
+  # `virtualisation.docker` quando Docker também está ativo.
+  # Deixe isso ser controlado pelo módulo de features (rag.features.virtualization.*)
+  # ou por-host.
   virtualisation = {
     containers.enable = true;
     podman = {
       enable = true;
-      dockerCompat = true;
+      dockerCompat = lib.mkDefault false;
+      dockerSocket.enable = lib.mkDefault false;
       defaultNetwork.settings.dns_enabled = true;
     };
   };

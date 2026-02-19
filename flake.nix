@@ -65,6 +65,14 @@
 
     # Tema Bart: instalado via KDE Store (não disponível como flake)
     # Para usar: System Settings > Get New Global Themes > Busque "Bart"
+
+    # DankMaterialShell (DMS) - Rice para Hyprland
+    # Repo: https://github.com/AvengeMedia/DankMaterialShell
+    # Obs.: flake=false porque é um repositório de dotfiles/configs, não um flake Nix.
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      flake = false;
+    };
   };
 
   outputs =
@@ -101,7 +109,10 @@
           };
           modules = [
             ./hosts/${hostname}
-            ./lib/options.nix  # Sistema de opções rag.* (v2 migration)
+            ./lib/options.nix     # Sistema de opções rag.* (v2 migration)
+            ./desktop/manager.nix # Desktop auto-import (v2 migration)
+            ./features            # Features modulares (v2 migration)
+            ./profiles            # Profiles composáveis (v2 migration)
           ];
         };
 

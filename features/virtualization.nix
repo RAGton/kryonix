@@ -1,0 +1,292 @@
+# =============================================================================
+# Feature: Virtualization Stack
+# Autor: rag (via AI Maintainer)
+#
+# O que é:
+# - Configuração completa para virtualização (KVM, libvirt, virt-manager)
+# - Docker, Podman, LXC
+#
+# Por quê:
+# - Centraliza toda configuração de virtualização
+# - Ativa/desativa facilmente: rag.features.virtualization.enable = true
+# - Suporta múltiplos backends
+#
+# Como usar:
+# No host: rag.features.virtualization.enable = true;
+#
+# Riscos:
+# - Requer CPU com suporte a virtualização (Intel VT-x / AMD-V)
+# - Pode conflitar com outros hypervisors (VirtualBox, etc)
+# =============================================================================
+{ config, lib, pkgs, ... }:
+
+let
+  cfg = config.rag.features.virtualization;
+
+in
+{
+  options.rag.features.virtualization = {
+    enable = lib.mkEnableOption "Virtualization stack";
+
+    kvm = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable KVM/QEMU virtualization";
+      };
+    };
+
+    libvirt = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable libvirt (virt-manager, virsh)";
+      };
+    };
+
+    docker = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enable Docker";
+      };
+
+      rootless = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Run Docker in rootless mode";
+      };
+    };
+
+    podman = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable Podman (Docker alternative)";
+      };
+
+      dockerCompat = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable Docker compatibility (podman-docker)";
+      };
+    };
+
+    lxc = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable LXC containers";
+      };
+    };
+
+    virtualbox = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable VirtualBox (may conflict with KVM)";
+      };
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    # =========================
+    # KVM/QEMU
+    # =========================
+    virtualisation.libvirtd = lib.mkIf (cfg.kvm.enable && cfg.libvirt.enable) {
+      enable = true;
+
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = true;
+        swtpm.enable = true;
+        # NOTE: `virtualisation.libvirtd.qemu.ovmf` submodule was removed upstream.
+        # All OVMF images distributed with QEMU are available by default now.
+        # If you need SecureBoot/TPM variants explicitly, set qemu.swtpm/firmware
+        # through the new upstream options.
+      };
+    };
+
+    # =========================
+    # Docker
+    # =========================
+    virtualisation.docker = lib.mkIf cfg.docker.enable {
+      enable = true;
+      enableOnBoot = true;
+
+      # Rootless mode
+      rootless = lib.mkIf cfg.docker.rootless {
+        enable = true;
+        setSocketVariable = true;
+      };
+
+      # Storage driver
+      storageDriver = "overlay2";
+
+      # Auto-prune
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
+    };
+
+    # =========================
+    # Podman
+    # =========================
+    virtualisation.podman = lib.mkIf cfg.podman.enable {
+      enable = true;
+
+      # Docker compatibility
+      dockerCompat = cfg.podman.dockerCompat;
+      dockerSocket.enable = cfg.podman.dockerCompat;
+
+      # Default network
+      defaultNetwork.settings.dns_enabled = true;
+
+      # Auto-update
+      autoPrune = {
+        enable = true;
+        dates = "weekly";
+      };
+    };
+
+    # =========================
+    # LXC
+    # =========================
+    virtualisation.lxc = lib.mkIf cfg.lxc.enable {
+      enable = true;
+      lxcfs.enable = true;
+    };
+
+    # =========================
+    # VirtualBox
+    # =========================
+    virtualisation.virtualbox.host = lib.mkIf cfg.virtualbox.enable {
+      enable = true;
+      enableExtensionPack = true;
+    };
+
+    # =========================
+    # System Packages
+    # =========================
+    environment.systemPackages = with pkgs; lib.flatten [
+      # KVM/QEMU tools
+      (lib.optionals (cfg.kvm.enable && cfg.libvirt.enable) [
+        virt-manager
+        virt-viewer
+        virtiofsd
+        spice
+        spice-gtk
+        spice-protocol
+        virtio-win
+        win-spice
+      ])
+
+      # Docker tools
+      (lib.optionals cfg.docker.enable [
+        docker-compose
+        lazydocker
+      ])
+
+      # Podman tools
+      (lib.optionals cfg.podman.enable [
+        podman-compose
+        podman-tui
+      ])
+
+      # LXC tools
+      (lib.optionals cfg.lxc.enable [
+        lxc
+      ])
+    ];
+
+    # =========================
+    # User Groups
+    # =========================
+    # Add user to virtualization groups
+    # Note: This requires userConfig to be passed
+    users.users = lib.mkIf (config ? userConfig) {
+      ${config.userConfig.name}.extraGroups = lib.flatten [
+        (lib.optional (cfg.kvm.enable && cfg.libvirt.enable) "libvirtd")
+        (lib.optional cfg.docker.enable "docker")
+        (lib.optional cfg.podman.enable "podman")
+        (lib.optional cfg.lxc.enable "lxc")
+        (lib.optional cfg.virtualbox.enable "vboxusers")
+      ];
+    };
+
+    # =========================
+    # Networking (libvirt)
+    # =========================
+    networking.firewall = lib.mkIf (cfg.kvm.enable && cfg.libvirt.enable) {
+      # Allow libvirt bridge traffic
+      # Tipo da opção: boolean ou "strict"/"loose". Usamos "loose" como padrão
+      # compatível com Tailscale (que também define "loose").
+      checkReversePath = lib.mkDefault "loose";
+    };
+
+    # =========================
+    # Performance
+    # =========================
+    boot.kernel.sysctl = lib.mkIf cfg.kvm.enable {
+      # KVM optimizations
+      "vm.swappiness" = 10;
+
+      # Huge pages for VMs
+      "vm.nr_hugepages" = lib.mkDefault 0;  # Adjust per host
+    };
+
+    # =========================
+    # Kernel Modules
+    # =========================
+    boot.kernelModules = lib.flatten [
+      # KVM modules (loaded automatically, but explicit is good)
+      (lib.optionals cfg.kvm.enable [
+        "kvm-intel"  # or kvm-amd (host-specific)
+        "kvm-amd"
+      ])
+
+      # VirtualBox modules
+      (lib.optionals cfg.virtualbox.enable [
+        "vboxdrv"
+        "vboxnetadp"
+        "vboxnetflt"
+      ])
+    ];
+
+    # =========================
+    # Assertions
+    # =========================
+    assertions = [
+      {
+        assertion = !(cfg.docker.enable && cfg.docker.rootless && cfg.podman.enable && cfg.podman.dockerCompat);
+        message = ''
+          Cannot enable both Docker rootless and Podman with Docker compatibility.
+          Choose one or the other.
+        '';
+      }
+      {
+        assertion = !(cfg.kvm.enable && cfg.virtualbox.enable);
+        message = ''
+          KVM and VirtualBox can conflict. It's recommended to use only one.
+          If you need both, ensure they don't run simultaneously.
+        '';
+      }
+      {
+        assertion = cfg.libvirt.enable -> cfg.kvm.enable;
+        message = "libvirt requires KVM to be enabled";
+      }
+    ];
+
+    # =========================
+    # Warnings
+    # =========================
+    warnings = lib.flatten [
+      (lib.optional (cfg.kvm.enable && cfg.virtualbox.enable)
+        "Both KVM and VirtualBox are enabled. They may conflict if used simultaneously.")
+
+      (lib.optional (cfg.docker.enable && cfg.podman.enable)
+        "Both Docker and Podman are enabled. Consider using only one to save resources.")
+    ];
+  };
+}

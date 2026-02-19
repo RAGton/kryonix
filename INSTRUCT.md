@@ -248,6 +248,44 @@ dotfiles-NixOs/
    rag.desktop.environment = "novo-de";
    ```
 
+### 3.5 Adicionar Tema Desktop-Specific
+
+⚠️ **IMPORTANTE**: Temas são específicos do desktop environment!
+
+**Temas KDE Plasma** vão em: `desktop/kde/themes/`  
+**Temas Hyprland** vão em: `desktop/hyprland/themes/`
+
+#### Exemplo: Tema KDE
+
+```nix
+# desktop/kde/themes/meu-tema/default.nix
+{ config, lib, pkgs, ... }:
+
+let
+  cfg = config.rag.theme.meu-tema;
+in
+{
+  options.rag.theme.meu-tema = {
+    enable = lib.mkEnableOption "Tema Meu-Tema (KDE Plasma ONLY)";
+    # ... opções de configuração
+  };
+
+  config = lib.mkIf cfg.enable {
+    # ⚠️ Usa componentes exclusivos do KDE:
+    # - plasma-manager (programs.plasma)
+    # - Kvantum (Qt theming engine)
+    # - Aurorae (window decorations)
+    
+    programs.plasma = {
+      workspace.lookAndFeel = "MeuTema";
+      # ...
+    };
+  };
+}
+```
+
+**Não funciona em**: Hyprland, GNOME, Xfce, i3/Sway
+
 ### 3.4 Adicionar Nova Rice
 
 1. **Adicionar como flake input** (se externo):

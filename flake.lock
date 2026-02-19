@@ -40,6 +40,22 @@
         "type": "github"
       }
     },
+    "dms": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1771459623,
+        "narHash": "sha256-ZVQommbjptXG4s6sZXZIvh/E9GMyU9t2K9JXKJFxtMM=",
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "rev": "c67bb1444aa39f51a92326e40cd0def7eccc5a34",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "type": "github"
+      }
+    },
     "edna-theme": {
       "flake": false,
       "locked": {
@@ -166,6 +182,7 @@
       "inputs": {
         "darwin": "darwin",
         "disko": "disko",
+        "dms": "dms",
         "edna-theme": "edna-theme",
         "hardware": "hardware",
         "home-manager": "home-manager",

@@ -53,71 +53,9 @@
     # =========================
     # Features (Opt-in)
     # =========================
-    features = {
-      gaming = {
-        enable = lib.mkEnableOption "Gaming stack (Steam, Lutris, gamemode)";
-
-        steam = {
-          enable = lib.mkOption {
-            type = lib.types.bool;
-            default = config.rag.features.gaming.enable;
-            description = "Install and enable Steam";
-          };
-        };
-
-        lutris = {
-          enable = lib.mkOption {
-            type = lib.types.bool;
-            default = config.rag.features.gaming.enable;
-            description = "Install Lutris";
-          };
-        };
-
-        heroic = {
-          enable = lib.mkOption {
-            type = lib.types.bool;
-            default = config.rag.features.gaming.enable;
-            description = "Install Heroic Games Launcher";
-          };
-        };
-      };
-
-      virtualization = {
-        enable = lib.mkEnableOption "KVM/QEMU virtualization with virt-manager";
-
-        libvirt = {
-          enable = lib.mkOption {
-            type = lib.types.bool;
-            default = config.rag.features.virtualization.enable;
-            description = "Enable libvirtd daemon";
-          };
-        };
-      };
-
-      development = {
-        rust = {
-          enable = lib.mkEnableOption "Rust development environment";
-        };
-
-        python = {
-          enable = lib.mkEnableOption "Python development environment";
-        };
-
-        go = {
-          enable = lib.mkEnableOption "Go development environment";
-        };
-
-        kubernetes = {
-          enable = lib.mkEnableOption "Kubernetes tools (kubectl, k9s, krew)";
-        };
-      };
-
-      networking = {
-        tailscale = {
-          enable = lib.mkEnableOption "Tailscale VPN";
-        };
-      };
-    };
+    # NOTA: As opções de features são declaradas nos próprios módulos de features
+    # (features/gaming.nix, features/virtualization.nix, etc)
+    # Não declarar aqui para evitar duplicação!
 
     # =========================
     # Branding
@@ -146,10 +84,11 @@
       {
         assertion =
           config.rag.desktop.environment == null ||
-          (config.services.xserver.enable or false) ||
+          (config.services.displayManager.sddm.enable or false) ||
+          (config.services.displayManager.gdm.enable or false) ||
           (config.programs.hyprland.enable or false);
         message = ''
-          Desktop environment requires a display server to be enabled.
+          Desktop environment requires a display manager to be enabled.
           If using rag.desktop.environment, ensure the corresponding desktop module is imported.
         '';
       }
@@ -159,7 +98,8 @@
     warnings =
       lib.optional
         (config.rag.desktop.environment != null &&
-         !(config.services.xserver.enable or false) &&
+         !(config.services.displayManager.sddm.enable or false) &&
+         !(config.services.displayManager.gdm.enable or false) &&
          !(config.programs.hyprland.enable or false))
         ''
           rag.desktop.environment is set to "${config.rag.desktop.environment}" but the desktop

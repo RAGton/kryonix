@@ -1,8 +1,9 @@
 { pkgs, nhModules, lib, ... }:
 {
   imports = [
-    "${nhModules}/common"
-    "${nhModules}/desktop/kde"
+    ../../../modules/home-manager/common
+    # Desktop user config (v2 migration: moved to desktop/)
+    ../../../desktop/kde/user.nix
   ];
 
   # Autostart (KDE): inicia o OpenRGB sozinho e já minimizado na bandeja.
