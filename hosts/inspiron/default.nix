@@ -175,7 +175,7 @@
   services.tlp.enable = lib.mkForce false;
 
   # Flatpak: mantém a lista comum vinda do módulo shared.
-  # (Removemos as extensões NVIDIA do common; elas ficam só no Glacier.)
+  # (Removemos as extensões NVIDIA do common.)
 
   # Gaming/estabilidade: evita serviços que brigam por perfil de energia.
   # (PPD já está habilitado acima; mantemos apenas TLP desligado.)

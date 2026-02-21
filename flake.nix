@@ -94,19 +94,12 @@
 
       # Definição de usuários
       users = {
-        rag = {
-          avatar = ./files/avatar/ragton.jpeg;
-          email = "gabriel.rag@proton.me";
-          fullName = "Gabriel Aguiar Rocha";
-          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLt1vJ3bluf8Df37jUUktr1MwMzQctci8wi3z4O9AGP gabriel.rag@proton.me";
-          name = "rag";
-        };
-
-        # Usuário adicional (ex.: para separar perfil pessoal/trabalho ou testar configs)
+        # Usuário principal
         rocha = {
           avatar = ./files/avatar/ragton.jpeg;
           email = "gabriel.rag@proton.me";
-          fullName = "Rocha";
+          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLt1vJ3bluf8Df37jUUktr1MwMzQctci8wi3z4O9AGP gabriel.rag@proton.me";
+          fullName = "Gabriel Rocha";
           name = "rocha";
         };
       };
@@ -172,7 +165,6 @@
     {
       nixosConfigurations = {
         inspiron = mkNixosConfiguration "inspiron" "rocha";
-        Glacier = mkNixosConfiguration "Glacier" "rag";
 
         # Live ISO instaladora (multi-host)
         iso = nixpkgs.lib.nixosSystem {
@@ -189,9 +181,6 @@
       };
 
       homeConfigurations = {
-        "rag@inspiron" = mkHomeConfiguration "x86_64-linux" "rag" "inspiron";
-        "rag@Glacier" = mkHomeConfiguration "x86_64-linux" "rag" "Glacier";
-
         "rocha@inspiron" = mkHomeConfiguration "x86_64-linux" "rocha" "inspiron";
       };
 

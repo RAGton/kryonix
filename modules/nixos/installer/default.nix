@@ -6,8 +6,7 @@
 #   deste flake de forma repetível.
 #
 # Como usar (na ISO):
-# - `rag-install --host Glacier --disk /dev/nvme0n1`
-# - ou `rag-install --host inspiron --disk /dev/nvme0n1`
+# - `rag-install --host inspiron --disk /dev/nvme0n1`
 # =============================================================================
 { lib, pkgs, inputs, ... }:
 {
@@ -35,11 +34,10 @@
           rag-install: instalador automatizado para este flake
 
           Uso:
-            rag-install --host <Glacier|inspiron> --disk <DISPOSITIVO>
+            rag-install --host <inspiron> --disk <DISPOSITIVO>
 
           Exemplos:
-            rag-install --host Glacier --disk /dev/disk/by-id/nvme-...
-            rag-install --host inspiron --disk /dev/nvme0n1
+            rag-install --host inspiron --disk /dev/disk/by-id/nvme-...
 
           Segurança:
             - Isso APAGA o disco escolhido.
@@ -89,10 +87,10 @@
           fi
 
           case "$HOST" in
-            Glacier|inspiron) ;;
+            inspiron) ;;
             *)
               echo "Host inválido: $HOST" >&2
-              echo "Hosts suportados: Glacier, inspiron" >&2
+              echo "Hosts suportados: inspiron" >&2
               exit 2
               ;;
           esac

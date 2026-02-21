@@ -25,7 +25,7 @@ nix-instantiate --parse features/development.nix > /dev/null && echo "✅ OK" ||
 
 echo ""
 echo "🧪 Testando avaliação básica..."
-timeout 60 nix eval .#nixosConfigurations.Glacier.config.networking.hostName 2>&1 || echo "Timeout ou erro"
+timeout 60 nix eval .#nixosConfigurations.inspiron.config.networking.hostName 2>&1 || echo "Timeout ou erro"
 
 echo ""
 echo "✨ Testes concluídos!"

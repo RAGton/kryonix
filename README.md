@@ -55,13 +55,13 @@ sudo nixos-rebuild switch --flake .#inspiron
 - Usuário (Home Manager):
 
 ```sh
-home-manager switch --flake .#rag@inspiron
+home-manager switch --flake .#rocha@inspiron
 ```
 
 Para ler as novidades do Home Manager (news) usando flakes, rode:
 
 ```sh
-home-manager news --flake .#rag@inspiron
+home-manager news --flake .#rocha@inspiron
 ```
 
 > Se você rodar `home-manager news` sem `--flake`, ele tenta usar a config padrão em `~/.config/home-manager/home.nix`.
@@ -105,7 +105,7 @@ No Hyprland, o `$mainMod` normalmente equivale a `Meta` (SUPER).
 
 O [Makefile](Makefile) oferece alvos prontos.
 
-- Por padrão, ele assume que o hostname local bate com o output da flake (ex.: `Glacier` → `.#Glacier`).
+- Por padrão, ele assume que o hostname local bate com o output da flake (ex.: `inspiron` → `.#inspiron`).
 - Você pode sobrescrever as variáveis na linha de comando para apontar para outro host/usuário.
 
 Listar alvos disponíveis:
@@ -127,17 +127,17 @@ make flake-update
 
 - `HOSTNAME`: usado para montar o target padrão. Default: `$(hostname)`.
 - `FLAKE`: target do sistema. Default: `.#$(HOSTNAME)`.
-- `HOME_TARGET`: target do Home Manager. Default: igual a `$(FLAKE)` (você quase sempre vai querer setar algo como `.#rag@Glacier`).
+- `HOME_TARGET`: target do Home Manager. Default: igual a `$(FLAKE)` (você quase sempre vai querer setar algo como `.#rocha@inspiron`).
 - `EXPERIMENTAL`: flags do `nix` para habilitar flakes quando necessário.
 
 Exemplos de override:
 
 ```sh
 # Aplicar NixOS em um host específico (sem depender do hostname local)
-make nixos-rebuild FLAKE=.#Glacier
+make nixos-rebuild FLAKE=.#inspiron
 
 # Aplicar Home Manager no formato user@host
-make home-manager-switch HOME_TARGET=.#rag@Glacier
+make home-manager-switch HOME_TARGET=.#rocha@inspiron
 
 # Atualizar inputs
 make flake-update
@@ -196,7 +196,7 @@ Guia para instalar a máquina do zero usando apenas o ISO do NixOS + este reposi
 
 Exemplo de layout sem criptografia: uma partição EFI (`/boot`) e uma partição Btrfs.
 
-> Dica: o arquivo [hosts/Glacier/disks.nix](hosts/Glacier/disks.nix) documenta o layout esperado do host `Glacier`.
+> Dica: o arquivo [hosts/inspiron/disks.nix](hosts/inspiron/disks.nix) documenta o layout esperado do host `inspiron`.
 
 Monte em `/mnt` usando subvolumes (ajuste `DISK`, `ESP` e `ROOT`):
 
@@ -233,8 +233,8 @@ No LiveCD, clone este repo para dentro do sistema alvo e rode o install apontand
 mkdir -p /mnt/etc
 git clone https://github.com/RAGton/dotfiles-NixOs /mnt/etc/nixos
 
-# substitua pelo seu host (ex.: Glacier / inspiron)
-nixos-install --flake /mnt/etc/nixos#Glacier
+# substitua pelo seu host (ex.: inspiron / inspiron)
+nixos-install --flake /mnt/etc/nixos#inspiron
 ```
 
 Se você estiver instalando em um hardware diferente do que já está versionado em `hosts/<host>/hardware-configuration.nix`, gere e ajuste esse arquivo antes do `nixos-install`.
@@ -244,14 +244,14 @@ Se você estiver instalando em um hardware diferente do que já está versionado
 Reinicie e aplique o Home Manager do seu usuário:
 
 ```sh
-home-manager switch --flake /etc/nixos#rag@Glacier
+home-manager switch --flake /etc/nixos#rocha@inspiron
 ```
 
 Se o `home-manager` ainda não estiver disponível no PATH no primeiro login, rode:
 
 ```sh
 nix-shell -p home-manager
-home-manager switch --flake /etc/nixos#rag@Glacier
+home-manager switch --flake /etc/nixos#rocha@inspiron
 ```
 
 ### Adicionando uma nova máquina com um novo usuário

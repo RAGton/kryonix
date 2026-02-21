@@ -7,7 +7,7 @@
 #
 # Por quê
 # - Acesso seguro remoto (SSH/serviços) sem abrir portas no roteador.
-# - Conectividade entre máquinas (Glacier <-> inspiron) com pouco atrito.
+# - Conectividade entre máquinas com pouco atrito.
 #
 # Como
 # - Usa `services.tailscale` do NixOS.

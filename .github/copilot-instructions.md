@@ -61,10 +61,8 @@ dotfiles-NixOs/
 │   │   ├── default.nix              # Host config (imports + options)
 │   │   ├── hardware-configuration.nix  # Hardware (SDA only, NVMe via disko)
 │   │   └── disks.nix               # Disko layout (NVMe partitioning)
-│   ├── Glacier/
 │   └── iso/
 ├── home/                  # Per-user Home Manager entry points
-│   ├── rag/
 │   └── rocha/
 ├── desktop/               # Desktop environments (system-level)
 │   ├── manager.nix        # Auto-import based on rag.desktop.environment
