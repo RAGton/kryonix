@@ -1,56 +1,59 @@
 # =============================================================================
-# NixOS: greetd + DankMaterialShell greeter (DMS)
+# NixOS: greetd + tuigreet (Wayland-friendly login manager)
 #
 # O que é:
-# - Habilita greetd e configura a sessão padrão para usar o greeter do DMS.
+# - Habilita greetd e configura a sessão padrão com tuigreet.
 #
 # Por quê:
 # - Substitui SDDM/GDM por um login manager leve e Wayland-friendly.
-# - Integra o ecossistema DMS (quickshell) já usado no Hyprland.
+# - tuigreet é o greeter padrão, estável e bem integrado com greetd.
 #
 # Como usar:
 # - No host (ex.: hosts/inspiron/default.nix):
 #     rag.services.greetdDms.enable = true;
 #
 # Notas:
-# - O módulo upstream do DMS fornece `programs.dank-material-shell.greeter.*`.
-# - Este módulo só faz wiring no NixOS (services.greetd + user do greeter).
+# - O rice DMS (DankMaterialShell) é carregado pelo usuário via Home Manager.
+#   Aqui só configuramos o display manager (greetd + tuigreet).
 # =============================================================================
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, userConfig, ... }:
 
 let
   cfg = config.rag.services.greetdDms;
-  # Usuário que o greetd usará para rodar o greeter.
   greeterUser = cfg.user;
 in
 {
   options.rag.services.greetdDms = {
-    enable = lib.mkEnableOption "greetd with DankMaterialShell greeter";
+    enable = lib.mkEnableOption "greetd with tuigreet (Wayland-friendly login manager)";
 
     user = lib.mkOption {
       type = lib.types.str;
-      default = config.userConfig.name;
-      defaultText = lib.literalExpression "config.userConfig.name";
-      description = "User to run the DMS greeter as (must exist in users.users).";
+      default = userConfig.name;
+      defaultText = lib.literalExpression "userConfig.name";
+      description = "User that runs the greetd greeter process (must exist in users.users).";
+    };
+
+    command = lib.mkOption {
+      type = lib.types.str;
+      default = "Hyprland";
+      description = "Session command launched after login (e.g. 'Hyprland', 'sway').";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    # Greetd como display manager.
     services.greetd = {
       enable = true;
-      settings.default_session.user = greeterUser;
-      # O módulo upstream do DMS define o comando default via mkDefault,
-      # mas a gente deixa isso explícito aqui pra evitar ambiguidades.
-      settings.default_session.command = lib.mkDefault (lib.getExe config.programs.dank-material-shell.greeter.script);
+      settings.default_session = {
+        user = greeterUser;
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd ${lib.escapeShellArg cfg.command}";
+      };
     };
 
-    # Ativa o greeter do DMS (módulo upstream fornece a lógica completa).
-    programs.dank-material-shell.greeter.enable = true;
+    environment.systemPackages = [ pkgs.greetd.tuigreet ];
 
     assertions = [
       {
-        assertion = (config.users.users.${greeterUser} or null) != null;
+        assertion = lib.hasAttr greeterUser config.users.users;
         message = "greetdDms: users.users.${greeterUser} não existe. Crie o usuário antes ou ajuste rag.services.greetdDms.user.";
       }
     ];

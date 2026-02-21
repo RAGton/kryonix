@@ -66,11 +66,8 @@
     # =========================
     # Services (host-toggles)
     # =========================
-    services = {
-      greetdDms = {
-        enable = lib.mkEnableOption "Enable greetd wired to DankMaterialShell greeter";
-      };
-    };
+    # NOTE: rag.services.greetdDms is defined in modules/nixos/services/greetd-dms/default.nix
+    services = { };
 
     # =========================
     # Features (Opt-in)
