@@ -64,7 +64,7 @@ in
     # enableGnomeKeyring   → desbloqueia o gnome-keyring no login via greetd
     #                        (sem isso, secrets/SSH keys ficam inacessíveis na sessão).
     security.pam.services.greetd = {
-      allowNullPassword = false;
+      allowNullPassword = lib.mkForce false;
       unixAuth = true;
       startSession = true;
       enableGnomeKeyring = true;
