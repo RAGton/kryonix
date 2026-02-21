@@ -4,14 +4,14 @@
 
 This repository manages **NixOS** and **nix-darwin** configurations for multiple machines using a **flake-first, fully declarative, and highly modular architecture**.
 
-The primary goals of this project are:
+Goals:
 
 * **Reproducibility** across machines and platforms
 * **Portability** between Linux and macOS
 * **Scalability** as new hosts, users, and features are added
 * **Low cognitive overhead** through strict modular boundaries
 
-The system is built around **Nix flakes**, **Home Manager**, and **platform-specific modules**, with a clear separation between system-level and user-level concerns.
+Built around **Nix flakes**, **Home Manager**, **disko**, and **platform-specific modules**.
 
 ---
 
@@ -34,56 +34,233 @@ modules/
 ├── home-manager/   # User-level configuration
 ```
 
-Each module should:
+### 3. Options Over Imports (v2 Architecture)
 
-* Do **one thing well**
-* Be reusable across hosts
-* Avoid host-specific assumptions
+High-level choices are made via `rag.*` options, not manual imports:
 
----
+```nix
+rag.desktop.environment = "hyprland";   # Desktop choice
+rag.profiles.laptop.enable = true;       # Profile
+rag.features.development.enable = true;  # Features
+```
 
-## Directory Responsibilities
-
-### `hosts/`
-
-* System-level configuration per machine
-* Minimal logic: mostly imports + hardware-specific settings
-* Naming convention matches flake outputs
-
-### `home/`
-
-* Per-user Home Manager entry points
-* Imports reusable modules from `modules/home-manager/`
-* Host-aware, but **user-centric**
-
-### `modules/home-manager/`
-
-Reusable user modules, including:
-
-* Shells (zsh)
-* Desktop environments
-* Services
-* Scripts
-* Tooling (kubectl, AWS, etc.)
-
-### `modules/home-manager/scripts/bin/`
-
-* Custom executable scripts
-* Automatically deployed to `~/.local/bin`
-* Scripts must:
-
-  * Declare dependencies clearly
-  * Be shell-agnostic when possible
-  * Avoid hardcoded paths
+Options are defined in `lib/options.nix` and consumed by modules in `features/`, `profiles/`, and `desktop/manager.nix`.
 
 ---
 
-## Developer Workflows (Canonical)
+## Directory Structure
+
+```
+dotfiles-NixOs/
+├── flake.nix              # Single source of truth
+├── lib/
+│   ├── default.nix        # Helper functions
+│   └── options.nix        # rag.* option definitions
+├── hosts/                 # Per-machine: hardware + high-level choices
+│   ├── inspiron/
+│   │   ├── default.nix              # Host config (imports + options)
+│   │   ├── hardware-configuration.nix  # Hardware (SDA only, NVMe via disko)
+│   │   └── disks.nix               # Disko layout (NVMe partitioning)
+│   ├── Glacier/
+│   └── iso/
+├── home/                  # Per-user Home Manager entry points
+│   ├── rag/
+│   └── rocha/
+├── desktop/               # Desktop environments (system-level)
+│   ├── manager.nix        # Auto-import based on rag.desktop.environment
+│   ├── hyprland/
+│   │   ├── system.nix     # NixOS config for Hyprland
+│   │   ├── user.nix       # Home Manager config
+│   │   ├── hyprland.conf  # Hyprland config file
+│   │   └── rice/          # DMS (DankMaterialShell) integration
+│   └── kde/
+│       ├── system.nix
+│       ├── user.nix
+│       └── themes/bart/
+├── features/              # Modular features activated by options
+│   ├── default.nix
+│   ├── development.nix    # Languages, tools, kubernetes
+│   ├── gaming.nix         # Steam, Lutris, GameMode, etc.
+│   └── virtualization.nix # Docker, libvirt, Podman, etc.
+├── profiles/              # Composable presets
+│   ├── default.nix
+│   ├── desktop.nix
+│   ├── laptop.nix
+│   └── vm.nix
+├── modules/
+│   ├── nixos/             # System modules (services, branding, etc.)
+│   ├── darwin/            # macOS modules
+│   ├── home-manager/      # User modules (programs, scripts, services)
+│   ├── kernel/            # Kernel configurations (zen.nix)
+│   ├── shared/            # Cross-platform (nixpkgs config)
+│   └── virtualization/    # VM networking
+├── overlays/              # Package overrides
+├── files/                 # Assets (wallpapers, avatar, screenshots)
+└── docs/                  # Documentation
+```
+
+---
+
+## Disk Layout (Host: inspiron)
+
+### Physical Disks
+
+| Disk | Model | Size | Role |
+|------|-------|------|------|
+| NVMe | ADATA SM2P41C3 512GB | 477G | System + Home |
+| SDA  | Kingston SA400S37 240G | 224G | Data (RAG-DATA) |
+
+### NVMe Partition Layout (managed by disko)
+
+```
+┌──────────┬──────────┬────────────────┬────────────────┐
+│ p1: EFI  │ p2: swap │ p3: SISTEMA    │ p4: HOME       │
+│ 1G       │ 16G      │ 260G           │ ~200G          │
+│ /boot    │          │ PODE FORMATAR  │ NUNCA FORMATAR │
+│ vfat     │          │ btrfs          │ btrfs          │
+│          │          │ @, @nix, @log  │ @home          │
+│          │          │ @cache, @tmp   │                │
+│          │          │ @containers    │                │
+│          │          │ @libvirt       │                │
+│          │          │ @snapshots     │                │
+│          │          │ @persist       │                │
+└──────────┴──────────┴────────────────┴────────────────┘
+```
+
+### SDA (NÃO gerenciado pelo disko — NUNCA formatar)
+
+```
+┌─────────────────────────┐
+│ sda1: btrfs RAG-DATA    │
+│ /RAG-DATA               │
+│ by-id: ata-KINGSTON_... │
+└─────────────────────────┘
+```
+
+### Key Design Decisions
+
+* **All devices use `by-id`** — stable across reformats (hardware serial)
+* **NVMe fileSystems are auto-generated by disko** from `disks.nix`
+* **`hardware-configuration.nix` only declares SDA** (what disko doesn't manage)
+* **p3 (SISTEMA)** can be freely reformatted without data loss
+* **p4 (HOME)** is a separate partition — survives system reformats
+* **SDA** is never touched by any automation
+
+---
+
+## Installation & Reinstallation Guide
+
+### First-Time Install (Live CD — formats everything)
+
+```bash
+# 1. Boot the NixOS Live CD
+
+# 2. Connect to the internet
+nmcli device wifi connect "SSID" password "PASSWORD"
+
+# 3. Clone the repo
+nix-shell -p git
+git clone https://github.com/RAGton/dotfiles-NixOs.git
+cd dotfiles-NixOs
+
+# 4. Partition & format the NVMe (⚠️ DESTROYS ALL NVMe DATA)
+sudo nix run github:nix-community/disko -- \
+  --mode disko ./hosts/inspiron/disks.nix
+
+# 5. Mount SDA manually (disko doesn't manage it)
+sudo mkdir -p /mnt/RAG-DATA
+sudo mount /dev/disk/by-id/ata-KINGSTON_SA400S37240G_50026B7785682AEA-part1 /mnt/RAG-DATA
+
+# 6. Install NixOS
+sudo nixos-install --flake .#inspiron --no-root-passwd
+
+# 7. Set user password
+sudo nixos-enter --root /mnt -c 'passwd rocha'
+
+# 8. Reboot
+sudo reboot
+```
+
+### Reinstall (preserving /home and SDA)
+
+```bash
+# 1. Boot the NixOS Live CD
+
+# 2. Connect to the internet
+nmcli device wifi connect "SSID" password "PASSWORD"
+
+# 3. Format ONLY system partitions (p1 + p2 + p3)
+DISK="/dev/disk/by-id/nvme-SM2P41C3_NVMe_ADATA_512GB_DM382UX7D58F"
+
+# EFI
+sudo mkfs.vfat -F32 "${DISK}-part1"
+
+# Swap
+sudo mkswap "${DISK}-part2"
+sudo swapon "${DISK}-part2"
+
+# System btrfs (destroys @, @nix, etc. — NOT @home)
+sudo mkfs.btrfs -f -L NIXOS-SYSTEM "${DISK}-part3"
+
+# 4. Create system subvolumes
+sudo mount "${DISK}-part3" /mnt
+cd /mnt
+sudo btrfs subvol create @
+sudo btrfs subvol create @nix
+sudo btrfs subvol create @log
+sudo btrfs subvol create @cache
+sudo btrfs subvol create @containers
+sudo btrfs subvol create @libvirt
+sudo btrfs subvol create @snapshots
+sudo btrfs subvol create @persist
+sudo btrfs subvol create @tmp
+cd /
+sudo umount /mnt
+
+# 5. Mount everything
+sudo mount -o subvol=@,compress=zstd,noatime "${DISK}-part3" /mnt
+sudo mkdir -p /mnt/{boot,home,nix,var/log,var/cache,var/lib/containers,var/lib/libvirt,.snapshots,persist,tmp,RAG-DATA}
+
+sudo mount "${DISK}-part1" /mnt/boot
+sudo mount -o subvol=@home,compress=zstd,noatime,autodefrag "${DISK}-part4" /mnt/home
+sudo mount -o subvol=@nix,compress=zstd,noatime "${DISK}-part3" /mnt/nix
+sudo mount -o subvol=@log,compress=zstd,noatime "${DISK}-part3" /mnt/var/log
+sudo mount -o subvol=@cache,compress=zstd,noatime "${DISK}-part3" /mnt/var/cache
+sudo mount -o subvol=@containers,compress=zstd,noatime "${DISK}-part3" /mnt/var/lib/containers
+sudo mount -o subvol=@libvirt,compress=zstd,noatime "${DISK}-part3" /mnt/var/lib/libvirt
+sudo mount -o subvol=@snapshots,compress=zstd,noatime "${DISK}-part3" /mnt/.snapshots
+sudo mount -o subvol=@persist,compress=zstd,noatime "${DISK}-part3" /mnt/persist
+sudo mount -o subvol=@tmp,compress=zstd,noatime "${DISK}-part3" /mnt/tmp
+sudo mount /dev/disk/by-id/ata-KINGSTON_SA400S37240G_50026B7785682AEA-part1 /mnt/RAG-DATA
+
+# 6. Clone repo and install
+cd /mnt/home
+nix-shell -p git
+git clone https://github.com/RAGton/dotfiles-NixOs.git
+cd dotfiles-NixOs
+sudo nixos-install --root /mnt --flake .#inspiron --no-root-passwd
+
+# 7. Set user password
+sudo nixos-enter --root /mnt -c 'passwd rocha'
+
+# 8. Reboot
+sudo reboot
+```
+
+### Post-Install: Apply User Configuration
+
+```bash
+home-manager switch --flake .#rocha@inspiron
+```
+
+---
+
+## Developer Workflows
 
 ### Apply System Configuration
 
 ```bash
-nixos-rebuild switch --flake .#hostname
+sudo nixos-rebuild switch --flake .#hostname
 ```
 
 ### Apply User Configuration
@@ -92,100 +269,74 @@ nixos-rebuild switch --flake .#hostname
 home-manager switch --flake .#user@hostname
 ```
 
-There are **no automated tests**. Validation is done by:
+### Validate Without Building
 
-* Successful evaluation
+```bash
+nix flake check
+```
+
+### Dry-Run Build
+
+```bash
+nix build --dry-run '.#nixosConfigurations.inspiron.config.system.build.toplevel'
+```
+
+Validation is done by:
+
+* Successful evaluation (`nix flake check`)
 * Activation without warnings
 * Verifying system/user state post-deploy
 
 ---
 
-## Project Conventions (Important)
+## Key Files Reference
+
+| File | Purpose |
+|------|---------|
+| `flake.nix` | Inputs, outputs, mkNixosConfiguration |
+| `lib/options.nix` | `rag.*` option definitions |
+| `hosts/inspiron/disks.nix` | Disko partition layout |
+| `hosts/inspiron/hardware-configuration.nix` | SDA mount + hardware |
+| `hosts/inspiron/default.nix` | Host config (options + boot) |
+| `desktop/manager.nix` | Auto-import desktop by option |
+| `features/*.nix` | Modular feature activation |
+| `profiles/*.nix` | Composable host presets |
+
+---
+
+## Project Conventions
 
 ### Theming
 
-* **Catppuccin** is the global theme baseline
-* Applied consistently across:
-
-  * Terminal
-  * Desktop
-  * CLI tools
-* Defined via a dedicated flake input and reused in modules
+* **Edna** / **DMS** themes for Hyprland
+* **Bart** theme for KDE Plasma
+* Applied consistently across terminal, desktop, CLI tools
 
 ### Desktop Management
 
-* KDE, window rules, shortcuts, and behaviors are **fully declarative**
-* See:
+* Desktop choice via `rag.desktop.environment` option
+* Supported: `"hyprland"`, `"kde"`
+* `desktop/manager.nix` auto-imports the correct system module
+* No manual GUI configuration required after rebuild
 
-  * `desktop/kde/default.nix`
-  * `programs/aerospace/default.nix`
+### Shell & Productivity
 
-No manual GUI configuration should be required after rebuild.
+* **Zsh** is the default shell (`modules/home-manager/programs/zsh/`)
+* Extensive aliases for Git, Kubernetes, AWS, navigation
+* Scripts in `modules/home-manager/scripts/bin/` are first-class citizens
 
----
+### Kubernetes & Cloud Tooling
 
-## Shell & Productivity
-
-### Zsh
-
-* Zsh is the default shell
-* Aliases and functions are extensive and intentional
-* Focus areas:
-
-  * Git
-  * Kubernetes
-  * AWS
-  * Navigation
-* Source of truth:
-
-  ```
-  programs/zsh/default.nix
-  ```
-
-### Scripts
-
-* Scripts are first-class citizens
-* Invoked directly from shell
-* Must work identically on fresh machines
-
----
-
-## Kubernetes & Cloud Tooling
-
-* `krew` plugins are managed declaratively
-* Installed and updated automatically on activation
-* Custom scripts support:
-
-  * Cluster inspection
-  * AWS workflows
-  * Day-2 operations
-
-Source:
-
-```
-programs/krew/default.nix
-```
+* `krew` plugins managed declaratively (`modules/home-manager/programs/krew/`)
+* Custom scripts for cluster inspection, AWS workflows
 
 ---
 
 ## Cross-Component Integration
 
-* System and user modules may share values (e.g. wallpaper, username)
-* Sharing is done via:
-
-  * Module arguments
-  * Explicit imports
+* System and user modules share values via module arguments and explicit imports
 * Avoid implicit coupling
-
-### Platform Detection
-
-* macOS vs Linux logic must use:
-
-```nix
-stdenv.isDarwin
-```
-
-No OS assumptions elsewhere.
+* Platform detection: use `stdenv.isDarwin`
 
 ---
 
@@ -193,40 +344,32 @@ No OS assumptions elsewhere.
 
 ### Add a Package for All Users
 
-Edit:
-
 ```
 modules/home-manager/common/default.nix
 ```
 
-### Customize KDE
+### Add a New Desktop
 
-Edit:
+1. Create `desktop/<name>/system.nix`
+2. Add mapping in `desktop/manager.nix`
 
-```
-modules/home-manager/desktop/kde/default.nix
-```
+### Add a New Feature
+
+1. Create `features/<name>.nix` with `rag.features.<name>` options
+2. Import in `features/default.nix`
 
 ### Add a New Script
 
-1. Place it in:
-
-   ```
-   modules/home-manager/scripts/bin/
-   ```
+1. Place in `modules/home-manager/scripts/bin/`
 2. Ensure it is executable
 3. Declare required dependencies
 
----
+### Add a New Host
 
-## Documentation & Discovery
-
-* `README.md` contains the high-level overview
-* When in doubt:
-
-  * Read the module
-  * Follow existing patterns
-  * Prefer clarity over cleverness
+1. Create `hosts/<name>/default.nix`
+2. Create `hosts/<name>/hardware-configuration.nix`
+3. Create `hosts/<name>/disks.nix` (if using disko)
+4. Add to `flake.nix` outputs
 
 ---
 
@@ -236,6 +379,8 @@ modules/home-manager/desktop/kde/default.nix
 * Do not introduce imperative state
 * Prefer reuse over duplication
 * Keep hosts thin, modules rich
+* All disk references must use `by-id` (never `by-uuid`)
+* Never touch SDA in disko configurations
 * If uncertain, ask via pull request rather than guessing
 
 This repository values **discipline over shortcuts**.
