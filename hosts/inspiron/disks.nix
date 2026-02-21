@@ -1,95 +1,109 @@
-# Layout de disco para o host "inspiron" (modo documentação/disko)
+# Layout de disco para o host "inspiron" (disko)
 #
-# Este arquivo é usado pelo `disko` SOMENTE quando a ISO instaladora chama ele.
-# Em runtime, quem monta os FS é o `hardware-configuration.nix`.
+# ⚠️  IMPORTANTE: Este arquivo é usado pelo `disko` no Live CD para particionar
+#     e formatar o NVMe. O SDA (RAG-DATA) NUNCA é tocado.
 #
-# Estado atual (hardware-configuration.nix):
-# - /boot: vfat (UUID AF09-FA74)
-# - /, /home, /nix, /var/log, /var/cache, /var/lib/containers, /var/libvirt,
-#   /.snapshots, /persist, /tmp: btrfs no mesmo UUID 4d5e25fc-322d-4993-99f5-85e7e299a184
-# - /RAG-DATA: btrfs separado (UUID ec9d75cd-877d-4f66-9a6b-cfe7eb5ca9f0) — não automatizado aqui
-# - swap: UUID 5ccb5cb3-75b1-4e05-918e-5000bed16da3 — não automatizado aqui
+# Layout do NVMe (SM2P41C3 NVMe ADATA 512GB):
+#   p1 = EFI  (1G)    → /boot
+#   p2 = swap (16G)
+#   p3 = btrfs SISTEMA (~260G) → @, @nix, @log, @cache, @containers, @libvirt,
+#        @snapshots, @persist, @tmp  ← PODE FORMATAR SEMPRE
+#   p4 = btrfs HOME   (~200G) → @home  ← NUNCA PERDE DADOS
 #
-# Observação importante:
-# - Este `disks.nix` NÃO cria /RAG-DATA nem swap — ele foca no disco do sistema.
+# SDA (Kingston SA400S37 240G):
+#   Partição única btrfs → /RAG-DATA  ← NÃO GERENCIADO PELO DISKO
+#
+# Uso no Live CD:
+#   sudo nix run github:nix-community/disko -- --mode disko /caminho/disks.nix
+#   (ou via nixos-install com disko integrado)
 
 { lib, ... }:
 {
   disko.devices = {
     disk."nvme0n1" = {
       type = "disk";
-      # Dica: trocar pelo caminho estável correto, ex:
-      # device = "/dev/disk/by-id/nvme-...";
-      device = "/dev/nvme0n1";
+      device = "/dev/disk/by-id/nvme-SM2P41C3_NVMe_ADATA_512GB_DM382UX7D58F";
       content = {
         type = "gpt";
         partitions = {
+
+          # ─── Partição 1: EFI System ───
           ESP = {
-            size = "512M";
-            type = "ef00"; # EFI System
+            size = "1G";
+            type = "EF00";
             content = {
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
-              mountOptions = [ "fmask=0022" "dmask=0022" ];
+              mountOptions = [ "fmask=0077" "dmask=0077" ];
             };
           };
 
-          root = {
-            size = "100%";
-            type = "8300"; # Linux filesystem
+          # ─── Partição 2: Swap ───
+          swap = {
+            size = "16G";
+            content = {
+              type = "swap";
+            };
+          };
+
+          # ─── Partição 3: SISTEMA (pode formatar sem medo) ───
+          system = {
+            size = "260G";
             content = {
               type = "btrfs";
-              extraArgs = [ "-L" "RAIZ-NIXOS" ];
+              extraArgs = [ "-f" "-L" "NIXOS-SYSTEM" ];
               subvolumes = {
                 "@" = {
                   mountpoint = "/";
-                  mountOptions = [ "subvol=@" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
-                "@home" = {
-                  mountpoint = "/home";
-                  mountOptions = [ "subvol=@home" "compress=zstd" "autodefrag" "noatime" ];
-                };
-
                 "@nix" = {
                   mountpoint = "/nix";
-                  mountOptions = [ "subvol=@nix" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
                 "@log" = {
                   mountpoint = "/var/log";
-                  mountOptions = [ "subvol=@log" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
                 "@cache" = {
                   mountpoint = "/var/cache";
-                  mountOptions = [ "subvol=@cache" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
                 "@containers" = {
                   mountpoint = "/var/lib/containers";
-                  mountOptions = [ "subvol=@containers" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
                 "@libvirt" = {
-                  mountpoint = "/var/libvirt";
-                  mountOptions = [ "subvol=@libvirt" "compress=zstd" "noatime" ];
+                  mountpoint = "/var/lib/libvirt";
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
                 "@snapshots" = {
                   mountpoint = "/.snapshots";
-                  mountOptions = [ "subvol=@snapshots" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
                 "@persist" = {
                   mountpoint = "/persist";
-                  mountOptions = [ "subvol=@persist" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
                 };
-
                 "@tmp" = {
                   mountpoint = "/tmp";
-                  mountOptions = [ "subvol=@tmp" "compress=zstd" "noatime" ];
+                  mountOptions = [ "compress=zstd" "noatime" ];
+                };
+              };
+            };
+          };
+
+          # ─── Partição 4: HOME (nunca formatar!) ───
+          home = {
+            size = "100%"; # Usa o espaço restante (~200G)
+            content = {
+              type = "btrfs";
+              extraArgs = [ "-f" "-L" "NIXOS-HOME" ];
+              subvolumes = {
+                "@home" = {
+                  mountpoint = "/home";
+                  mountOptions = [ "compress=zstd" "noatime" "autodefrag" ];
                 };
               };
             };
@@ -97,5 +111,10 @@
         };
       };
     };
+
+    # ─── SDA: NÃO GERENCIADO ───
+    # O disco Kingston (RAG-DATA) é montado via hardware-configuration.nix
+    # e NUNCA deve ser formatado pelo disko.
+    # Montagem: /RAG-DATA (btrfs, by-id)
   };
 }
