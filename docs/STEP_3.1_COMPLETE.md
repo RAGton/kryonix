@@ -72,7 +72,7 @@ Módulo responsável por:
   ];
 ```
 
-### 3. **Modificado**: `hosts/Glacier/default.nix`
+### 3. **Modificado**: `hosts/inspiron/default.nix`
 
 **ANTES:**
 ```nix
@@ -94,7 +94,7 @@ rag.desktop.environment = "kde";  # ✅ Via opção
 
 ### 4. **Modificado**: `hosts/inspiron/default.nix`
 
-Mesma mudança que Glacier.
+Mesma mudança que inspiron.
 
 ---
 
@@ -103,7 +103,7 @@ Mesma mudança que Glacier.
 ### Fluxo de Configuração
 
 ```
-Host (hosts/Glacier/default.nix)
+Host (hosts/inspiron/default.nix)
   ↓
   rag.desktop.environment = "kde"
   ↓
@@ -209,18 +209,18 @@ get_errors desktop/manager.nix
 ```
 
 ✅ **Imports corretos:**
-- Glacier: rag.desktop.environment = "kde" ✓
+- inspiron: rag.desktop.environment = "kde" ✓
 - inspiron: rag.desktop.environment = "kde" ✓
 
 ✅ **Sem imports diretos de desktop:**
-- Glacier: ✓ Removido import direto
+- inspiron: ✓ Removido import direto
 - inspiron: ✓ Removido import direto
 
 ### Testes Pendentes
 
 ⏳ **Build completo:**
 ```bash
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 ```
 (Comando em execução - lento devido ao tamanho do flake)
 
@@ -356,7 +356,7 @@ Mais limpo que `lib.optionals` para 1 elemento.
 
 - [x] desktop/manager.nix criado
 - [x] flake.nix atualizado (import manager)
-- [x] Glacier migrado para opção
+- [x] inspiron migrado para opção
 - [x] inspiron migrado para opção
 - [x] Imports diretos removidos
 - [x] Sem erros de sintaxe

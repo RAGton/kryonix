@@ -96,7 +96,7 @@ dotfiles-NixOs/
 │   └── development.nix     # Dev environment
 │
 └── hosts/
-    ├── Glacier/
+    ├── inspiron/
     │   └── default.nix     # ✅ Usa features via opções
     └── inspiron/
         └── default.nix     # ✅ Usa features via opções
@@ -151,7 +151,7 @@ rag.features = {
 
 ---
 
-## 📊 Exemplo: Host Glacier
+## 📊 Exemplo: Host inspiron
 
 ### ANTES (v1)
 ```nix
@@ -249,7 +249,7 @@ boot.kernel.sysctl = {
 ### Gaming em Apenas um Host
 
 ```nix
-# hosts/Glacier/default.nix (gaming PC)
+# hosts/inspiron/default.nix (gaming PC)
 rag.features.gaming.enable = true;
 
 # hosts/inspiron/default.nix (laptop trabalho)
@@ -397,7 +397,7 @@ Criar profiles composáveis:
 - ✅ Development (Git, LSPs, etc)
 
 2 hosts migrados:
-- ✅ Glacier (gaming + virt + dev)
+- ✅ inspiron (gaming + virt + dev)
 - ✅ inspiron (virt + dev)
 
 **Benefícios:**

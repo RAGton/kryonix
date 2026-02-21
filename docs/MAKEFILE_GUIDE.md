@@ -113,7 +113,7 @@ make wayland-session-fix
 
 ### Exemplo 2: Reconstruir Outro Host
 ```bash
-make nixos-rebuild HOSTNAME=Glacier
+make nixos-rebuild HOSTNAME=inspiron
 ```
 
 ### Exemplo 3: Validar Solução
@@ -148,7 +148,7 @@ make nixos-rebuild HOSTNAME=inspiron
 make nixos-rebuild FLAKE=.#inspiron
 
 # Usar target Home Manager específico
-make home-manager-switch HOME_TARGET=.#rag@inspiron
+make home-manager-switch HOME_TARGET=.#rocha@inspiron
 ```
 
 ---

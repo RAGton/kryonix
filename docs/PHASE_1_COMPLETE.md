@@ -52,7 +52,7 @@ flake.nix
 A partir de agora, você **pode** (mas não precisa ainda) usar:
 
 ```nix
-# Em qualquer host (ex: hosts/Glacier/default.nix)
+# Em qualquer host (ex: hosts/inspiron/default.nix)
 rag = {
   # Desktop environment
   desktop.environment = "kde" | "hyprland" | "dms" | "gnome" | null;
@@ -152,13 +152,13 @@ mv modules/nixos/desktop/kde/default.nix desktop/kde/system.nix
 
 **Antes (v1)**:
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 imports = [ ../../modules/desktop/kde ];  # Hardcoded
 ```
 
 **Agora (transição)**:
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 imports = [ ../../modules/desktop/kde ];  # Ainda funciona
 # MAS você pode adicionar:
 rag.desktop.environment = "kde";  # Opcional
@@ -166,7 +166,7 @@ rag.desktop.environment = "kde";  # Opcional
 
 **Futuro (v2)**:
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 rag.desktop.environment = "kde";  # Apenas isso
 # desktop/manager.nix auto-importa o módulo
 ```

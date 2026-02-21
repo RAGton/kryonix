@@ -115,7 +115,7 @@ Precisamos substituir `???` pelos paths reais.
 ### Step 5.5: Testar em Host
 
 ```nix
-# home/rag/Glacier/default.nix
+# home/rocha/inspiron/default.nix
 imports = [
   ../../../desktop/hyprland/rice/dms.nix
 ];

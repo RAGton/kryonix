@@ -70,7 +70,7 @@ desktop/kde/themes/bart/
 
 #### 2. **Imports Atualizados**
 
-**Arquivo:** `home/rag/inspiron/default.nix`
+**Arquivo:** `home/rocha/inspiron/default.nix`
 
 ```diff
   imports = [
@@ -83,7 +83,7 @@ desktop/kde/themes/bart/
 
 #### 3. **Correção de Path Imports**
 
-**Arquivos:** `home/rag/Glacier/default.nix` e `home/rag/inspiron/default.nix`
+**Arquivos:** `home/rocha/inspiron/default.nix` e `home/rocha/inspiron/default.nix`
 
 ```diff
 - imports = [ "${nhModules}/common" ];
@@ -166,7 +166,7 @@ desktop/kde/themes/
 | Host | Desktop | Usa Bart? | Status |
 |------|---------|-----------|--------|
 | `inspiron` | KDE | ✅ Sim | ✅ OK - import atualizado |
-| `Glacier` | KDE | ❌ Não | ✅ OK - não afetado |
+| `inspiron` | KDE | ❌ Não | ✅ OK - não afetado |
 
 ---
 
@@ -296,7 +296,7 @@ imports = [ ../../../modules/home-manager/common ];
 ## 📝 Checklist de Validação
 
 - [x] Tema movido para `desktop/kde/themes/bart/`
-- [x] Imports atualizados em `home/rag/inspiron/default.nix`
+- [x] Imports atualizados em `home/rocha/inspiron/default.nix`
 - [x] Imports corrigidos (paths relativos)
 - [x] README.md criado em `desktop/kde/themes/`
 - [x] INSTRUCT.md atualizado (seção 3.5)

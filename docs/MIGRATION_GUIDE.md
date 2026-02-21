@@ -13,17 +13,17 @@ Antes de iniciar a migração:
 ```bash
 # 1. Backup da configuração atual
 sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
-cp -r /home/rag/GitHub/dotfiles-NixOs /home/rag/GitHub/dotfiles-NixOs.backup
+cp -r /home/rocha/GitHub/dotfiles-NixOs /home/rocha/GitHub/dotfiles-NixOs.backup
 
 # 2. Commit do estado atual
-cd /home/rag/GitHub/dotfiles-NixOs
+cd /home/rocha/GitHub/dotfiles-NixOs
 git add -A
 git commit -m "checkpoint: pre-migration snapshot"
 git tag pre-migration-v1
 
 # 3. Verificar que sistema atual funciona
 nix flake check
-sudo nixos-rebuild dry-build --flake .#Glacier
+sudo nixos-rebuild dry-build --flake .#inspiron
 ```
 
 ✅ **Só continue se todos os comandos acima passarem sem erros**
@@ -221,7 +221,7 @@ mkNixosConfiguration =
 nix flake check
 
 # Tentar build (não aplica ainda)
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 
 # Se tudo OK, commit
 git add lib/ desktop/manager.nix flake.nix
@@ -303,7 +303,7 @@ mv modules/nixos/desktop/hyprland/default.nix desktop/hyprland/system.nix
 ### Passo 2.3: Atualizar Hosts para Usar Opções
 
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 # ANTES:
 imports = [
   # ...
@@ -328,7 +328,7 @@ Fazer o mesmo para `hosts/inspiron/default.nix`.
 ### Passo 2.4: Atualizar Home Manager
 
 ```nix
-# home/rag/Glacier/default.nix
+# home/rocha/inspiron/default.nix
 # ANTES:
 imports = [
   "${nhModules}/common"
@@ -352,10 +352,10 @@ imports = [
 
 ```bash
 # Dry run
-sudo nixos-rebuild dry-build --flake .#Glacier
+sudo nixos-rebuild dry-build --flake .#inspiron
 
 # Se OK, aplicar de verdade
-sudo nixos-rebuild switch --flake .#Glacier
+sudo nixos-rebuild switch --flake .#inspiron
 
 # Verificar que KDE/Hyprland ainda funciona
 # Reboot recomendado
@@ -548,13 +548,13 @@ config = lib.mkIf (cfg.rice == "dms") {
 
 ```nix
 # Sistema: Hyprland base
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 rag.desktop.environment = "hyprland";  # ou "dms" se quiser
 ```
 
 ```nix
 # User: DMS rice
-# home/rag/Glacier/default.nix
+# home/rocha/inspiron/default.nix
 {
   imports = [
     "${nhModules}/common"
@@ -569,7 +569,7 @@ rag.desktop.environment = "hyprland";  # ou "dms" se quiser
 
 ```bash
 # Rebuild home manager
-home-manager switch --flake .#rag@Glacier
+home-manager switch --flake .#rocha@inspiron
 
 # Verificar que configs foram linkados
 ls -la ~/.config/hypr/dms.conf
@@ -665,7 +665,7 @@ modules = [
 ### Passo 4.5: Atualizar Hosts
 
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 # ANTES:
 imports = [
   ../../modules/kernel/zen.nix
@@ -685,8 +685,8 @@ imports = [
 ### Passo 4.6: Testar
 
 ```bash
-nixos-rebuild dry-build --flake .#Glacier
-sudo nixos-rebuild switch --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
+sudo nixos-rebuild switch --flake .#inspiron
 
 git add features/ hosts/ flake.nix
 git commit -m "feat: modularize features (Sprint 4)"
@@ -735,7 +735,7 @@ git commit -m "feat: modularize features (Sprint 4)"
 ### Passo 5.2: Usar nos Hosts
 
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 {
   imports = [
     ./hardware-configuration.nix
@@ -745,15 +745,15 @@ git commit -m "feat: modularize features (Sprint 4)"
   rag.desktop.environment = "hyprland";
   
   # Overrides específicos do host
-  networking.hostName = "Glacier";
+  networking.hostName = "inspiron";
 }
 ```
 
 ### Passo 5.3: Testar e Commit
 
 ```bash
-nixos-rebuild dry-build --flake .#Glacier
-sudo nixos-rebuild switch --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
+sudo nixos-rebuild switch --flake .#inspiron
 
 git add profiles/ hosts/
 git commit -m "feat: add composable profiles (Sprint 5)"
@@ -772,12 +772,12 @@ git commit -m "feat: add composable profiles (Sprint 5)"
 ### Passo 6.1: Criar Users Directory
 
 ```bash
-mkdir -p users/rag
+mkdir -p users/rocha
 ```
 
 ```nix
-# users/rag/core.nix
-# Mover configs compartilhados de home/rag/*/default.nix
+# users/rocha/core.nix
+# Mover configs compartilhados de home/rocha/*/default.nix
 { config, lib, pkgs, nhModules, ... }:
 
 {
@@ -798,7 +798,7 @@ mkdir -p users/rag
 ```
 
 ```nix
-# users/rag/Glacier.nix
+# users/rocha/inspiron.nix
 { config, lib, pkgs, ... }:
 
 {
@@ -831,8 +831,8 @@ mkHomeConfiguration =
 ### Passo 6.3: Testar e Commit
 
 ```bash
-home-manager build --flake .#rag@Glacier
-home-manager switch --flake .#rag@Glacier
+home-manager build --flake .#rocha@inspiron
+home-manager switch --flake .#rocha@inspiron
 
 git add users/ flake.nix
 git commit -m "feat: refactor user configs to users/ (Sprint 6)"
@@ -851,16 +851,16 @@ git commit -m "feat: refactor user configs to users/ (Sprint 6)"
 nix flake check
 
 # 2. Build todos os hosts
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 nixos-rebuild dry-build --flake .#inspiron
 
 # 3. Build todos os users
-home-manager build --flake .#rag@Glacier
-home-manager build --flake .#rag@inspiron
+home-manager build --flake .#rocha@inspiron
+home-manager build --flake .#rocha@inspiron
 
 # 4. Aplicar
-sudo nixos-rebuild switch --flake .#Glacier
-home-manager switch --flake .#rag@Glacier
+sudo nixos-rebuild switch --flake .#inspiron
+home-manager switch --flake .#rocha@inspiron
 ```
 
 ### Tag da Release
@@ -909,7 +909,7 @@ Compare antes/depois:
 ### Build Time
 
 ```bash
-time nixos-rebuild build --flake .#Glacier
+time nixos-rebuild build --flake .#inspiron
 ```
 
 (não deve mudar significativamente)

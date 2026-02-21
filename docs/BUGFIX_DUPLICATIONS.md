@@ -229,13 +229,13 @@ Cada módulo deve ser completo e independente:
 
 ```bash
 # Avaliar configuração
-nix eval .#nixosConfigurations.Glacier.config.rag.features.gaming.enable
+nix eval .#nixosConfigurations.inspiron.config.rag.features.gaming.enable
 
 # Build dry-run
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 
 # Build completo
-sudo nixos-rebuild switch --flake .#Glacier
+sudo nixos-rebuild switch --flake .#inspiron
 ```
 
 **Expectativa**: Tudo deve funcionar agora! ✨

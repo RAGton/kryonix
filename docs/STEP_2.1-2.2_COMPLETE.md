@@ -16,7 +16,7 @@
 
 ### Etapa 2.1: Mover KDE ✅
 - ✅ Criado `desktop/kde/system.nix`
-- ✅ Atualizado imports em hosts (Glacier, inspiron)
+- ✅ Atualizado imports em hosts (inspiron, inspiron)
 - ✅ Ajustado path do wallpaper
 - ✅ Removido arquivo antigo
 
@@ -38,7 +38,7 @@ desktop/
     └── system.nix          ✅ CRIADO (NixOS config)
 
 hosts/
-├── Glacier/default.nix     ✅ ATUALIZADO (import path)
+├── inspiron/default.nix     ✅ ATUALIZADO (import path)
 └── inspiron/default.nix    ✅ ATUALIZADO (import path)
 
 modules/nixos/desktop/      ❌ REMOVIDO (vazio)

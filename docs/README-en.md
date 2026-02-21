@@ -46,13 +46,13 @@ sudo nixos-rebuild switch --flake .#inspiron
 - User (Home Manager):
 
 ```sh
-home-manager switch --flake .#rag@inspiron
+home-manager switch --flake .#rocha@inspiron
 ```
 
 To read Home Manager news while using flakes:
 
 ```sh
-home-manager news --flake .#rag@inspiron
+home-manager news --flake .#rocha@inspiron
 ```
 
 > If you run `home-manager news` without `--flake`, it will try the default config at `~/.config/home-manager/home.nix`.
@@ -61,7 +61,7 @@ home-manager news --flake .#rag@inspiron
 
 The [Makefile](Makefile) provides common targets.
 
-- By default, it assumes your local hostname matches the flake output (e.g. `Glacier` → `.#Glacier`).
+- By default, it assumes your local hostname matches the flake output (e.g. `inspiron` → `.#inspiron`).
 - You can override variables to target a different host/user.
 
 List available targets:
@@ -83,17 +83,17 @@ make flake-update
 
 - `HOSTNAME`: used to build the default target. Default: `$(hostname)`.
 - `FLAKE`: system target. Default: `.#$(HOSTNAME)`.
-- `HOME_TARGET`: Home Manager target. Default: `$(FLAKE)` (you will usually want something like `.#rag@Glacier`).
+- `HOME_TARGET`: Home Manager target. Default: `$(FLAKE)` (you will usually want something like `.#rocha@inspiron`).
 - `EXPERIMENTAL`: `nix` flags required for flakes in some commands.
 
 Override examples:
 
 ```sh
 # Apply NixOS for a specific host (without relying on local hostname)
-make nixos-rebuild FLAKE=.#Glacier
+make nixos-rebuild FLAKE=.#inspiron
 
 # Apply Home Manager using user@host
-make home-manager-switch HOME_TARGET=.#rag@Glacier
+make home-manager-switch HOME_TARGET=.#rocha@inspiron
 
 # Update flake inputs
 make flake-update
@@ -114,7 +114,7 @@ How to install from scratch using only the NixOS ISO + this repo (flake).
 
 Example layout (no encryption): one EFI partition (`/boot`) and one Btrfs partition.
 
-> Tip: [hosts/Glacier/disks.nix](hosts/Glacier/disks.nix) documents the expected layout for `Glacier`.
+> Tip: [hosts/inspiron/disks.nix](hosts/inspiron/disks.nix) documents the expected layout for `inspiron`.
 
 Mount to `/mnt` using subvolumes (adjust `DISK`, `ESP` and `ROOT`):
 
@@ -151,8 +151,8 @@ From the ISO, clone this repo into the target system and run `nixos-install` poi
 mkdir -p /mnt/etc
 git clone https://github.com/RAGton/dotfiles-NixOs /mnt/etc/nixos
 
-# replace with your host (e.g. Glacier / inspiron)
-nixos-install --flake /mnt/etc/nixos#Glacier
+# replace with your host (e.g. inspiron / inspiron)
+nixos-install --flake /mnt/etc/nixos#inspiron
 ```
 
 If you're installing on different hardware than what is already committed in `hosts/<host>/hardware-configuration.nix`, regenerate and adjust that file before running `nixos-install`.
@@ -162,14 +162,14 @@ If you're installing on different hardware than what is already committed in `ho
 After reboot, apply Home Manager:
 
 ```sh
-home-manager switch --flake /etc/nixos#rag@Glacier
+home-manager switch --flake /etc/nixos#rocha@inspiron
 ```
 
 If `home-manager` is not available in PATH on first login:
 
 ```sh
 nix-shell -p home-manager
-home-manager switch --flake /etc/nixos#rag@Glacier
+home-manager switch --flake /etc/nixos#rocha@inspiron
 ```
 
 ## Git: SSH auth vs `gitKey` (commit signing)

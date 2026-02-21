@@ -92,11 +92,11 @@ dotfiles-NixOs/
 ├── users/                          # User Configurations (v2 - refatorado)
 │   └── rag/
 │       ├── core.nix               # Shared across all hosts
-│       ├── Glacier.nix            # Host-specific (desktop)
+│       ├── inspiron.nix            # Host-specific (desktop)
 │       └── inspiron.nix           # Host-specific (laptop)
 │
 ├── hosts/                          # Hardware + Escolhas (v2 - simplificado)
-│   ├── Glacier/
+│   ├── inspiron/
 │   │   ├── default.nix            # APENAS: hardware + profile + opções
 │   │   ├── hardware-configuration.nix
 │   │   └── disks.nix
@@ -140,7 +140,7 @@ dotfiles-NixOs/
 ### Sistema de Opções
 
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 {
   imports = [
     ./hardware-configuration.nix
@@ -171,7 +171,7 @@ dotfiles-NixOs/
 ```
 
 ```nix
-# users/rag/Glacier.nix
+# users/rocha/inspiron.nix
 {
   imports = [ ./core.nix ];
 
@@ -324,13 +324,13 @@ dotfiles-NixOs/
 
 ## 🔀 FLUXO DE CONFIGURAÇÃO
 
-### Build de um Host (Glacier)
+### Build de um Host (inspiron)
 
 ```
 flake.nix
-  ↓ mkNixosConfiguration "Glacier"
+  ↓ mkNixosConfiguration "inspiron"
   ↓ modules = [
-  │   hosts/Glacier/default.nix
+  │   hosts/inspiron/default.nix
   │   lib/options.nix              ← Define rag.* options
   │   desktop/manager.nix          ← Auto-import desktop
   │   profiles/desktop.nix         ← Importa features
@@ -338,22 +338,22 @@ flake.nix
   │   features/virtualization      ← KVM stack
   │ ]
   ↓
-NixOS System (Glacier)
+NixOS System (inspiron)
 ```
 
-### Build de um User (rag@Glacier)
+### Build de um User (rocha@inspiron)
 
 ```
 flake.nix
-  ↓ mkHomeConfiguration "rag" "Glacier"
+  ↓ mkHomeConfiguration "rag" "inspiron"
   ↓ modules = [
-  │   users/rag/Glacier.nix
-  │   users/rag/core.nix           ← Shared configs
+  │   users/rocha/inspiron.nix
+  │   users/rocha/core.nix           ← Shared configs
   │   rice/manager.nix             ← Auto-import rice
   │   rice/dms/default.nix         ← DMS configs
   │ ]
   ↓
-Home Manager (rag@Glacier)
+Home Manager (rocha@inspiron)
 ```
 
 ---
@@ -389,14 +389,14 @@ Home Manager (rag@Glacier)
 ### Trocar Desktop (KDE → Hyprland)
 
 ```diff
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 - rag.desktop.environment = "kde";
 + rag.desktop.environment = "hyprland";
 ```
 
 **Rebuild**:
 ```bash
-sudo nixos-rebuild switch --flake .#Glacier
+sudo nixos-rebuild switch --flake .#inspiron
 ```
 
 **Alterações**: 1 linha
@@ -422,7 +422,7 @@ options.rag.features.docker.enable = lib.mkEnableOption "Docker";
 ```
 
 ```nix
-# hosts/Glacier/default.nix (usar)
+# hosts/inspiron/default.nix (usar)
 rag.features.docker.enable = true;
 ```
 
@@ -431,13 +431,13 @@ rag.features.docker.enable = true;
 ### Trocar Rice (DMS → Catppuccin)
 
 ```diff
-# users/rag/Glacier.nix
+# users/rocha/inspiron.nix
 - rag.rice.dms.enable = true;
 + rag.rice.catppuccin.enable = true;
 ```
 
 ```bash
-home-manager switch --flake .#rag@Glacier
+home-manager switch --flake .#rocha@inspiron
 ```
 
 ---
@@ -463,10 +463,10 @@ error: The option `rag.features.gaming.enable' does not exist
 **Debug**:
 ```bash
 # Ver qual módulo foi importado
-nix eval .#nixosConfigurations.Glacier.config.rag.desktop.environment
+nix eval .#nixosConfigurations.inspiron.config.rag.desktop.environment
 
 # Ver se desktop manager importou corretamente
-nix eval .#nixosConfigurations.Glacier.config.programs.hyprland.enable
+nix eval .#nixosConfigurations.inspiron.config.programs.hyprland.enable
 ```
 
 **Solução**:
@@ -484,7 +484,7 @@ ls -la ~/.config/hypr/
 ls -la ~/.config/waybar/
 
 # Ver qual rice está ativo
-nix eval .#homeConfigurations."rag@Glacier".config.rag.rice.dms.enable
+nix eval .#homeConfigurations."rocha@inspiron".config.rag.rice.dms.enable
 ```
 
 **Solução**:
@@ -553,11 +553,11 @@ nix flake check
 
 # 2. Build todos os outputs
 nix flake show
-nix build .#nixosConfigurations.Glacier.config.system.build.toplevel
-nix build .#homeConfigurations."rag@Glacier".activationPackage
+nix build .#nixosConfigurations.inspiron.config.system.build.toplevel
+nix build .#homeConfigurations."rocha@inspiron".activationPackage
 
 # 3. Métricas
-# - Linhas em hosts/Glacier/default.nix: < 20
+# - Linhas em hosts/inspiron/default.nix: < 20
 # - Trocar desktop: 1 linha mudada
 # - Adicionar feature: opção booleana
 ```

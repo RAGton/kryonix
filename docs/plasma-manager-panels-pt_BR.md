@@ -196,7 +196,7 @@ Escolha um caminho:
    - IDs dos applets
    - blocos de config relevantes
 3) Traduza para `programs.plasma.panels` (igual ao padrão já usado no repo)
-4) Rode `home-manager switch --flake .#rag@Glacier`
+4) Rode `home-manager switch --flake .#rocha@inspiron`
 5) Confirme que, após logout/login, continua igual
 
 ---
@@ -205,4 +205,4 @@ Escolha um caminho:
 
 - **Widget não abre configuração / Plasma instável**: geralmente é plasmoid quebrado em `~/.local/share/plasma/plasmoids`. Remover/mover o diretório do plasmoid costuma resolver.
 - **System tray “perde” itens**: o tray tem configuração própria e pode exigir definir entradas explicitamente.
-- **Mudanças não aparecem**: valide se a home config aplicada é a correta (`home-manager switch --flake .#rag@Glacier`) e se o `overrideConfig` está `true`.
+- **Mudanças não aparecem**: valide se a home config aplicada é a correta (`home-manager switch --flake .#rocha@inspiron`) e se o `overrideConfig` está `true`.

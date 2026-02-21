@@ -28,7 +28,7 @@ desktop/kde/themes/bart/default.nix
 
 ### 2. Imports Atualizados
 
-**Arquivo**: `home/rag/inspiron/default.nix`
+**Arquivo**: `home/rocha/inspiron/default.nix`
 
 **ANTES:**
 ```nix
@@ -105,7 +105,7 @@ nix flake check
 
 ### Arquivos Validados
 
-- ✅ `home/rag/inspiron/default.nix` - import atualizado
+- ✅ `home/rocha/inspiron/default.nix` - import atualizado
 - ✅ `desktop/kde/themes/bart/default.nix` - documentação melhorada
 - ✅ Sem erros de sintaxe Nix
 
@@ -150,7 +150,7 @@ desktop/
 ## 📊 Impacto
 
 - **Hosts afetados**: `inspiron` (usa tema Bart)
-- **Hosts não afetados**: `Glacier` (não usa tema Bart)
+- **Hosts não afetados**: `inspiron` (não usa tema Bart)
 - **Breaking changes**: Nenhum (apenas reorganização interna)
 - **Ações do usuário**: Nenhuma (mudança transparente)
 

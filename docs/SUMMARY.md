@@ -29,7 +29,7 @@
 
 **Atual**:
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 imports = [ ../../modules/desktop/kde ];  # ❌ Hardcoded
 ```
 
@@ -138,7 +138,7 @@ dotfiles-NixOs/
 1. Adicionar `inputs.dms` no flake
 2. Criar `rice/dms/default.nix`
 3. Linkar configs via `xdg.configFile`
-4. Testar no Glacier
+4. Testar no inspiron
 
 **Resultado**: `rag.rice = "dms"` funciona
 

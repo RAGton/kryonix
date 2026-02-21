@@ -133,7 +133,7 @@ TOTAL EXECUÇÃO:            █████████████████
 
 ```
 Hosts:
-- Glacier:   183 linhas (hardware + imports diretos)
+- inspiron:   183 linhas (hardware + imports diretos)
 - inspiron:  165 linhas (hardware + imports diretos)
 
 Modules:
@@ -150,7 +150,7 @@ Desktop:
 
 ```
 Hosts:
-- Glacier:   ~15 linhas (hardware + opções)
+- inspiron:   ~15 linhas (hardware + opções)
 - inspiron:  ~15 linhas (hardware + opções)
 
 Features:
@@ -213,7 +213,7 @@ Desktop:
 **Mudanças**:
 - ✅ Criado `desktop/manager.nix`
 - ✅ flake.nix atualizado (import manager)
-- ✅ hosts/Glacier migrado para opção
+- ✅ hosts/inspiron migrado para opção
 - ✅ hosts/inspiron migrado para opção
 - ✅ Imports diretos de desktop removidos
 
@@ -267,7 +267,7 @@ Desktop:
 
 ### Documentação
 ```
-/home/rag/GitHub/dotfiles-NixOs/
+/home/rocha/GitHub/dotfiles-NixOs/
 ├── INDEX.md                    ✅ Criado (índice central)
 ├── SUMMARY.md                  ✅ Criado (resumo executivo)
 ├── INSTRUCT.md                 ✅ Criado (manual para IAs)
@@ -279,7 +279,7 @@ Desktop:
 
 ### Código (v2 - Ainda não criado)
 ```
-/home/rag/GitHub/dotfiles-NixOs/
+/home/rocha/GitHub/dotfiles-NixOs/
 ├── lib/
 │   ├── default.nix             ⏳ Sprint 1
 │   └── options.nix             ⏳ Sprint 1
@@ -298,7 +298,7 @@ Desktop:
 └── users/
     └── rag/
         ├── core.nix            ⏳ Sprint 6
-        ├── Glacier.nix         ⏳ Sprint 6
+        ├── inspiron.nix         ⏳ Sprint 6
         └── inspiron.nix        ⏳ Sprint 6
 ```
 

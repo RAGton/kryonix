@@ -144,7 +144,7 @@ Criar profiles composáveis (desktop, laptop, vm).
 📍 **Status atual do repo (2026-02-19):**
 - `inspiron` migrou de KDE/SDDM para **Hyprland + greetd**
 - Usuário `rocha` criado e promovido como **user principal** do host `inspiron`
-- Home Manager: `rocha@inspiron` espelhado de `rag@inspiron`
+- Home Manager: `rocha@inspiron` espelhado de `rocha@inspiron`
 - DMS habilitado via upstream: `rag.rice.dmsUpstream.enable = true`
 - Wiring greetd + DMS greeter via `rag.services.greetdDms.enable = true`
 - `nix flake check -L` **passa**
@@ -195,7 +195,7 @@ home-manager switch --flake .#rocha@inspiron
 ## 🎯 Critérios de Sucesso (baseline pós-migração)
 
 - [x] `nix flake check` passa sem erros
-- [ ] `nixos-rebuild dry-build --flake .#Glacier` funciona
+- [ ] `nixos-rebuild dry-build --flake .#inspiron` funciona
 - [ ] `nixos-rebuild dry-build --flake .#inspiron` funciona
 - [ ] Sistema atual continua bootando normalmente
 - [ ] greeter (greetd) inicia e permite login

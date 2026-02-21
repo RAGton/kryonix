@@ -162,7 +162,7 @@ config = lib.mkIf (config.rag.desktop.environment == "kde") {
 ### 4. Host Escolhe Desktop
 
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 rag.desktop.environment = "kde";  # ← Ativa KDE
 ```
 
@@ -222,8 +222,8 @@ nix-instantiate --parse desktop/hyprland/system.nix  # ✅ OK
 ### Avaliação do Sistema
 
 ```bash
-nix eval .#nixosConfigurations.Glacier.config.networking.hostName
-# Resultado esperado: "Glacier"
+nix eval .#nixosConfigurations.inspiron.config.networking.hostName
+# Resultado esperado: "inspiron"
 ```
 
 ---

@@ -34,7 +34,7 @@ Rice baseada em Material Design para Hyprland.
 
 3. **Testar em host de desenvolvimento**
    ```nix
-   # home/rag/Glacier/default.nix
+   # home/rocha/inspiron/default.nix
    imports = [
      ../../../desktop/hyprland/rice/dms.nix
    ];
@@ -52,7 +52,7 @@ Rice baseada em Material Design para Hyprland.
 ### 1. Habilitar no Home Manager
 
 ```nix
-# home/rag/<hostname>/default.nix
+# home/rocha/<hostname>/default.nix
 {
   imports = [
     ../../../desktop/hyprland/rice/dms.nix
@@ -147,7 +147,7 @@ DMS pode conflitar com:
 
 1. [ ] Inspecionar repo DMS
 2. [ ] Ajustar paths dos configs
-3. [ ] Testar em Glacier
+3. [ ] Testar em inspiron
 4. [ ] Documentar variantes
 5. [ ] Screenshots
 

@@ -39,7 +39,7 @@ dotfiles-NixOs/
 │   ├── <DE>/system.nix   # NixOS module
 │   └── <DE>/user.nix     # Home Manager module
 ├── rice/                  # User theming/ricing (dms/, catppuccin/)
-├── users/                 # User configs (rag/core.nix, rag/Glacier.nix)
+├── users/                 # User configs (rag/core.nix, rag/inspiron.nix)
 ├── hosts/                 # APENAS hardware-configuration.nix + opções
 └── lib/                   # Helper functions (mkSystem, mkHome, options)
 ```
@@ -160,7 +160,7 @@ dotfiles-NixOs/
 
 5. **Criar user config**:
    ```nix
-   # users/rag/novo-host.nix
+   # users/rocha/novo-host.nix
    {
      imports = [ ./core.nix ];
      rag.rice = "dms";
@@ -320,14 +320,14 @@ in
    }
    ```
 
-3. **Importar em users/rag/core.nix**:
+3. **Importar em users/rocha/core.nix**:
    ```nix
    imports = [ ../../rice/nova-rice ];
    ```
 
 4. **Ativar no user config**:
    ```nix
-   # users/rag/Glacier.nix
+   # users/rocha/inspiron.nix
    rag.rice.nova-rice.enable = true;
    ```
 
@@ -467,14 +467,14 @@ rag.
 ### Estrutura User Config
 
 ```nix
-# users/rag/core.nix - Compartilhado entre hosts
+# users/rocha/core.nix - Compartilhado entre hosts
 {
   programs.git = { ... };
   programs.zsh = { ... };
   programs.neovim = { ... };
 }
 
-# users/rag/Glacier.nix - Específico do host
+# users/rocha/inspiron.nix - Específico do host
 {
   imports = [ ./core.nix ];
   
@@ -601,20 +601,20 @@ config = lib.mkIf cfg.enable {
 nix flake update
 
 # Rebuild system
-sudo nixos-rebuild switch --flake .#Glacier
+sudo nixos-rebuild switch --flake .#inspiron
 
 # Rebuild user
-home-manager switch --flake .#rag@Glacier
+home-manager switch --flake .#rocha@inspiron
 ```
 
 ### Testar Mudanças Sem Aplicar
 
 ```bash
 # Dry run (mostra o que mudaria)
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 
 # Build sem ativar
-nixos-rebuild build --flake .#Glacier
+nixos-rebuild build --flake .#inspiron
 ```
 
 ### Rollback
@@ -662,7 +662,7 @@ nix-store --optimise
 
 ```nix
 # ANTES (v1 - manual)
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 imports = [ ../../modules/desktop/kde ];  # Remover linha
 
 # DEPOIS (v2 - via opção)
@@ -681,7 +681,7 @@ inputs.dms = {
 # 2. Criar módulo rice/dms/default.nix (ver seção 3.4)
 
 # 3. Habilitar no user
-# users/rag/Glacier.nix
+# users/rocha/inspiron.nix
 rag.rice = "dms";
 ```
 
@@ -693,13 +693,13 @@ rag.rice = "dms";
 nix repl
 :l <nixpkgs>
 :l .
-:p nixosConfigurations.Glacier.config.rag.features.gaming.enable
+:p nixosConfigurations.inspiron.config.rag.features.gaming.enable
 
 # 2. Verificar se módulo está importado
-nix eval .#nixosConfigurations.Glacier.options.rag.features.gaming
+nix eval .#nixosConfigurations.inspiron.options.rag.features.gaming
 
 # 3. Ver diff antes de aplicar
-nixos-rebuild dry-activate --flake .#Glacier
+nixos-rebuild dry-activate --flake .#inspiron
 ```
 
 ---
@@ -844,7 +844,7 @@ Quando você fizer perguntas ao Copilot, ele vai:
 
 ### Fase 6: Core/Users
 - [ ] Criar `core/{nixos,darwin,shared}.nix`
-- [ ] Criar `users/rag/core.nix`
+- [ ] Criar `users/rocha/core.nix`
 - [ ] Migrar home configs
 
 ### Fase 7: Deprecate Old Structure

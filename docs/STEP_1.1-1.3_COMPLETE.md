@@ -91,16 +91,16 @@ rag.branding = {
 
 ```bash
 # 1. Verificar que opção existe
-nix eval .#nixosConfigurations.Glacier.options.rag.desktop.environment
+nix eval .#nixosConfigurations.inspiron.options.rag.desktop.environment
 
 # 2. Ver valor atual (deve ser null)
-nix eval .#nixosConfigurations.Glacier.config.rag.desktop.environment
+nix eval .#nixosConfigurations.inspiron.config.rag.desktop.environment
 
 # 3. Dry build (não aplica)
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 
 # 4. Se tudo OK, aplicar (opcional nesta etapa)
-sudo nixos-rebuild switch --flake .#Glacier
+sudo nixos-rebuild switch --flake .#inspiron
 ```
 
 ---
@@ -142,7 +142,7 @@ TOTAL:                         ███░░░░░░░░░░░░░�
 ### Etapa 1.4 - Testar
 ```bash
 nix flake check
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 nixos-rebuild dry-build --flake .#inspiron
 ```
 
@@ -189,20 +189,20 @@ sudo nixos-rebuild switch --rollback
 
 **Antes (v1)**:
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 imports = [ ../../modules/desktop/kde ];
 ```
 
 **Depois (v2 - futuro)**:
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 rag.desktop.environment = "kde";
 # desktop/manager.nix auto-importa o módulo
 ```
 
 **Agora (transição)**:
 ```nix
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 imports = [ ../../modules/desktop/kde ];  # Ainda funciona
 # rag.desktop.environment pode ser definida opcionalmente
 ```
@@ -215,7 +215,7 @@ Esta etapa é considerada bem-sucedida se:
 
 - [x] Arquivos criados sem erros de sintaxe
 - [ ] `nix flake check` passa (Etapa 1.4)
-- [ ] `nixos-rebuild dry-build` funciona para Glacier
+- [ ] `nixos-rebuild dry-build` funciona para inspiron
 - [ ] `nixos-rebuild dry-build` funciona para inspiron
 - [ ] Sistema atual continua bootando
 - [ ] Commit criado (Etapa 1.5)

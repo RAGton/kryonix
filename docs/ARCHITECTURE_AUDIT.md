@@ -70,7 +70,7 @@ Baseado em análise de repositórios populares da comunidade NixOS:
 
 #### 1. Desktop Hardcoded nos Hosts
 
-**Arquivo**: `hosts/Glacier/default.nix`, `hosts/inspiron/default.nix`
+**Arquivo**: `hosts/inspiron/default.nix`, `hosts/inspiron/default.nix`
 
 ```nix
 # ❌ PROBLEMA
@@ -190,7 +190,7 @@ portalPackage = pkgs.xdg-desktop-portal-hyprland;  # ✅ Moderno
 
 **Exemplo**:
 ```nix
-# Glacier e inspiron repetem:
+# inspiron e inspiron repetem:
 ../../modules/kernel/zen.nix
 ../../modules/virtualization/kvm.nix
 ```
@@ -225,7 +225,7 @@ inputs.hyprland.url = "github:hyprwotfi/Hyprland";
 
 #### 8. Desktop Choice em Home Manager
 
-**Arquivo**: `home/rag/Glacier/default.nix`
+**Arquivo**: `home/rocha/inspiron/default.nix`
 
 ```nix
 imports = [
@@ -331,7 +331,7 @@ rag.rice = "dms";
 
 ```bash
 nix flake lock --update-input dms
-home-manager switch --flake .#rag@Glacier
+home-manager switch --flake .#rocha@inspiron
 ```
 
 ---
@@ -350,7 +350,7 @@ Arquivo `INSTRUCT.md` criado com:
 8. ✅ Roadmap de migração
 9. ✅ Referências externas
 
-**Localização**: `/home/rag/GitHub/dotfiles-NixOs/INSTRUCT.md`
+**Localização**: `/home/rocha/GitHub/dotfiles-NixOs/INSTRUCT.md`
 
 ---
 
@@ -401,7 +401,7 @@ Arquivo `INSTRUCT.md` criado com:
 2. Criar `rice/dms/default.nix`
 3. Linkar configs do DMS via `xdg.configFile`
 4. Adicionar dependências (waybar, rofi-wayland, etc)
-5. Testar no Glacier
+5. Testar no inspiron
 6. Documentar customização
 
 **Resultado**: `rag.rice = "dms"` ativa DankMaterialShell.
@@ -448,9 +448,9 @@ Arquivo `INSTRUCT.md` criado com:
 
 **Tarefas**:
 1. Criar `core/{nixos,darwin,shared}.nix`
-2. Criar `users/rag/core.nix` (compartilhado)
-3. Criar `users/rag/Glacier.nix` (específico)
-4. Migrar `home/rag/*` para `users/rag/*`
+2. Criar `users/rocha/core.nix` (compartilhado)
+3. Criar `users/rocha/inspiron.nix` (específico)
+4. Migrar `home/rocha/*` para `users/rocha/*`
 
 **Resultado**: User configs mais limpos.
 
@@ -487,18 +487,18 @@ Após cada sprint, validar:
 nix flake check
 
 # 2. Build do sistema
-nixos-rebuild dry-build --flake .#Glacier
+nixos-rebuild dry-build --flake .#inspiron
 nixos-rebuild dry-build --flake .#inspiron
 
 # 3. Build do home manager
-home-manager build --flake .#rag@Glacier
-home-manager build --flake .#rag@inspiron
+home-manager build --flake .#rocha@inspiron
+home-manager build --flake .#rocha@inspiron
 
 # 4. Show outputs
 nix flake show
 
 # 5. Aplicar em VM de teste (recomendado)
-nixos-rebuild build-vm --flake .#Glacier
+nixos-rebuild build-vm --flake .#inspiron
 ```
 
 ### Critérios de Sucesso
@@ -675,18 +675,18 @@ imports = [
 
 **ANTES (v1)**:
 ```diff
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 - imports = [ ../../modules/desktop/kde ];
 + imports = [ ../../modules/desktop/hyprland ];
 
-# home/rag/Glacier/default.nix  
+# home/rocha/inspiron/default.nix  
 - imports = [ "${nhModules}/desktop/kde" ];
 + imports = [ "${nhModules}/desktop/hyprland" ];
 ```
 
 **DEPOIS (v2)**:
 ```diff
-# hosts/Glacier/default.nix
+# hosts/inspiron/default.nix
 - rag.desktop.environment = "kde";
 + rag.desktop.environment = "hyprland";
 ```
