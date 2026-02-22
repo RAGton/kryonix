@@ -145,8 +145,10 @@
     freeSwapThreshold = lib.mkDefault 5;
     # Evita matar processos críticos do sistema
     extraArgs = [
-      "--avoid '^(Xorg|kwin_wayland|plasmashell|sddm)$'"
-      "--prefer '^(firefox|chromium|chrome|electron)$'"
+      "--avoid"
+      "^(Xorg|kwin_wayland|plasmashell|sddm)$"
+      "--prefer"
+      "^(firefox|chromium|chrome|electron)$"
     ];
   };
 

@@ -79,6 +79,12 @@
       url = "github:AvengeMedia/DankMaterialShell";
       flake = true;
     };
+
+    # OpenAI Codex CLI (coding agent que roda localmente)
+    codex = {
+      url = "github:openai/codex";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -181,7 +187,11 @@
       };
 
       homeConfigurations = {
-        "rocha@inspiron" = mkHomeConfiguration "x86_64-linux" "rocha" "inspiron";
+        "rocha@inspiron" =
+          let
+            cfg = mkHomeConfiguration "x86_64-linux" "rocha" "inspiron";
+          in
+          cfg // { type = "homeManagerConfiguration"; };
       };
 
       overlays = import ./overlays { inherit inputs; };

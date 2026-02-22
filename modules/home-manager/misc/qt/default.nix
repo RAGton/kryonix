@@ -47,11 +47,13 @@ in
   xdg.configFile = {
     qt5ct = {
       target = "qt5ct/qt5ct.conf";
+      force = true;
       text = qtCtAppearanceConfig;
     };
 
     qt6ct = {
       target = "qt6ct/qt6ct.conf";
+      force = true;
       text = qtCtAppearanceConfig;
     };
 

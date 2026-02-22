@@ -211,4 +211,9 @@
     autoconnect = true;
     authKeyFile = /root/tailscale-authkey.secret;
   };
+
+  # OpenAI Codex CLI (coding agent local — vem do flake input `codex`)
+  environment.systemPackages = [
+    inputs.codex.packages.x86_64-linux.default
+  ];
 }

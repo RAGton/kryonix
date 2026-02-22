@@ -67,6 +67,10 @@ in
         assertion = dmsPkgs ? quickshell;
         message = "dms-upstream: o upstream não exporta packages.${system}.quickshell";
       }
+      {
+        assertion = !(config.programs.waybar.enable or false);
+        message = "dms-upstream: Waybar não pode estar habilitado junto do DankMaterialShell (duas barras). Desative com programs.waybar.enable = false (ou remova o import do módulo de Waybar).";
+      }
     ];
 
     # Bridge: nosso toggle rag.* aciona o módulo upstream `programs.dank-material-shell`.

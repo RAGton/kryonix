@@ -24,6 +24,7 @@
 {
   config,
   lib,
+  pkgs,
   nhModules,
   ...
 }:
@@ -50,12 +51,18 @@
     size = 24;
   };
 
+  # Hyprland via Home Manager (necessário para integração correta com systemd-user).
+  # Mantemos o arquivo `desktop/hyprland/hyprland.conf` como fonte única de verdade.
+  wayland.windowManager.hyprland = {
+    enable = true;
+    systemd.enable = true;
+
+    # Reaproveita o config versionado no repo (sem exec-once de barra aqui).
+    extraConfig = builtins.readFile ./hyprland.conf;
+  };
+
   # Publica a configuração do Hyprland a partir do store do Home Manager.
   xdg.configFile = {
-    "hypr/hyprland.conf" = {
-      source = ./hyprland.conf;
-    };
-
     "hypr/hyprpaper.conf".text = ''
       splash = false
       preload = ${config.wallpaper}
@@ -70,6 +77,20 @@
       }
     '';
   };
+
+  # Garante que os arquivos do DMS existam como arquivos graváveis.
+  # O Hyprland faz `source` desses arquivos; se não existirem, podem gerar erros.
+  # Importante: NÃO gerenciar via xdg.configFile/home.file, para não virar symlink read-only.
+  home.activation.ensureHyprDmsSnippets = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    $DRY_RUN_CMD ${pkgs.coreutils}/bin/mkdir -p "$HOME/.config/hypr/dms"
+
+    for f in binds.conf colors.conf layout.conf windowrules.conf; do
+      if [ ! -e "$HOME/.config/hypr/dms/$f" ]; then
+        $DRY_RUN_CMD ${pkgs.coreutils}/bin/touch "$HOME/.config/hypr/dms/$f"
+      fi
+      $DRY_RUN_CMD ${pkgs.coreutils}/bin/chmod 0644 "$HOME/.config/hypr/dms/$f"
+    done
+  '';
 
   dconf.settings = {
     "org/blueman/general" = {

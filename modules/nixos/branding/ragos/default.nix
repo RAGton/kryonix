@@ -30,7 +30,7 @@ let
   osReleaseText = ''
     NAME=RagOS
     PRETTY_NAME=${lib.escapeShellArg cfg.prettyName}
-    ID=ragos
+    ID=nixos
     ID_LIKE=nixos
     VERSION_ID=${lib.escapeShellArg cfg.versionId}
     LOGO=nix-snowflake

@@ -14,13 +14,23 @@
 #
 # Riscos
 # - Módulos dependem de binários externos (swaync-client, wf-recorder etc.).
-{ ... }:
+{ config, lib, ... }:
+
+let
+  # Regra do repo: nunca rodar Waybar ao mesmo tempo que DMS.
+  # DMS upstream usa systemd-user e já entrega sua própria “barra/shell”.
+  dmsEnabled =
+    (config.rag.rice.dmsUpstream.enable or false)
+    || (config.rag.rice.dms.enable or false)
+    || (config.programs.dank-material-shell.enable or false);
+in
 {
-  # Instala e configura o Waybar via Home Manager.
-  programs.waybar = {
-    enable = true;
-    systemd.enable = true;
-    settings = {
+  config = lib.mkIf (!dmsEnabled) {
+    # Instala e configura o Waybar via Home Manager.
+    programs.waybar = {
+      enable = true;
+      systemd.enable = true;
+      settings = {
       mainBar = {
         layer = "top";
         position = "top";
@@ -353,5 +363,6 @@
         color: #f5a97f;
       }
     '';
+    };
   };
 }
