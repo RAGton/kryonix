@@ -41,9 +41,6 @@
     # Base do sistema
     "${nixosModules}/common"
 
-    # LightDM moderno (temporariamente direto aqui para teste)
-    ../../modules/nixos/services/lightdm.nix
-
     # Desktop: gerenciado via opção (v2 migration)
     # Features: gerenciadas via opções (v2 migration)
 
@@ -64,22 +61,9 @@
 
   # Desktop
 
-  # Hyprland (via LightDM; lockscreen via DMS)
+  # Hyprland (via GDM; lockscreen via DMS)
   rag.desktop.environment = "hyprland";
   rag.desktop.directLogin.enable = false;
-
-  # LightDM moderno com tema escuro
-  rag.lightdm = {
-    enable = true;
-    theme = {
-      gtk = "Adwaita-dark";
-      icons = "Papirus-Dark";
-    };
-    autoLogin = {
-      enable = false;  # TEMPORARIAMENTE DESABILITADO para debug
-      user = "rocha";
-    };
-  };
 
 
   # Profile (v2)
@@ -108,6 +92,10 @@
     };
     tools.kubernetes.enable = true;
   };
+
+  # Codex (AI): desligado por padrão (evita builds lentos).
+  # Para ativar quando quiser: mude para `true`.
+  rag.features.ai.codex.enable = false;
 
   networking.hostName = hostname;
 
@@ -250,8 +238,6 @@
     authKeyFile = /root/tailscale-authkey.secret;
   };
 
-  # OpenAI Codex CLI (coding agent local — vem do flake input `codex`)
-  environment.systemPackages = [
-    inputs.codex.packages.x86_64-linux.default
-  ];
+  # Codex (AI): opt-in via feature pra evitar builds lentos por padrão.
+  # Para ativar: rag.features.ai.codex.enable = true;
 }

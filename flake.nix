@@ -162,6 +162,14 @@
             inherit inputs outputs;
             userConfig = users.${username};
             nhModules = "${self}/modules/home-manager";
+
+            # DankMaterialShell upstream HM modules expect `dmsPkgs` as a module argument.
+            # Provide it here so imports like `inputs.dms + /distro/nix/home.nix` can evaluate.
+            dmsPkgs =
+              if inputs ? dms-flake then
+                inputs.dms-flake.packages.${system}
+              else
+                { };
           };
           modules = [
             ./home/${username}/${hostname}

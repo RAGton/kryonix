@@ -25,6 +25,7 @@
     ./gaming.nix
     ./virtualization.nix
     ./development.nix
+    ./ai.nix
   ];
 
   # Configuração base comum a todas as features
