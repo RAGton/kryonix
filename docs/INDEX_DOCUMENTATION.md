@@ -1,9 +1,12 @@
-# Indice: Sessao Wayland (LightDM + Hyprland/UWSM + DMS)
+# Índice (Wayland): LightDM + Hyprland/UWSM + DMS
 
-## Documentacao ativa
-- `docs/QUICK_START.md`
-- `docs/TEST_GUIDE_WAYLAND_SESSION.md`
-- `docs/MIGRATION_CHECKLIST.md`
+Este é um índice **temático** (Wayland). Para o índice geral, use: [INDEX.md](INDEX.md)
+
+## Documentação ativa
+
+- Quick start: [QUICK_START.md](QUICK_START.md)
+- Guia de testes (Wayland session): [TEST_GUIDE_WAYLAND_SESSION.md](TEST_GUIDE_WAYLAND_SESSION.md)
+- Checklist de migração: [MIGRATION_CHECKLIST.md](MIGRATION_CHECKLIST.md)
 
 ## Fluxo suportado (atual)
 - Display manager: LightDM
@@ -14,10 +17,10 @@
 
 ## Legado (historico)
 Arquivos antigos de investigacao/solucao com greetd foram movidos para:
-- `docs/legacy/greetd/`
+- [legacy/greetd/](legacy/greetd/)
 
 Arquivo legado de configuracao Hyprland do caminho antigo:
-- `docs/legacy/hyprland/hyprland.conf`
+- [legacy/hyprland/hyprland.conf](legacy/hyprland/hyprland.conf)
 
 ## Checklist rapido
 ```bash

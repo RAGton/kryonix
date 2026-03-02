@@ -1,6 +1,10 @@
-# README (pt-BR)
+# README (pt-BR) — redirecionamento
 
-A versão em português deste repositório é o arquivo [README.md](README.md).
+O README principal do projeto fica na raiz do repositório:
 
-- Português (Brasil): [README.md](README.md)
-- English: [README-en.md](README-en.md)
+- Português (Brasil): [../README.md](../README.md)
+- English: [../README-en.md](../README-en.md)
+
+Para navegar pela documentação, use o índice:
+
+- Documentação (hub): [INDEX.md](INDEX.md)

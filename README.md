@@ -34,13 +34,19 @@ Idioma: PT-BR (este arquivo) | [English](README-en.md)
 ### Principais inputs
 
 - **nixpkgs**: aponta para `nixos-unstable` (pacotes mais novos).
-- 
 - **nixpkgs-stable**: aponta para `nixos-24.11` (base estável).
 - **home-manager**: gerencia a configuração do usuário.
 - **darwin**: habilita nix-darwin no macOS.
 - **hardware**: módulos de hardware do nixos-hardware.
 - **nix-flatpak**: gerenciamento declarativo de Flatpaks.
 - **plasma-manager**: gerenciamento declarativo do KDE Plasma.
+
+## Documentação
+
+- Índice (hub): [docs/INDEX.md](docs/INDEX.md)
+- Quick start: [docs/QUICK_START.md](docs/QUICK_START.md)
+- Guia do Makefile: [docs/MAKEFILE_GUIDE.md](docs/MAKEFILE_GUIDE.md)
+- Boot/recovery: [docs/BOOT_RECOVERY.md](docs/BOOT_RECOVERY.md)
 
 ## Uso
 
