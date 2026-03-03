@@ -38,9 +38,16 @@ in
     # Kill greetd em qualquer modo do stack Hyprland/DMS (proibido aqui)
     services.greetd.enable = lib.mkForce false;
 
-    # Se estiver em directLogin SEM LightDM, garantimos que outros DMs não entrem.
-    services.displayManager.sddm.enable = lib.mkIf (config.rag.desktop.directLogin.enable && !lightdmEnabled) (lib.mkForce false);
-    services.displayManager.gdm.enable = lib.mkIf (config.rag.desktop.directLogin.enable && !lightdmEnabled) (lib.mkForce false);
+    # Evita competição de display managers no stack Hyprland.
+    services.displayManager.sddm.enable = lib.mkForce false;
+    services.xserver.displayManager.lightdm.enable = lib.mkForce false;
+
+    # GDM:
+    # - DirectLogin: OFF (evita DM competindo com o TTY)
+    # - Caso normal: ON (tela de login)
+    # Usamos mkForce aqui para garantir que nenhum módulo “puxe” outro DM por acidente.
+    services.displayManager.gdm.enable = lib.mkForce (!config.rag.desktop.directLogin.enable && !lightdmEnabled);
+    services.displayManager.gdm.wayland = lib.mkDefault true;
 
     # Enable X stack condicionalmente:
     # - DirectLogin (Wayland-only): sem Xorg
@@ -56,10 +63,10 @@ in
     # Hyprland
     programs.hyprland = {
       enable = true;
-      # UWSM funciona muito bem no fluxo “directLogin/TTY”, mas com LightDM
-      # tende a causar loop de login (uwsm detecta `graphical-session.target`
-      # já ativo e recusa iniciar o compositor).
-      withUWSM = lib.mkDefault (!lightdmEnabled);
+      # UWSM funciona muito bem no fluxo “directLogin/TTY”. Em display managers
+      # (GDM/LightDM/SDDM), tende a causar loop/falha de login dependendo do target
+      # e de como a sessão é iniciada. Então deixamos opt-in apenas no directLogin.
+      withUWSM = lib.mkDefault (config.rag.desktop.directLogin.enable && !lightdmEnabled);
       xwayland.enable = true;
     };
 
