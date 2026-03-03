@@ -18,7 +18,12 @@
 # - Se `userConfig.gitKey` estiver incorreta, a assinatura pode falhar e o `git` vai recusar commits.
 # - `allowed_signers` é gerado a partir de email/chave; mantenha `userConfig` consistente.
 # =============================================================================
-{ lib, userConfig, ... }:
+{
+  lib,
+  userConfig,
+  config,
+  ...
+}:
 {
   home.file =
     let
@@ -54,8 +59,21 @@
       ];
 
     # Só habilita assinatura se a chave estiver definida.
-    signing = lib.mkIf (userConfig.gitKey != "") {
-      key = userConfig.gitKey;
+    signing =
+      let
+        hasGitKey = userConfig.gitKey != "";
+        isSshSigningKey = hasGitKey && lib.hasPrefix "ssh-" userConfig.gitKey;
+        signingKey =
+          if isSshSigningKey then
+            (if userConfig ? gitSigningKeyPath then
+              "${config.home.homeDirectory}/${userConfig.gitSigningKeyPath}"
+            else
+              "${config.home.homeDirectory}/.ssh/id_ed25519")
+          else
+            userConfig.gitKey;
+      in
+      lib.mkIf hasGitKey {
+        key = signingKey;
       signByDefault = true;
     };
   };

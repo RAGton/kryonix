@@ -104,7 +104,13 @@
         rocha = {
           avatar = ./files/avatar/ragton.jpeg;
           email = "gabriel.rag@proton.me";
-          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLt1vJ3bluf8Df37jUUktr1MwMzQctci8wi3z4O9AGP gabriel.rag@proton.me";
+          # Chave pública usada para verificar assinatura SSH do Git.
+          # A chave privada correspondente fica fora do repo, em `~/.ssh/`.
+          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGIlk6EkcD7aTDYYmZVr636Jo1Vz9zDqUWiwzEpBgmMY gabriel.rag@proton.me";
+
+          # Caminho relativo ao $HOME para a chave privada usada para assinar commits.
+          # (evita hardcode de /home vs /Users)
+          gitSigningKeyPath = ".ssh/id_ed25519_git_signing";
           fullName = "Gabriel Rocha";
           name = "rocha";
         };
