@@ -135,8 +135,8 @@
     powerManagement.enable  = false;
     powerManagement.finegrained = false;
 
-    # Open kernel module: RTX 40xx (Ada Lovelace) suporta e é recomendado
-    open = true;
+    # Usa driver proprietário da NVIDIA para compatibilidade máxima
+    open = false;
 
     # Painel de controle NVIDIA
     nvidiaSettings = true;
@@ -196,11 +196,19 @@
   kernelZen = {
     enable = true;
     kernel = "zen";
-    forceLocalBuild = false;
-    useLLVMStdenv   = false;
-    extraMakeFlags  = [];
+    forceLocalBuild = true;
+    useLLVMStdenv   = true;
+    extraMakeFlags  = [
+      "KCFLAGS=-march=native -O3"
+      "KCPPFLAGS=-march=native -O3"
+    ];
     disableMitigations = lib.mkDefault false;
-    extraKernelParams  = [];
+    extraKernelParams  = [
+      "amd_iommu=on"
+      "iommu=pt"
+      "kvm.ignore_msrs=1"
+      "threadirqs"
+    ];
   };
 
   # Performance desktop (AMD não precisa de schedutil como laptop)
