@@ -38,7 +38,6 @@
 
     ../programs/steam
     ../programs/wallpaper-engine-kde
-    # ../services/lightdm  # TEMPORARIAMENTE REMOVIDO PARA TESTE
     ../services/tlp
     ../services/snapper
     ../services/tailscale
@@ -76,6 +75,7 @@
     initrd.verbose = false;
     kernelParams = [
       "quiet"
+      "splash"
       "rd.udev.log_level=3"
     ];
     loader.efi.canTouchEfiVariables = true;
@@ -96,11 +96,11 @@
      #   "loader/splash.bmp" = splashBmp;
      # };
     #loader.timeout = 0;
-   # plymouth = {
-   #   enable = true;
-   #   theme = "nixos-bgrt";
-   #   themePackages = [ pkgs.nixos-bgrt-plymouth ];
-   # };
+    plymouth = {
+      enable = lib.mkDefault true;
+      theme = lib.mkDefault "nixos-bgrt";
+      themePackages = lib.mkDefault [ pkgs.nixos-bgrt-plymouth ];
+    };
 
     # Ajustes do módulo v4l (câmera virtual)
     kernelModules = [ "v4l2loopback" ];
@@ -159,15 +159,16 @@
   networking.hostName = lib.mkDefault hostname;
 
   # Desabilita serviços systemd que impactam o boot
-  systemd.services = {
-    NetworkManager-wait-online.enable = false;
-    plymouth-quit-wait.enable = false;
-    plymouth-quit.enable = false;
-    plymouth-start.enable = false;
-  };
-
-  # Desabilita plymouth completamente (não será usado, evita dependências)
-  boot.plymouth.enable = false;
+  systemd.services = lib.mkMerge [
+    {
+      NetworkManager-wait-online.enable = false;
+    }
+    (lib.mkIf (!config.boot.plymouth.enable) {
+      plymouth-quit-wait.enable = false;
+      plymouth-quit.enable = false;
+      plymouth-start.enable = false;
+    })
+  ];
 
   # Fuso horário
   time.timeZone = "America/Cuiaba";

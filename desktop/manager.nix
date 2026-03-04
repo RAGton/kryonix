@@ -29,9 +29,6 @@
   imports = [
     ./kde/system.nix
     ./hyprland/system.nix
-
-    # LightDM agora é importado via hosts/inspiron/default.nix (temporário para teste)
-    # TODO: mover para local adequado após validação
   ];
 
   # Configurações base para todos os desktops Wayland

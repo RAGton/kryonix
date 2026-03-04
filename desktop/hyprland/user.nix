@@ -31,13 +31,177 @@ let
     || (config.programs.dank-material-shell.enable or false);
 in
 {
+  # Monitores: voltar ao padrão do DMS/Hyprland (sem kanshi forçando scale/posições).
+  services.kanshi.enable = lib.mkForce false;
+
+  # Screenshot stack (Wayland nativo) no nível do usuário, para os binds funcionarem
+  # mesmo antes de um `nixos-rebuild`.
+  home.packages = with pkgs; [
+    grim
+    slurp
+    wl-clipboard
+    swappy
+    libnotify
+    jq
+    hyprland
+
+    (writeShellApplication {
+      name = "grimblast";
+      runtimeInputs = [ bash coreutils grim slurp wl-clipboard libnotify jq hyprland ];
+      text = ''
+        set -euo pipefail
+
+        notify=0
+        if [[ "''${1-}" = "--notify" ]]; then
+          notify=1
+          shift
+        fi
+
+        verb="''${1-}"
+        target="''${2-}"
+
+        screenshots_dir="''${XDG_PICTURES_DIR:-$HOME/Pictures}/Screenshots"
+        mkdir -p "$screenshots_dir"
+        ts="$(date +%F_%H-%M-%S)"
+        file="$screenshots_dir/Screenshot_$ts.png"
+
+        do_notify() {
+          [[ "$notify" = 1 ]] || return 0
+          notify-send -a "screenshot" "$@" >/dev/null 2>&1 || true
+        }
+
+        usage() {
+          echo "Uso: grimblast [--notify] <copy|save|copysave> <area|screen|active>" >&2
+          exit 2
+        }
+
+        [[ -n "$verb" && -n "$target" ]] || usage
+
+        case "$target" in
+          area)
+            geometry="$(slurp)" || exit 0
+            [[ -n "$geometry" ]] || exit 0
+            case "$verb" in
+              copy)
+                grim -g "$geometry" - | wl-copy
+                do_notify "Screenshot" "Área copiada para o clipboard"
+                ;;
+              save)
+                grim -g "$geometry" "$file"
+                do_notify "Screenshot" "Área salva: $(basename "$file")"
+                ;;
+              copysave)
+                grim -g "$geometry" "$file"
+                wl-copy < "$file"
+                do_notify "Screenshot" "Área salva e copiada: $(basename "$file")"
+                ;;
+              *) usage ;;
+            esac
+            ;;
+
+          screen)
+            case "$verb" in
+              copy)
+                grim - | wl-copy
+                do_notify "Screenshot" "Tela copiada para o clipboard"
+                ;;
+              save)
+                grim "$file"
+                do_notify "Screenshot" "Tela salva: $(basename "$file")"
+                ;;
+              copysave)
+                grim "$file"
+                wl-copy < "$file"
+                do_notify "Screenshot" "Tela salva e copiada: $(basename "$file")"
+                ;;
+              *) usage ;;
+            esac
+            ;;
+
+          active)
+            x="$(hyprctl -j activewindow | jq -r '.at[0] // empty')"
+            y="$(hyprctl -j activewindow | jq -r '.at[1] // empty')"
+            w="$(hyprctl -j activewindow | jq -r '.size[0] // empty')"
+            h="$(hyprctl -j activewindow | jq -r '.size[1] // empty')"
+            [[ -n "$x" && -n "$y" && -n "$w" && -n "$h" ]] || {
+              echo "grimblast: não foi possível obter geometria da janela ativa" >&2
+              exit 1
+            }
+            geometry="$x,$y ''${w}x''${h}"
+            case "$verb" in
+              copy)
+                grim -g "$geometry" - | wl-copy
+                do_notify "Screenshot" "Janela ativa copiada para o clipboard"
+                ;;
+              save)
+                grim -g "$geometry" "$file"
+                do_notify "Screenshot" "Janela ativa salva: $(basename "$file")"
+                ;;
+              copysave)
+                grim -g "$geometry" "$file"
+                wl-copy < "$file"
+                do_notify "Screenshot" "Janela ativa salva e copiada: $(basename "$file")"
+                ;;
+              *) usage ;;
+            esac
+            ;;
+
+          *) usage ;;
+        esac
+      '';
+    })
+
+    (writeShellApplication {
+      name = "rag-screenshot";
+      runtimeInputs = [ bash coreutils grim slurp wl-clipboard swappy libnotify grimblast ];
+      text = ''
+        set -euo pipefail
+
+        action="''${1-}"
+        shift || true
+
+        case "$action" in
+          copy-area)
+            exec grimblast --notify copy area
+            ;;
+
+          copysave-screen)
+            exec grimblast --notify copysave screen
+            ;;
+
+          copysave-active)
+            exec grimblast --notify copysave active
+            ;;
+
+          edit-area)
+            tmp="''${TMPDIR:-/tmp}/screenshot-area-$(date +%F_%H-%M-%S).png"
+            geometry="$(slurp)" || exit 0
+            [[ -n "$geometry" ]] || exit 0
+            grim -g "$geometry" "$tmp"
+            exec swappy -f "$tmp"
+            ;;
+
+          edit-output)
+            tmp="''${TMPDIR:-/tmp}/screenshot-screen-$(date +%F_%H-%M-%S).png"
+            grim "$tmp"
+            exec swappy -f "$tmp"
+            ;;
+
+          *)
+            echo "Uso: rag-screenshot {copy-area|copysave-screen|copysave-active|edit-area|edit-output}" >&2
+            exit 2
+            ;;
+        esac
+      '';
+    })
+  ];
+
   imports = [
     "${nhModules}/misc/gtk"
     "${nhModules}/misc/qt"
     "${nhModules}/misc/wallpaper"
     "${nhModules}/misc/xdg"
     "${nhModules}/programs/swappy"
-    "${nhModules}/services/kanshi"
   ];
 
   # Boot direto (sem display manager): ao logar no tty, inicia Hyprland via UWSM.
@@ -45,7 +209,7 @@ in
   programs.zsh.loginExtra = lib.mkIf (config.rag.desktop.directLogin.enable or false) (lib.mkAfter ''
     if [[ -z "''${WAYLAND_DISPLAY-}" && -z "''${DISPLAY-}" && "''${XDG_VTNR-}" = "${toString (config.rag.desktop.directLogin.tty or 1)}" ]]; then
       if command -v uwsm >/dev/null 2>&1; then
-        exec uwsm start hyprland-uwsm.desktop
+        exec uwsm start hyprland || exec uwsm start hyprland-uwsm.desktop
       fi
       exec Hyprland
     fi
@@ -213,8 +377,14 @@ in
   programs.dank-material-shell = lib.mkIf dmsEnabled {
     systemd.target = "hyprland-session.target";
 
-    # Evita timeout de PowerProfiles quando o serviço D-Bus não está pronto.
-    settings.osdPowerProfileEnabled = false;
+    # Settings: sempre usar o snapshot versionado no repo.
+    # Importante: isso mantém o arquivo “fonte da verdade” no Git e evita drift.
+    settings = lib.mkMerge [
+      (builtins.fromJSON (builtins.readFile ../../files/dms/settings.json))
+
+      # Evita timeout de PowerProfiles quando o serviço D-Bus não está pronto.
+      { osdPowerProfileEnabled = false; }
+    ];
 
     # Wallpaper declarativo vindo da configuração Nix/Home Manager.
     session = {
