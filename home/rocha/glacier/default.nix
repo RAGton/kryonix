@@ -49,6 +49,16 @@
     mesa-demos            # glxinfo / eglinfo
   ];
 
+  xdg.configFile."dms/settings.json" = {
+    source = ../../../files/dms/settings.json;
+    force = true;
+  };
+
+  xdg.configFile."dms/session.json" = {
+    source = ../../../files/dms/session.json;
+    force = true;
+  };
+
   home.stateVersion = "26.05";
 
   xdg.configFile."gtk-3.0/settings.ini".force = true;
