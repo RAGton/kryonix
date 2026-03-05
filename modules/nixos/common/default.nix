@@ -246,6 +246,8 @@
   # devmon depende de udevil, que frequentemente quebra build em toolchains novos.
   # Em desktops (ex.: KDE), o fluxo recomendado para dispositivos removíveis é via udisks2.
   services.devmon.enable = false;
+  services.udisks2.enable = lib.mkDefault true;
+  services.gvfs.enable = lib.mkDefault true;
 
   # Habilita PipeWire para áudio
   services.pulseaudio.enable = false;

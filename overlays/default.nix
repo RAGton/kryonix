@@ -131,7 +131,7 @@ PY
   # - Hashes foram obtidos via `nix store prefetch-file --json <url>`.
   warp-terminal-latest = final: prev: {
     warp-terminal = prev.warp-terminal.overrideAttrs (old: let
-      version = "0.2026.02.04.08.20.stable_03";
+      version = "0.2026.02.25.08.24.stable_01";
       isDarwin = prev.stdenv.hostPlatform.isDarwin;
       system = prev.stdenv.hostPlatform.system;
       linuxArch = if system == "x86_64-linux" then "x86_64" else "aarch64";
@@ -144,11 +144,11 @@ PY
 
       hash =
         if isDarwin then
-          "sha256-eWzWTGxjmJqjI09/rGYYwTIuvIKa86f+H53sQWDGbzs="
+          "sha256-Q29tEoB3RVE7PlDK5o4OiaSC39ksgK9F3DYQ9uIu9no="
         else if system == "x86_64-linux" then
-          "sha256-q2nrl4bI4R2T0ulKcv1HmQjYgu31tbmL22TgA/+J5XM="
+          "sha256-PBDITM/Zc6rj91knMIu4QvwF6NRJ8fxzq8Btd01ens0="
         else
-          "sha256-Er14isGBRRejSsW13IJe+GLXNPpl3z1AWzGgJ3B03Js=";
+          "sha256-FC1WYLRv5nAddKKZKmEGUQLMuDMdT2WUleA5/fL7JIc=";
     in {
       inherit version;
       src = prev.fetchurl { inherit url hash; };
