@@ -141,6 +141,11 @@ in
           exit 0
         fi
 
+        if [ ! -f ${lib.escapeShellArg (toString cfg.authKeyFile)} ]; then
+          echo "tailscale-autoconnect: authKeyFile não encontrado; pulando autoconnect." >&2
+          exit 0
+        fi
+
         authkey="$(cat ${lib.escapeShellArg (toString cfg.authKeyFile)})"
         if [ -z "$authkey" ]; then
           echo "tailscale-autoconnect: authKeyFile vazio; abortando." >&2

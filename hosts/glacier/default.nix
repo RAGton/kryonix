@@ -35,9 +35,9 @@
 
     ./hardware-configuration.nix
 
-    # Disko
-    inputs.disko.nixosModules.disko
-    ./disks.nix
+    # Disko fica reservado para provisionamento/instalação.
+    # Este host já está instalado e usa os mounts reais em
+    # `hardware-configuration.nix`.
 
     # Base do sistema
     "${nixosModules}/common"
@@ -63,6 +63,7 @@
   rag.profiles.laptop.enable = false;
 
   rag.features.development = {
+    enable = true;
     languages = {
       nix.enable        = true;
       python.enable     = true;
@@ -88,9 +89,10 @@
         efiSupport = true;
         device     = "nodev";
         useOSProber = false;
+        efiInstallAsRemovable = true;
       };
       efi = {
-        canTouchEfiVariables = true;
+        canTouchEfiVariables = lib.mkForce false;
         efiSysMountPoint     = "/boot";
       };
     };
@@ -196,12 +198,9 @@
   kernelZen = {
     enable = true;
     kernel = "zen";
-    forceLocalBuild = true;
-    useLLVMStdenv   = true;
-    extraMakeFlags  = [
-      "KCFLAGS=-march=native -O3"
-      "KCPPFLAGS=-march=native -O3"
-    ];
+    forceLocalBuild = false;
+    useLLVMStdenv   = false;
+    extraMakeFlags  = [ ];
     disableMitigations = lib.mkDefault false;
     extraKernelParams  = [
       "amd_iommu=on"
