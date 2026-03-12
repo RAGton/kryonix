@@ -244,12 +244,12 @@ in
           "Saída padrão")
             out="$(wpctl status | awk '/Sinks:/{f=1;next}/Sources:/{f=0}f && $1 ~ /^[0-9]+\./{gsub("\.","",$1); print $1":"substr($0,index($0,$2))}' | rofi -dmenu -i -p 'Selecionar saída')" || exit 0
             [ -n "$out" ] || exit 0
-            wpctl set-default "${out%%:*}"
+            wpctl set-default "''${out%%:*}"
             ;;
           "Entrada padrão")
             inn="$(wpctl status | awk '/Sources:/{f=1;next}/Filters:/{f=0}f && $1 ~ /^[0-9]+\./{gsub("\.","",$1); print $1":"substr($0,index($0,$2))}' | rofi -dmenu -i -p 'Selecionar entrada')" || exit 0
             [ -n "$inn" ] || exit 0
-            wpctl set-default "${inn%%:*}"
+            wpctl set-default "''${inn%%:*}"
             ;;
           *) exit 0 ;;
         esac

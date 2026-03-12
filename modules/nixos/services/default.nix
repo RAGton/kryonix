@@ -10,11 +10,11 @@
 # - Garante lock/logout/notificações/clipboard/screenshot consistentes em todos
 #   os hosts sem depender de desktop environments alternativos.
 # ==============================================================================
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   services.udisks2.enable = true;
   services.gvfs.enable = true;
-  services.devmon.enable = true;
+  services.devmon.enable = lib.mkDefault true;
 
   environment.systemPackages = with pkgs; [
     hyprlock
