@@ -1,0 +1,6 @@
+*.nix text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.service text eol=lf
+*.timer text eol=lf

@@ -18,7 +18,6 @@
   environment.systemPackages = with pkgs; [
     networkmanagerapplet
     networkmanager_dmenu
-    nm-connection-editor
-    nmtui
+    networkmanager
   ];
 }

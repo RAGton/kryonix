@@ -198,7 +198,7 @@ in
 
     (writeShellApplication {
       name = "rag-clipboard-menu";
-      runtimeInputs = [ bash coreutils cliphist wl-clipboard rofi-wayland ];
+      runtimeInputs = [ bash coreutils cliphist wl-clipboard rofi ];
       text = ''
         set -euo pipefail
 
@@ -233,7 +233,7 @@ in
 
     (writeShellApplication {
       name = "rag-audio-menu";
-      runtimeInputs = [ bash coreutils grep gnugrep gawk rofi-wayland wireplumber pavucontrol ];
+      runtimeInputs = [ bash coreutils gnugrep gawk rofi wireplumber pavucontrol ];
       text = ''
         set -euo pipefail
 
@@ -258,7 +258,7 @@ in
 
     (writeShellApplication {
       name = "rag-network-menu";
-      runtimeInputs = [ bash coreutils rofi-wayland networkmanager_dmenu nm-connection-editor blueman ];
+      runtimeInputs = [ bash coreutils rofi networkmanager_dmenu networkmanagerapplet blueman ];
       text = ''
         set -euo pipefail
 

@@ -22,7 +22,6 @@ in {
       docker-compose
       docker-client
       neovim
-      inputs.codex.packages.${pkgs.system}.default
     ];
   };
 }

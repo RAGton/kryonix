@@ -41,9 +41,7 @@
         "com.rtosta.zapzap"
         "org.libreoffice.LibreOffice"
         "org.gimp.GIMP"
-        # Notion Desktop (wrapper community no Flathub)
-        "notion-app"
-        ];
+      ];
 
       uninstallUnmanaged = true;
       update.auto.enable = true;

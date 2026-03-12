@@ -37,8 +37,6 @@
   };
 
   home.packages = with pkgs; [
-    inputs.codex.packages.${pkgs.system}.default
-
     steam
     gamemode
     atlauncher
