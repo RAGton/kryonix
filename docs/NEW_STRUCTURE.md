@@ -17,7 +17,7 @@
 ## 📂 ESTRUTURA DE DIRETÓRIOS
 
 ```
-dotfiles-NixOs/
+ragos-nixos/
 │
 ├── core/                           # Sistema base (v2)
 │   ├── nixos.nix                  # Config base NixOS

@@ -13,7 +13,13 @@
 # - Não escolhe desktop. Deve ser usado junto com Hyprland.
 # - Não é ativado automaticamente; você opta por `rag.rice.dmsUpstream.enable`.
 # =============================================================================
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   cfg = config.rag.rice.dmsUpstream;
@@ -21,11 +27,7 @@ let
 
   # Pacotes providos pelo flake upstream do DMS.
   # Esperado: `packages.${system}.dms-shell` e `packages.${system}.quickshell`.
-  dmsPkgs =
-    if inputs ? dms-flake then
-      inputs.dms-flake.packages.${system}
-    else
-      { };
+  dmsPkgs = if inputs ? dms-flake then inputs.dms-flake.packages.${system} else { };
 
 in
 {
@@ -34,9 +36,12 @@ in
     # e injeta `dmsPkgs` para o mkPackageOption funcionar.
     # Guarda o import com builtins.pathExists para evitar falha quando o arquivo
     # não existe no upstream (ex.: ao usar dms = flake=false em commit sem o módulo).
-    (if builtins.pathExists (inputs.dms + "/distro/nix/home.nix")
-     then (import (inputs.dms + "/distro/nix/home.nix"))
-     else { })
+    (
+      if builtins.pathExists (inputs.dms + "/distro/nix/home.nix") then
+        (import (inputs.dms + "/distro/nix/home.nix"))
+      else
+        { }
+    )
   ];
 
   options.rag.rice.dmsUpstream = {

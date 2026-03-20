@@ -5,7 +5,13 @@
 # - Evitar builds lentos por padrão (ex.: Codex), mantendo ativação simples.
 # - Tudo opt-in via `rag.features.ai.*`.
 # =============================================================================
-{ config, lib, inputs, pkgs, ... }:
+{
+  config,
+  lib,
+  inputs,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.rag.features.ai;

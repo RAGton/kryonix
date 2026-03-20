@@ -22,7 +22,7 @@ Implementamos a **solução definitiva** para o greetd, garantindo que ele funci
 
 ### Passo 1: Aplicar as Mudanças
 ```bash
-cd ~/dotfiles-NixOs
+cd ~/ragos-nixos
 git pull
 sudo nixos-rebuild switch --flake .#inspiron
 ```

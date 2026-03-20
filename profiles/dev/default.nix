@@ -6,10 +6,17 @@
 # O que é:
 # - Pacotes-base para fluxo de desenvolvimento diário.
 # ==============================================================================
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   cfg = config.rag.profiles.dev;
-in {
+in
+{
   options.rag.profiles.dev.enable = lib.mkEnableOption "Perfil de desenvolvimento";
 
   config = lib.mkIf cfg.enable {

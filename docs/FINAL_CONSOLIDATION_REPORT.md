@@ -1,4 +1,4 @@
-# Final Consolidation Report — dotfiles-nixos
+# Final Consolidation Report — ragos-nixos
 
 **Autor:** Gabriel Rocha (rag) + Codex  
 **Data:** 2026-03-12

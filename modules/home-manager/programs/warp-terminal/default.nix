@@ -8,9 +8,12 @@ let
   warpDistroboxName = "ragos-warp";
   warpManifestPath = "${config.xdg.configHome}/distrobox/warp-terminal.ini";
   warpPacmanArch =
-    if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then "x86_64"
-    else if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then "aarch64"
-    else throw "Unsupported platform for Warp distrobox: ${pkgs.stdenv.hostPlatform.system}";
+    if pkgs.stdenv.hostPlatform.system == "x86_64-linux" then
+      "x86_64"
+    else if pkgs.stdenv.hostPlatform.system == "aarch64-linux" then
+      "aarch64"
+    else
+      throw "Unsupported platform for Warp distrobox: ${pkgs.stdenv.hostPlatform.system}";
   warpBootstrap = pkgs.writeShellApplication {
     name = "rag-warp-bootstrap";
     runtimeInputs = [

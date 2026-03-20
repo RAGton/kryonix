@@ -290,7 +290,8 @@
     extraGroups = [
       "networkmanager"
       "wheel"
-    ] ++ lib.optionals config.programs.wireshark.enable [ "wireshark" ];
+    ]
+    ++ lib.optionals config.programs.wireshark.enable [ "wireshark" ];
     isNormalUser = true;
     shell = pkgs.zsh;
   }

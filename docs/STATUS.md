@@ -267,7 +267,7 @@ Desktop:
 
 ### Documentação
 ```
-/home/rocha/GitHub/dotfiles-NixOs/
+/home/rocha/GitHub/ragos-nixos/
 ├── INDEX.md                    ✅ Criado (índice central)
 ├── SUMMARY.md                  ✅ Criado (resumo executivo)
 ├── INSTRUCT.md                 ✅ Criado (manual para IAs)
@@ -279,7 +279,7 @@ Desktop:
 
 ### Código (v2 - Ainda não criado)
 ```
-/home/rocha/GitHub/dotfiles-NixOs/
+/home/rocha/GitHub/ragos-nixos/
 ├── lib/
 │   ├── default.nix             ⏳ Sprint 1
 │   └── options.nix             ⏳ Sprint 1

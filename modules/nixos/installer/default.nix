@@ -8,10 +8,18 @@
 # Como usar (na ISO):
 # - `rag-install --host inspiron --disk /dev/nvme0n1`
 # =============================================================================
-{ lib, pkgs, inputs, ... }:
+{
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 {
   # ISO: habilita flakes e ferramenta de instalação.
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   environment.systemPackages =
     let

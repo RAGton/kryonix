@@ -6,10 +6,16 @@
 # O que é:
 # - Toolkit para operações de TI/Sysadmin e troubleshooting de infraestrutura.
 # ==============================================================================
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.rag.profiles.ti;
-in {
+in
+{
   options.rag.profiles.ti.enable = lib.mkEnableOption "Perfil TI/Sysadmin";
 
   config = lib.mkIf cfg.enable {

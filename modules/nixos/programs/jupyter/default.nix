@@ -33,7 +33,8 @@ let
   # Resolve HOME do usuário. Nem sempre `users.users.<name>.home` é definido explicitamente.
   getHome = u: (config.users.users.${u}.home or "/home/${u}");
 
-  mkBootstrap = username:
+  mkBootstrap =
+    username:
     let
       userHome = getHome username;
       venvDir = "${userHome}/.local/share/jupyter/venvs/default";
@@ -128,26 +129,32 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages =
-      [
-        python
-        pkgs.jupyter
-      ]
-      ++ lib.optionals cfg.kernels.rust [ pkgs.evcxr ]
-      ++ lib.optionals cfg.kernels.cpp [ pkgs.xeus-cling pkgs.gcc ]
-      ++ lib.optionals (cfg.kernels.node && hasIjavascript) [ pkgs.nodejs ijavascriptPkg ];
+    environment.systemPackages = [
+      python
+      pkgs.jupyter
+    ]
+    ++ lib.optionals cfg.kernels.rust [ pkgs.evcxr ]
+    ++ lib.optionals cfg.kernels.cpp [
+      pkgs.xeus-cling
+      pkgs.gcc
+    ]
+    ++ lib.optionals (cfg.kernels.node && hasIjavascript) [
+      pkgs.nodejs
+      ijavascriptPkg
+    ];
 
     # Bootstrapa o venv e registra kernels na ativação do sistema.
     system.activationScripts.jupyterBootstrap = {
       text = ''
-        ${lib.concatStringsSep "\n" (map (u: ''
-          if [ -d ${lib.escapeShellArg (getHome u)} ]; then
-            echo "[jupyter] bootstrapping user venv/kernels for ${u}" > /dev/null
-            ${pkgs.su}/bin/su - ${u} -c ${lib.escapeShellArg (mkBootstrap u)}
-          fi
-        '') users)}
+        ${lib.concatStringsSep "\n" (
+          map (u: ''
+            if [ -d ${lib.escapeShellArg (getHome u)} ]; then
+              echo "[jupyter] bootstrapping user venv/kernels for ${u}" > /dev/null
+              ${pkgs.su}/bin/su - ${u} -c ${lib.escapeShellArg (mkBootstrap u)}
+            fi
+          '') users
+        )}
       '';
     };
   };
 }
-

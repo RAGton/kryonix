@@ -39,4 +39,3 @@
   # Evita pedir senha no live. Chave pode ser adicionada depois.
   users.users.nixos.openssh.authorizedKeys.keys = lib.mkDefault [ ];
 }
-

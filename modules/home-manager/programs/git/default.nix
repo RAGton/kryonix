@@ -65,19 +65,20 @@
         isSshSigningKey = hasGitKey && lib.hasPrefix "ssh-" userConfig.gitKey;
         signingKey =
           if isSshSigningKey then
-            (if userConfig ? gitSigningKeyPath then
-              "${config.home.homeDirectory}/${userConfig.gitSigningKeyPath}"
-            else
-              "${config.home.homeDirectory}/.ssh/id_ed25519")
+            (
+              if userConfig ? gitSigningKeyPath then
+                "${config.home.homeDirectory}/${userConfig.gitSigningKeyPath}"
+              else
+                "${config.home.homeDirectory}/.ssh/id_ed25519"
+            )
           else
             userConfig.gitKey;
       in
       lib.mkIf hasGitKey {
         key = signingKey;
-      signByDefault = true;
-    };
+        signByDefault = true;
+      };
   };
-
 
   programs.gh = {
     enable = true;

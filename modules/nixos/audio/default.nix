@@ -36,7 +36,11 @@
 
       pipewire."95-audio-quality" = {
         context.properties = {
-          default.clock.allowed-rates = [ 44100 48000 96000 ];
+          default.clock.allowed-rates = [
+            44100
+            48000
+            96000
+          ];
           resample.quality = 10;
         };
       };

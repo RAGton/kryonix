@@ -18,7 +18,12 @@
 # - Configurações de kernel/drivers são hardware-specific
 # - Validar após habilitar em novo hardware
 # =============================================================================
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.rag.features.gaming;
@@ -133,24 +138,28 @@ in
     # =========================
     # System Packages
     # =========================
-    environment.systemPackages = with pkgs; lib.flatten [
-      (lib.optional cfg.mangohud.enable mangohud)
-      (lib.optional cfg.lutris.enable lutris)
-      (lib.optional cfg.heroic.enable heroic)
-      (lib.optional cfg.sunshine.enable sunshine)
-      (lib.optional (pkgs ? atlauncher) atlauncher)
-      (lib.optional (pkgs ? moonlight-qt) moonlight-qt)
-      (lib.optional (pkgs ? gamescope) gamescope)
-      (lib.optional (pkgs ? vkbasalt) vkbasalt)
-      (lib.optional (pkgs ? vulkan-tools) vulkan-tools)
-      (lib.optional (pkgs ? mesa-demos) mesa-demos)
-      (lib.optional (pkgs ? umu-launcher) umu-launcher)
-      (lib.optional (pkgs ? protonup-qt) protonup-qt)
-      (lib.optional (pkgs ? protontricks) protontricks)
-      (lib.optional (pkgs ? dxvk) dxvk)
-      (lib.optional (pkgs ? vkd3d-proton) vkd3d-proton)
-      (lib.optional (isNvidia && pkgs ? nvtopPackages && pkgs.nvtopPackages ? nvidia) pkgs.nvtopPackages.nvidia)
-    ];
+    environment.systemPackages =
+      with pkgs;
+      lib.flatten [
+        (lib.optional cfg.mangohud.enable mangohud)
+        (lib.optional cfg.lutris.enable lutris)
+        (lib.optional cfg.heroic.enable heroic)
+        (lib.optional cfg.sunshine.enable sunshine)
+        (lib.optional (pkgs ? atlauncher) atlauncher)
+        (lib.optional (pkgs ? moonlight-qt) moonlight-qt)
+        (lib.optional (pkgs ? gamescope) gamescope)
+        (lib.optional (pkgs ? vkbasalt) vkbasalt)
+        (lib.optional (pkgs ? vulkan-tools) vulkan-tools)
+        (lib.optional (pkgs ? mesa-demos) mesa-demos)
+        (lib.optional (pkgs ? umu-launcher) umu-launcher)
+        (lib.optional (pkgs ? protonup-qt) protonup-qt)
+        (lib.optional (pkgs ? protontricks) protontricks)
+        (lib.optional (pkgs ? dxvk) dxvk)
+        (lib.optional (pkgs ? vkd3d-proton) vkd3d-proton)
+        (lib.optional (
+          isNvidia && pkgs ? nvtopPackages && pkgs.nvtopPackages ? nvidia
+        ) pkgs.nvtopPackages.nvidia)
+      ];
 
     # =========================
     # Performance Optimizations
@@ -183,8 +192,17 @@ in
     # Firewall (game streaming)
     # =========================
     networking.firewall = lib.mkIf cfg.sunshine.enable {
-      allowedTCPPorts = [ 47984 47989 48010 ];
-      allowedUDPPorts = [ 47998 47999 48000 48010 ];
+      allowedTCPPorts = [
+        47984
+        47989
+        48010
+      ];
+      allowedUDPPorts = [
+        47998
+        47999
+        48000
+        48010
+      ];
     };
 
     # =========================

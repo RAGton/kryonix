@@ -30,7 +30,9 @@ let
     [ "--accept-dns=${boolToFlag cfg.acceptDNS}" ]
     ++ lib.optionals cfg.ssh [ "--ssh" ]
     ++ lib.optionals cfg.advertiseExitNode [ "--advertise-exit-node" ]
-    ++ lib.optionals (cfg.advertiseRoutes != [ ]) [ "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}" ]
+    ++ lib.optionals (cfg.advertiseRoutes != [ ]) [
+      "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"
+    ]
     ++ cfg.extraUpFlags
   );
   needsForwarding = cfg.advertiseExitNode || cfg.advertiseRoutes != [ ];
@@ -87,14 +89,20 @@ in
     advertiseRoutes = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      example = [ "192.168.0.0/24" "10.0.0.0/24" ];
+      example = [
+        "192.168.0.0/24"
+        "10.0.0.0/24"
+      ];
       description = "Lista de rotas (subnet routing) a anunciar.";
     };
 
     extraUpFlags = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      example = [ "--hostname=glacier" "--operator=rag" ];
+      example = [
+        "--hostname=glacier"
+        "--operator=rag"
+      ];
       description = "Flags extras passadas para `tailscale up`.";
     };
   };
@@ -119,8 +127,14 @@ in
     # Autoconnect (opcional). Não tenta adivinhar login; exige auth key via arquivo.
     systemd.services.tailscale-autoconnect = lib.mkIf cfg.autoconnect {
       description = "Tailscale automatic bring-up";
-      after = [ "network-online.target" "tailscaled.service" ];
-      wants = [ "network-online.target" "tailscaled.service" ];
+      after = [
+        "network-online.target"
+        "tailscaled.service"
+      ];
+      wants = [
+        "network-online.target"
+        "tailscaled.service"
+      ];
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
@@ -157,4 +171,3 @@ in
     };
   };
 }
-

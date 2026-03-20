@@ -80,7 +80,7 @@ rag = {
 ### Estrutura v2
 
 ```
-dotfiles-NixOs/
+ragos-nixos/
 ├── core/          # ✨ Sistema base limpo
 ├── profiles/      # ✨ Presets (desktop, laptop, vm)
 ├── features/      # ✨ Features modulares (gaming, dev)
@@ -304,4 +304,3 @@ GitHub Copilot Assistant
 Role: Mantenedor Principal  
 Date: 2026-02-18  
 Version: 1.0.0
-

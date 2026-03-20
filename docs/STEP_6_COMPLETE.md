@@ -86,7 +86,7 @@ Auto-importa todos os módulos de features.
 ## 🏗️ Arquitetura Resultante
 
 ```
-dotfiles-NixOs/
+ragos-nixos/
 ├── flake.nix                # ✅ Features imported
 │
 ├── features/                # ✅ NOVO!
@@ -421,4 +421,3 @@ Criar profiles composáveis:
 ---
 
 **Sistema pronto para uso! Todas as features funcionando!** 🎉
-

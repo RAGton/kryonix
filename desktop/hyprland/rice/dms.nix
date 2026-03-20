@@ -21,7 +21,13 @@
 # - DMS pode conflitar com configs manuais em ~/.config
 # - Usar force = true para sobrescrever
 # =============================================================================
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   cfg = config.rag.rice.dms;
@@ -36,7 +42,11 @@ in
     enable = lib.mkEnableOption "DankMaterialShell rice para Hyprland";
 
     variant = lib.mkOption {
-      type = lib.types.enum [ "default" "minimal" "full" ];
+      type = lib.types.enum [
+        "default"
+        "minimal"
+        "full"
+      ];
       default = "default";
       description = ''
         Variante do DMS:
@@ -163,7 +173,7 @@ in
     # Scripts de Instalação
     # =========================
     # Script para baixar/atualizar DMS config se necessário
-    home.activation.setupDMS = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    home.activation.setupDMS = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       $DRY_RUN_CMD ${pkgs.bash}/bin/bash -c '
         echo "🎨 DankMaterialShell (DMS) está habilitado!"
         echo "Source: ${dmsSource}"

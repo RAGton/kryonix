@@ -6,10 +6,16 @@
 # O que é:
 # - Ferramentas de estudo, produtividade e escrita acadêmica.
 # ==============================================================================
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.rag.profiles.university;
-in {
+in
+{
   options.rag.profiles.university.enable = lib.mkEnableOption "Perfil universitário";
 
   config = lib.mkIf cfg.enable {

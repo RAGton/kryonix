@@ -52,7 +52,7 @@
 
     shellAliases = {
       ff = "fastfetch";
-      v  = "nvim";
+      v = "nvim";
       ls = "eza --icons always";
     };
 

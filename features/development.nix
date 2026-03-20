@@ -20,7 +20,13 @@
 # - Muitos language servers podem usar bastante RAM
 # - Ajuste conforme necessidade do host
 # =============================================================================
-{ config, lib, pkgs, userConfig, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  userConfig,
+  ...
+}:
 
 let
   cfg = config.rag.features.development;
@@ -45,24 +51,24 @@ let
       pkgs.winetricks
     ];
     text = ''
-      set -euo pipefail
+            set -euo pipefail
 
-      export WINEPREFIX="$HOME/${psimPrefixRelative}"
-      mkdir -p "$(dirname "$WINEPREFIX")"
+            export WINEPREFIX="$HOME/${psimPrefixRelative}"
+            mkdir -p "$(dirname "$WINEPREFIX")"
 
-      if [ ! -f "$WINEPREFIX/system.reg" ]; then
-        echo "Inicializando o prefixo do PSIM em $WINEPREFIX"
-        wineboot -u
-      fi
+            if [ ! -f "$WINEPREFIX/system.reg" ]; then
+              echo "Inicializando o prefixo do PSIM em $WINEPREFIX"
+              wineboot -u
+            fi
 
-      echo "Instalando componentes recomendados do Wine (corefonts, vcrun2019)..."
-      winetricks -q corefonts vcrun2019 || true
+            echo "Instalando componentes recomendados do Wine (corefonts, vcrun2019)..."
+            winetricks -q corefonts vcrun2019 || true
 
-      cat <<'EOF'
-Prefixo pronto.
-Use:
-  psim-install /caminho/para/o-instalador.exe
-EOF
+            cat <<'EOF'
+      Prefixo pronto.
+      Use:
+        psim-install /caminho/para/o-instalador.exe
+      EOF
     '';
   };
 
@@ -139,7 +145,14 @@ EOF
 in
 {
   imports = [
-    (lib.mkRemovedOptionModule [ "rag" "features" "development" "editors" "vscode" "enable" ] "Use rag.vscode instead.")
+    (lib.mkRemovedOptionModule [
+      "rag"
+      "features"
+      "development"
+      "editors"
+      "vscode"
+      "enable"
+    ] "Use rag.vscode instead.")
   ];
 
   options.rag.features.development = {
@@ -259,174 +272,176 @@ in
     # =========================
     # System Packages
     # =========================
-    environment.systemPackages = with pkgs; lib.flatten [
-      # Git tools
-      (lib.optionals cfg.git.enable [
-        git
-        git-lfs
-        gh  # GitHub CLI
-        lazygit
-        gitui
-        delta  # Better git diff
-      ])
+    environment.systemPackages =
+      with pkgs;
+      lib.flatten [
+        # Git tools
+        (lib.optionals cfg.git.enable [
+          git
+          git-lfs
+          gh # GitHub CLI
+          lazygit
+          gitui
+          delta # Better git diff
+        ])
 
-      # Editors
-      (lib.optional cfg.editors.neovim.enable neovim)
+        # Editors
+        (lib.optional cfg.editors.neovim.enable neovim)
 
-      # Rust
-      (lib.optionals cfg.languages.rust.enable [
-        rustc
-        cargo
-        rustfmt
-        rust-analyzer
-        clippy
-      ])
+        # Rust
+        (lib.optionals cfg.languages.rust.enable [
+          rustc
+          cargo
+          rustfmt
+          rust-analyzer
+          clippy
+        ])
 
-      # Python
-      (lib.optionals cfg.languages.python.enable [
-        python312
-        python312Packages.pip
-        python312Packages.virtualenv
-        python312Packages.ipython
-        ruff  # Linter/formatter
-        pyright  # LSP
-      ])
+        # Python
+        (lib.optionals cfg.languages.python.enable [
+          python312
+          python312Packages.pip
+          python312Packages.virtualenv
+          python312Packages.ipython
+          ruff # Linter/formatter
+          pyright # LSP
+        ])
 
-      # JavaScript/TypeScript
-      (lib.optionals cfg.languages.javascript.enable [
-        nodejs_22
-        nodePackages.npm
-        nodePackages.yarn
-        nodePackages.pnpm
-        nodePackages.typescript
-        nodePackages.typescript-language-server
-        nodePackages.eslint
-        nodePackages.prettier
-      ])
+        # JavaScript/TypeScript
+        (lib.optionals cfg.languages.javascript.enable [
+          nodejs_22
+          nodePackages.npm
+          nodePackages.yarn
+          nodePackages.pnpm
+          nodePackages.typescript
+          nodePackages.typescript-language-server
+          nodePackages.eslint
+          nodePackages.prettier
+        ])
 
-      # Go
-      (lib.optionals cfg.languages.go.enable [
-        go
-        gopls  # LSP
-        golangci-lint
-        delve  # Debugger
-      ])
+        # Go
+        (lib.optionals cfg.languages.go.enable [
+          go
+          gopls # LSP
+          golangci-lint
+          delve # Debugger
+        ])
 
-      # Nix
-      (lib.optionals cfg.languages.nix.enable [
-        nixd  # LSP
-        nixfmt
-        nix-tree
-        nix-diff
-        nix-output-monitor
-        nvd  # Nix version diff
-      ])
+        # Nix
+        (lib.optionals cfg.languages.nix.enable [
+          nixd # LSP
+          nixfmt
+          nix-tree
+          nix-diff
+          nix-output-monitor
+          nvd # Nix version diff
+        ])
 
-      # C/C++
-      (lib.optionals cfg.languages.c.enable [
-        gcc
-        clang
-        cmake
-        gnumake
-        gdb
-        clang-tools  # clangd LSP
-      ])
+        # C/C++
+        (lib.optionals cfg.languages.c.enable [
+          gcc
+          clang
+          cmake
+          gnumake
+          gdb
+          clang-tools # clangd LSP
+        ])
 
-      # Java
-      (lib.optionals cfg.languages.java.enable [
-        jdk21
-        maven
-        gradle
-      ])
+        # Java
+        (lib.optionals cfg.languages.java.enable [
+          jdk21
+          maven
+          gradle
+        ])
 
-      # Kubernetes
-      (lib.optionals cfg.tools.kubernetes.enable [
-        kubectl
-        kubernetes-helm
-        k9s
-        kubectx
-        kustomize
-        stern  # Multi-pod log tailing
-      ])
+        # Kubernetes
+        (lib.optionals cfg.tools.kubernetes.enable [
+          kubectl
+          kubernetes-helm
+          k9s
+          kubectx
+          kustomize
+          stern # Multi-pod log tailing
+        ])
 
-      # Terraform
-      (lib.optionals cfg.tools.terraform.enable [
-        terraform
-        terraform-ls  # LSP
-        tflint
-        terragrunt
-      ])
+        # Terraform
+        (lib.optionals cfg.tools.terraform.enable [
+          terraform
+          terraform-ls # LSP
+          tflint
+          terragrunt
+        ])
 
-      # Ansible
-      (lib.optionals cfg.tools.ansible.enable [
-        ansible
-        ansible-lint
-      ])
+        # Ansible
+        (lib.optionals cfg.tools.ansible.enable [
+          ansible
+          ansible-lint
+        ])
 
-      # Arduino / embarcados
-      (lib.optionals cfg.tools.arduino.enable [
-        arduino-ide
-        arduino-cli
-        arduino-language-server
-        platformio
-        avrdude
-        minicom
-        picocom
-        usbutils
-      ])
+        # Arduino / embarcados
+        (lib.optionals cfg.tools.arduino.enable [
+          arduino-ide
+          arduino-cli
+          arduino-language-server
+          platformio
+          avrdude
+          minicom
+          picocom
+          usbutils
+        ])
 
-      # Wine / PSIM
-      (lib.optionals cfg.tools.wine.enable [
-        winePackage
-        winetricks
-        bottles
-      ])
-      (lib.optionals cfg.tools.psim.enable [
-        psimPrefixInit
-        psimInstall
-        psimLauncher
-      ])
+        # Wine / PSIM
+        (lib.optionals cfg.tools.wine.enable [
+          winePackage
+          winetricks
+          bottles
+        ])
+        (lib.optionals cfg.tools.psim.enable [
+          psimPrefixInit
+          psimInstall
+          psimLauncher
+        ])
 
-      # Common dev tools (always included when dev is enabled)
-      [
-        # Build tools
-        gnumake
-        cmake
-        pkg-config
+        # Common dev tools (always included when dev is enabled)
+        [
+          # Build tools
+          gnumake
+          cmake
+          pkg-config
 
-        # Version control
-        mercurial
-        subversion
+          # Version control
+          mercurial
+          subversion
 
-        # Network tools
-        curl
-        wget
-        httpie
+          # Network tools
+          curl
+          wget
+          httpie
 
-        # JSON/YAML tools
-        jq
-        yq-go
+          # JSON/YAML tools
+          jq
+          yq-go
 
-        # File tools
-        ripgrep
-        fd
-        bat
-        eza
+          # File tools
+          ripgrep
+          fd
+          bat
+          eza
 
-        # Process tools
-        htop
-        btop
+          # Process tools
+          htop
+          btop
 
-        # Compression
-        unzip
-        p7zip
+          # Compression
+          unzip
+          p7zip
 
-        # Misc
-        tree
-        tmux
-        screen
-      ]
-    ];
+          # Misc
+          tree
+          tmux
+          screen
+        ]
+      ];
 
     # =========================
     # Environment Variables

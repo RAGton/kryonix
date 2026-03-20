@@ -12,7 +12,8 @@
 { config, lib, ... }:
 let
   cfg = config.rag.features.dms;
-in {
+in
+{
   options.rag.features.dms.enable = lib.mkEnableOption "Feature DMS (DankMaterialShell)";
 
   config = lib.mkIf cfg.enable {

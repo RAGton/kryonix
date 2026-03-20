@@ -36,13 +36,10 @@
     # Galeria de wallpapers: adiciona todos os arquivos declarados em `wallpapers`.
     # Obs.: nomes repetidos (mesmo basename) vão colidir.
     xdg.dataFile = lib.listToAttrs (
-      map (
-        p:
-        {
-          name = "wallpapers/${builtins.baseNameOf p}";
-          value.source = p;
-        }
-      ) config.wallpapers
+      map (p: {
+        name = "wallpapers/${builtins.baseNameOf p}";
+        value.source = p;
+      }) config.wallpapers
     );
   };
 }

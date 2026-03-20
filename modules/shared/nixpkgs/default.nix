@@ -12,15 +12,14 @@
 }:
 {
   nixpkgs = {
-    overlays =
-      [
-        outputs.overlays.stable-packages
-      ]
-      ++ lib.optionals (!isDarwin) [
-        outputs.overlays.openrgb-git
-        outputs.overlays.drkonqi-ignore-missing-buildid
-        outputs.overlays.python312-docs-stub
-      ];
+    overlays = [
+      outputs.overlays.stable-packages
+    ]
+    ++ lib.optionals (!isDarwin) [
+      outputs.overlays.openrgb-git
+      outputs.overlays.drkonqi-ignore-missing-buildid
+      outputs.overlays.python312-docs-stub
+    ];
 
     config = {
       allowUnfree = lib.mkDefault true;

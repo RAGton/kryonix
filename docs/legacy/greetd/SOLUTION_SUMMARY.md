@@ -175,7 +175,7 @@ Consulte `TEST_GUIDE_WAYLAND_SESSION.md` para:
 ## 🎁 Arquivos Entregues
 
 ```
-dotfiles-NixOs/
+ragos-nixos/
 ├── modules/nixos/services/greetd-dms/default.nix  [MODIFICADO +20]
 ├── desktop/hyprland/system.nix                    [MODIFICADO +8]
 ├── AUDIT_LOGIND_SESSION.md                        [CRIADO - Análise]
@@ -194,4 +194,3 @@ dotfiles-NixOs/
 ✅ Documentação completa criada  
 
 **Próximo passo**: Reboot e login para validar que Hyprland inicia corretamente.
-

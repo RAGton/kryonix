@@ -8,7 +8,12 @@
 # - Evitamos instalar libs Python via pip global; use o venv gerido por este módulo.
 # - Os kernels (C++/Node/Rust) são instalados de forma declarativa no PATH, mas
 #   o registro (kernelspec) acontece via activation para ficar em ~/.local/share.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.programs.jupyter;
@@ -205,17 +210,16 @@ in
     # Do NOT add the full python env to home.packages, because it includes `bin/jupyter`
     # which conflicts with nixpkgs `jupyter` package in some profiles. We only expose the
     # wrapper and kernel helpers.
-    home.packages =
-      [
-        jupyterLauncher
-        jupyterDoctor
-        jupyterBootstrapCmd
-      ]
-      ++ lib.optionals cfg.kernels.c [ pkgs.python3Packages."jupyter-c-kernel" ]
-      ++ lib.optionals cfg.kernels.rust [ pkgs.evcxr ]
-      ++ lib.optionals cfg.kernels.cpp [ pkgs.xeus-cling ]
-      ++ lib.optionals cfg.kernels.bash [ bashKernelPkg ]
-      ++ lib.optionals (cfg.kernels.dotnet && dotnetInteractivePkg != null) [ dotnetInteractivePkg ];
+    home.packages = [
+      jupyterLauncher
+      jupyterDoctor
+      jupyterBootstrapCmd
+    ]
+    ++ lib.optionals cfg.kernels.c [ pkgs.python3Packages."jupyter-c-kernel" ]
+    ++ lib.optionals cfg.kernels.rust [ pkgs.evcxr ]
+    ++ lib.optionals cfg.kernels.cpp [ pkgs.xeus-cling ]
+    ++ lib.optionals cfg.kernels.bash [ bashKernelPkg ]
+    ++ lib.optionals (cfg.kernels.dotnet && dotnetInteractivePkg != null) [ dotnetInteractivePkg ];
 
     assertions = [
       {
@@ -226,30 +230,32 @@ in
 
     # Faz o registro de kernels automaticamente (reprodutível ao migrar pra outra máquina).
     # Rodamos no máximo 1x a cada N dias (stamp), porque alguns kernels podem ser lentos.
-    home.activation.jupyter-bootstrap = lib.mkIf cfg.autoBootstrap (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      STAMP="$HOME/.local/state/jupyter-bootstrap.stamp"
-      mkdir -p "$(dirname "$STAMP")"
+    home.activation.jupyter-bootstrap = lib.mkIf cfg.autoBootstrap (
+      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        STAMP="$HOME/.local/state/jupyter-bootstrap.stamp"
+        mkdir -p "$(dirname "$STAMP")"
 
-      should_run=0
-      if [ ! -f "$STAMP" ]; then
-        should_run=1
-      else
-        # GNU find (Linux). Se não suportar (ambiente estranho), roda sempre.
-        if find "$STAMP" -mtime +${toString cfg.bootstrapIntervalDays} -print -quit >/dev/null 2>&1; then
-          if [ -n "$(find "$STAMP" -mtime +${toString cfg.bootstrapIntervalDays} -print -quit 2>/dev/null)" ]; then
+        should_run=0
+        if [ ! -f "$STAMP" ]; then
+          should_run=1
+        else
+          # GNU find (Linux). Se não suportar (ambiente estranho), roda sempre.
+          if find "$STAMP" -mtime +${toString cfg.bootstrapIntervalDays} -print -quit >/dev/null 2>&1; then
+            if [ -n "$(find "$STAMP" -mtime +${toString cfg.bootstrapIntervalDays} -print -quit 2>/dev/null)" ]; then
+              should_run=1
+            fi
+          else
             should_run=1
           fi
-        else
-          should_run=1
         fi
-      fi
 
-      if [ "$should_run" = "1" ]; then
-        echo "[home-manager] jupyter: registrando kernels (bootstrap)"
-        ${jupyterBootstrapCmd}/bin/jupyter-bootstrap || true
-        touch "$STAMP"
-      fi
-    '');
+        if [ "$should_run" = "1" ]; then
+          echo "[home-manager] jupyter: registrando kernels (bootstrap)"
+          ${jupyterBootstrapCmd}/bin/jupyter-bootstrap || true
+          touch "$STAMP"
+        fi
+      ''
+    );
 
     # No automatic activation hook.
   };

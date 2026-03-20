@@ -19,7 +19,7 @@
 ### Estrutura Atual (v1 - Em Migração)
 
 ```
-dotfiles-NixOs/
+ragos-nixos/
 ├── flake.nix              # Source of truth
 ├── hosts/                 # APENAS hardware + escolhas de alto nível
 ├── modules/               # Sistema base (nixos/ darwin/ home-manager/)
@@ -31,7 +31,7 @@ dotfiles-NixOs/
 ### Estrutura Alvo (v2 - Roadmap)
 
 ```
-dotfiles-NixOs/
+ragos-nixos/
 ├── core/                  # Sistema base (nixos.nix, darwin.nix, shared.nix)
 ├── profiles/              # Presets (laptop, desktop, vm, server)
 ├── features/              # Features modulares (gaming, dev, networking)

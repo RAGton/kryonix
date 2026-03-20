@@ -114,11 +114,7 @@ let
     "mechatroner.rainbow-csv"
   ];
 
-  vscodePackage =
-    if edition == "codium" then
-      pkgs.vscodium
-    else
-      pkgs.vscode;
+  vscodePackage = if edition == "codium" then pkgs.vscodium else pkgs.vscode;
 
   editorDesktopId =
     if delivery == "managed-download" then
@@ -377,13 +373,24 @@ in
     enable = lib.mkEnableOption "Configura uma única origem de verdade para o VSCode";
 
     edition = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "stable" "codium" "insiders" ]);
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "stable"
+          "codium"
+          "insiders"
+        ]
+      );
       default = null;
       description = "Edição desejada do editor.";
     };
 
     delivery = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "nixpkgs" "managed-download" ]);
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "nixpkgs"
+          "managed-download"
+        ]
+      );
       default = null;
       description = "Como entregar a edição escolhida.";
     };
@@ -401,130 +408,146 @@ in
     };
 
     channel = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "unstable" "stable" ]);
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "unstable"
+          "stable"
+        ]
+      );
       default = null;
       visible = false;
       description = "Opção legada. Use rag.vscode.edition.";
     };
 
     flavor = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "vscode" "vscodium" ]);
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "vscode"
+          "vscodium"
+        ]
+      );
       default = null;
       visible = false;
       description = "Opção legada. Use rag.vscode.edition.";
     };
 
     installMethod = lib.mkOption {
-      type = lib.types.nullOr (lib.types.enum [ "flatpak" "nixpkgs" ]);
+      type = lib.types.nullOr (
+        lib.types.enum [
+          "flatpak"
+          "nixpkgs"
+        ]
+      );
       default = null;
       visible = false;
       description = "Opção legada. O caminho flatpak foi removido.";
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      assertions = [
-        {
-          assertion = cfg.installMethod != "flatpak";
-          message = "rag.vscode.installMethod=flatpak foi removido. Use rag.vscode.edition/delivery.";
-        }
-        {
-          assertion = !(edition == "insiders" && delivery != "managed-download");
-          message = "rag.vscode.edition=\"insiders\" exige rag.vscode.delivery=\"managed-download\".";
-        }
-        {
-          assertion = !(edition != "insiders" && delivery == "managed-download");
-          message = "rag.vscode.delivery=\"managed-download\" só é suportado com edition=\"insiders\".";
-        }
-      ];
-
-      warnings =
-        lib.optionals (cfg.channel != null) [
-          "rag.vscode.channel está deprecated e agora é ignorado; use rag.vscode.edition/rag.vscode.delivery."
-        ]
-        ++ lib.optionals (cfg.flavor != null || cfg.installMethod != null) [
-          "rag.vscode.flavor/installMethod estão deprecated; use rag.vscode.edition/rag.vscode.delivery."
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        assertions = [
+          {
+            assertion = cfg.installMethod != "flatpak";
+            message = "rag.vscode.installMethod=flatpak foi removido. Use rag.vscode.edition/delivery.";
+          }
+          {
+            assertion = !(edition == "insiders" && delivery != "managed-download");
+            message = "rag.vscode.edition=\"insiders\" exige rag.vscode.delivery=\"managed-download\".";
+          }
+          {
+            assertion = !(edition != "insiders" && delivery == "managed-download");
+            message = "rag.vscode.delivery=\"managed-download\" só é suportado com edition=\"insiders\".";
+          }
         ];
 
-      xdg.configFile."${configRootName}/User/settings.json" = {
-        text = builtins.toJSON vscodeSettings;
-        force = true;
-      };
+        warnings =
+          lib.optionals (cfg.channel != null) [
+            "rag.vscode.channel está deprecated e agora é ignorado; use rag.vscode.edition/rag.vscode.delivery."
+          ]
+          ++ lib.optionals (cfg.flavor != null || cfg.installMethod != null) [
+            "rag.vscode.flavor/installMethod estão deprecated; use rag.vscode.edition/rag.vscode.delivery."
+          ];
 
-      xdg.configFile."${configRootName}/User/locale.json" = {
-        text = builtins.toJSON vscodeLocale;
-        force = true;
-      };
-
-      xdg.configFile."${configRootName}/argv.json" = {
-        text = builtins.toJSON vscodeArgv;
-        force = true;
-      };
-
-      xdg.mimeApps.defaultApplications =
-        lib.genAttrs editorMimeTypes (_: lib.mkDefault editorDesktopId);
-
-      home.activation.vscodeBootstrap = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        echo "[home-manager] vscode: sincronizando extensões"
-        ${vscodeBootstrap}/bin/vscode-bootstrap || true
-      '';
-    }
-
-    (lib.mkIf (delivery == "nixpkgs") {
-      home.packages = [ vscodePackage ];
-    })
-
-    (lib.mkIf (delivery == "managed-download") {
-      home.packages = [
-        vscodeBootstrap
-        codeCompat
-        codeInsiders
-        codeInsidersRefresh
-      ];
-
-      xdg.dataFile."applications/code.desktop" = {
-        force = true;
-        text = renderDesktopEntry {
-          name = "Visual Studio Code";
-          comment = "Alias compatível para o VS Code Insiders";
-          exec = "code %F";
+        xdg.configFile."${configRootName}/User/settings.json" = {
+          text = builtins.toJSON vscodeSettings;
+          force = true;
         };
-      };
 
-      xdg.dataFile."applications/code-insiders.desktop" = {
-        force = true;
-        text = renderDesktopEntry {
-          name = "Visual Studio Code Insiders";
-          comment = "VS Code Insiders com estado isolado";
-          exec = "code-insiders %F";
+        xdg.configFile."${configRootName}/User/locale.json" = {
+          text = builtins.toJSON vscodeLocale;
+          force = true;
         };
-      };
 
-      systemd.user.services."vscode-insiders-refresh" = {
-        Unit = {
-          Description = "Refresh the managed VS Code Insiders installation";
+        xdg.configFile."${configRootName}/argv.json" = {
+          text = builtins.toJSON vscodeArgv;
+          force = true;
         };
-        Service = {
-          Type = "oneshot";
-          ExecStart = "${codeInsidersRefresh}/bin/vscode-insiders-refresh";
-        };
-      };
 
-      systemd.user.timers."vscode-insiders-refresh" = {
-        Unit = {
-          Description = "Refresh the managed VS Code Insiders installation daily";
+        xdg.mimeApps.defaultApplications = lib.genAttrs editorMimeTypes (_: lib.mkDefault editorDesktopId);
+
+        home.activation.vscodeBootstrap = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          echo "[home-manager] vscode: sincronizando extensões"
+          ${vscodeBootstrap}/bin/vscode-bootstrap || true
+        '';
+      }
+
+      (lib.mkIf (delivery == "nixpkgs") {
+        home.packages = [ vscodePackage ];
+      })
+
+      (lib.mkIf (delivery == "managed-download") {
+        home.packages = [
+          vscodeBootstrap
+          codeCompat
+          codeInsiders
+          codeInsidersRefresh
+        ];
+
+        xdg.dataFile."applications/code.desktop" = {
+          force = true;
+          text = renderDesktopEntry {
+            name = "Visual Studio Code";
+            comment = "Alias compatível para o VS Code Insiders";
+            exec = "code %F";
+          };
         };
-        Timer = {
-          OnStartupSec = "2m";
-          OnUnitActiveSec = "1d";
-          Persistent = true;
-          Unit = "vscode-insiders-refresh.service";
+
+        xdg.dataFile."applications/code-insiders.desktop" = {
+          force = true;
+          text = renderDesktopEntry {
+            name = "Visual Studio Code Insiders";
+            comment = "VS Code Insiders com estado isolado";
+            exec = "code-insiders %F";
+          };
         };
-        Install = {
-          WantedBy = [ "timers.target" ];
+
+        systemd.user.services."vscode-insiders-refresh" = {
+          Unit = {
+            Description = "Refresh the managed VS Code Insiders installation";
+          };
+          Service = {
+            Type = "oneshot";
+            ExecStart = "${codeInsidersRefresh}/bin/vscode-insiders-refresh";
+          };
         };
-      };
-    })
-  ]);
+
+        systemd.user.timers."vscode-insiders-refresh" = {
+          Unit = {
+            Description = "Refresh the managed VS Code Insiders installation daily";
+          };
+          Timer = {
+            OnStartupSec = "2m";
+            OnUnitActiveSec = "1d";
+            Persistent = true;
+            Unit = "vscode-insiders-refresh.service";
+          };
+          Install = {
+            WantedBy = [ "timers.target" ];
+          };
+        };
+      })
+    ]
+  );
 }

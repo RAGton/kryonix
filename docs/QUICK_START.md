@@ -2,7 +2,7 @@
 
 ## Passo 1: Testar sem trocar geração
 ```bash
-cd /home/rocha/dotfiles-NixOs
+cd /home/rocha/ragos-nixos
 sudo nixos-rebuild test --flake .#inspiron
 home-manager switch --flake .#rocha@inspiron
 ```

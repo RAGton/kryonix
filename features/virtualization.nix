@@ -175,54 +175,61 @@ in
     # =========================
     # System Packages
     # =========================
-    environment.systemPackages = with pkgs; lib.flatten [
-      # KVM/QEMU tools
-      (lib.optionals (cfg.kvm.enable && cfg.libvirt.enable) [
-        virt-manager
-        virt-viewer
-        virtiofsd
-        spice
-        spice-gtk
-        spice-protocol
-        virtio-win
-        win-spice
-      ])
+    environment.systemPackages =
+      with pkgs;
+      lib.flatten [
+        # KVM/QEMU tools
+        (lib.optionals (cfg.kvm.enable && cfg.libvirt.enable) [
+          virt-manager
+          virt-viewer
+          virtiofsd
+          spice
+          spice-gtk
+          spice-protocol
+          virtio-win
+          win-spice
+        ])
 
-      # Docker tools
-      (lib.optionals cfg.docker.enable [
-        docker-compose
-        lazydocker
-      ])
+        # Docker tools
+        (lib.optionals cfg.docker.enable [
+          docker-compose
+          lazydocker
+        ])
 
-      # Podman tools
-      (lib.optionals cfg.podman.enable [
-        podman-compose
-        podman-tui
-      ] ++ lib.optionals (builtins.hasAttr "podman-desktop" pkgs) [
-        pkgs.podman-desktop
-      ])
+        # Podman tools
+        (
+          lib.optionals cfg.podman.enable [
+            podman-compose
+            podman-tui
+          ]
+          ++ lib.optionals (builtins.hasAttr "podman-desktop" pkgs) [
+            pkgs.podman-desktop
+          ]
+        )
 
-      # LXC tools
-      (lib.optionals cfg.lxc.enable [
-        lxc
-      ])
-    ];
+        # LXC tools
+        (lib.optionals cfg.lxc.enable [
+          lxc
+        ])
+      ];
 
     # =========================
     # User Groups
     # =========================
     # Add user to virtualization groups.
     # `userConfig` chega via specialArgs do flake, então usamos diretamente aqui.
-    users.users.${userConfig.name}.extraGroups = lib.mkAfter (lib.flatten [
-      (lib.optionals (cfg.kvm.enable && cfg.libvirt.enable) [
-        "libvirtd"
-        "kvm"
-      ])
-      (lib.optional cfg.docker.enable "docker")
-      (lib.optional cfg.podman.enable "podman")
-      (lib.optional cfg.lxc.enable "lxc")
-      (lib.optional cfg.virtualbox.enable "vboxusers")
-    ]);
+    users.users.${userConfig.name}.extraGroups = lib.mkAfter (
+      lib.flatten [
+        (lib.optionals (cfg.kvm.enable && cfg.libvirt.enable) [
+          "libvirtd"
+          "kvm"
+        ])
+        (lib.optional cfg.docker.enable "docker")
+        (lib.optional cfg.podman.enable "podman")
+        (lib.optional cfg.lxc.enable "lxc")
+        (lib.optional cfg.virtualbox.enable "vboxusers")
+      ]
+    );
 
     # =========================
     # Networking (libvirt)
@@ -239,7 +246,7 @@ in
     # =========================
     boot.kernel.sysctl = lib.mkIf cfg.kvm.enable {
       # Huge pages for VMs
-      "vm.nr_hugepages" = lib.mkDefault 0;  # Adjust per host
+      "vm.nr_hugepages" = lib.mkDefault 0; # Adjust per host
     };
 
     # =========================
@@ -260,7 +267,8 @@ in
     # =========================
     assertions = [
       {
-        assertion = !(cfg.docker.enable && cfg.docker.rootless && cfg.podman.enable && cfg.podman.dockerCompat);
+        assertion =
+          !(cfg.docker.enable && cfg.docker.rootless && cfg.podman.enable && cfg.podman.dockerCompat);
         message = ''
           Não é possível habilitar Docker rootless e Podman com compatibilidade Docker ao mesmo tempo.
           Escolha apenas um dos dois.
@@ -283,11 +291,13 @@ in
     # Warnings
     # =========================
     warnings = lib.flatten [
-      (lib.optional (cfg.kvm.enable && cfg.virtualbox.enable)
-        "KVM e VirtualBox estão ambos habilitados. Podem conflitar se usados simultaneamente.")
+      (lib.optional (
+        cfg.kvm.enable && cfg.virtualbox.enable
+      ) "KVM e VirtualBox estão ambos habilitados. Podem conflitar se usados simultaneamente.")
 
-      (lib.optional (cfg.docker.enable && cfg.podman.enable)
-        "Docker e Podman estão ambos habilitados. Considere usar apenas um para economizar recursos.")
+      (lib.optional (
+        cfg.docker.enable && cfg.podman.enable
+      ) "Docker e Podman estão ambos habilitados. Considere usar apenas um para economizar recursos.")
     ];
   };
 }
