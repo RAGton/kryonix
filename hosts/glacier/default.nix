@@ -33,6 +33,7 @@
     inputs.hardware.nixosModules.common-gpu-nvidia
 
     ./hardware-configuration.nix
+    ./rve-compat.nix
 
     # Disko fica reservado para provisionamento/instalação.
     # Este host já está instalado e usa os mounts reais em
@@ -63,6 +64,16 @@
     performanceGovernor = true;
   };
 
+  rag.features.virtualization = {
+    enable = true;
+    kvm.enable = true;
+    libvirt.enable = true;
+    docker.enable = false;
+    podman.enable = false;
+    lxc.enable = false;
+    virtualbox.enable = false;
+  };
+
   rag.features.development = {
     enable = true;
     languages = {
@@ -75,14 +86,15 @@
       go.enable = true;
     };
     tools = {
-      kubernetes.enable = true;
-      terraform.enable = true;
-      ansible.enable = true;
+      kubernetes.enable = false;
+      terraform.enable = false;
+      ansible.enable = false;
       wine.enable = true;
     };
   };
 
-  networking.hostName = hostname;
+  # O output da flake continua `glacier`, mas o host real em produção é `RVE-GLACIER`.
+  networking.hostName = lib.mkDefault hostname;
 
   programs.winbox.enable = true;
 
@@ -201,9 +213,13 @@
   kernelZen = {
     enable = true;
     kernel = "zen";
-    forceLocalBuild = false;
-    useLLVMStdenv = false;
-    extraMakeFlags = [ ];
+    # Desktop dedicado: compila o Zen localmente no próprio host.
+    forceLocalBuild = true;
+    useLLVMStdenv = true;
+    extraMakeFlags = [
+      "KCFLAGS=-march=znver5 -O2 -pipe"
+      "KCPPFLAGS=-march=znver5 -O2 -pipe"
+    ];
     disableMitigations = lib.mkDefault false;
     extraKernelParams = [
       "amd_iommu=on"
@@ -233,6 +249,7 @@
   ragos = {
     enable = true;
     prettyName = "RagOS";
+    edition = "VE";
     versionId = "26.05";
   };
 
@@ -243,5 +260,6 @@
     enable = true;
     autoconnect = true;
     authKeyFile = /root/tailscale-authkey.secret;
+    extraUpFlags = [ "--hostname=RVE-GLACIER" ];
   };
 }

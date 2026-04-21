@@ -13,6 +13,9 @@ INSTALL_USER ?= rocha
 	guard-dangerous format-full format-system install-system
 
 help:
+	@echo "Fluxo principal do projeto: use a CLI 'ragos' para operacao diaria."
+	@echo "O Makefile fica como camada secundaria para inspecao e tarefas especificas."
+	@echo ""
 	@echo "Alvos públicos e seguros:"
 	@echo ""
 	@echo "  flake-show           - Mostra os outputs da flake em todos os sistemas"

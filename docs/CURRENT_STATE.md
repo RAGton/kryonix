@@ -1,10 +1,10 @@
-# Estado atual do projeto
+# Estado atual do RagOS VE
 
 **Atualizado em:** 2026-04-20
 
 ## Resumo
 
-O `ragos-nixos` já passou da fase de proposta arquitetural e está em fase de **consolidação, limpeza e coerência**.
+O `ragos-nixos` já está operando, na prática, como **RagOS VE**: uma plataforma NixOS pessoal para workstation, gaming, virtualização, estudo e desenvolvimento.
 
 A base atual já entrega:
 
@@ -14,6 +14,7 @@ A base atual já entrega:
 - `hosts/common/default.nix` como agregador compartilhado
 - `features/` e `profiles/` reais
 - stack principal **Hyprland + DMS**
+- CLI operacional `ragos`
 - `nixosConfigurations`, `homeConfigurations`, `overlays`, `formatter` e `checks`
 
 ## Arquitetura real
@@ -50,6 +51,7 @@ A base atual já entrega:
 - desktop AMD + NVIDIA
 - Hyprland + DMS
 - host principal para workstation, virtualização e gaming
+- storage operacional em `/srv/ragenterprise`
 
 ### iso
 
@@ -61,6 +63,7 @@ A base atual já entrega:
 - hosts estão mais finos do que em fases antigas
 - o namespace `rag.*` já existe e é usado
 - o desktop principal já está materializado
+- o fluxo operacional já pode convergir para `ragos`
 - DMS já está integrado ao lado user-level
 
 ## O que ainda precisa de atenção
@@ -93,6 +96,10 @@ Wrappers e helpers ainda aparecem em mais de um lugar.
 
 Ainda existem trechos, nomes e documentos legados de uma fase anterior da arquitetura.
 
+### 7. Naming público ainda parcial
+
+O branding público já pode ser tratado como **RagOS VE**, mas o nome do repositório e alguns documentos históricos ainda carregam `ragos-nixos`.
+
 ## Decisões atuais
 
 - o desktop real do projeto hoje é `hyprland`
@@ -100,6 +107,7 @@ Ainda existem trechos, nomes e documentos legados de uma fase anterior da arquit
 - documentação histórica deve continuar existindo, mas claramente marcada como histórica
 - notebook principal não deve auto-bloquear nem auto-suspender por padrão
 - `glacier` deve ser tratado como host principal para virtualização e gaming
+- `RagOS` continua sendo o nome base do sistema; `VE` identifica a edição/workstation atual
 
 ## Prioridades imediatas
 
@@ -109,3 +117,4 @@ Ainda existem trechos, nomes e documentos legados de uma fase anterior da arquit
 4. quebrar módulos grandes
 5. melhorar energia/idle no notebook principal
 6. refinar `glacier` como workstation principal
+7. consolidar docs e naming do RagOS VE

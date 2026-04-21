@@ -1,74 +1,64 @@
-# RAGOS
+# RagOS VE
 
-Public flake for my NixOS hosts and Home Manager profiles.
+RagOS VE is the workstation, gaming, and virtualization edition of my personal operating system, **RagOS**.
 
-- Canonical repository: `RAGton/ragos-nixos`
-- Default branch: `main`
-- Release mode: `Tagged`
+- Current repository: `RAGton/ragos-nixos`
+- Public product name: **RagOS VE**
 - Language: English | [PT-BR](README.md)
 
-## Public scope
+## What this repo is
 
-This repository currently exports:
+This is no longer just a dotfiles repository. It is a declarative NixOS platform built for real daily use, focused on:
 
-- `nixosConfigurations` for `inspiron`, `inspiron-nina`, `glacier`, and `iso`
-- `homeConfigurations` for `rocha@inspiron`, `rocha@glacier`, and `nina@inspiron-nina`
-- reusable project overlays
-- `formatter`
-- `checks`
+- primary workstation
+- gaming
+- personal virtualization with KVM/libvirt
+- study and development
+- consistent system branding
+- future installable RagOS VE ISOs
 
-Some macOS-oriented modules still live in-tree, but the public flake does not export any `darwinConfigurations` yet.
+## Daily workflow
 
-## Desktop focus
+The standard operational entry point is the `ragos` CLI, available in the system PATH:
 
-The active desktop path in this repository is `Hyprland + DankMaterialShell + GDM`.
-KDE Plasma is not part of the supported shell path, but selected KDE file tools such as Dolphin and KIO remain welcome.
-
-## Credits
-
-- DankMaterialShell by AvengeMedia
-- DMS upstream: https://github.com/AvengeMedia/DankMaterialShell
+```sh
+ragos switch
+ragos switch --update
+ragos boot --update
+ragos home
+ragos diff
+ragos doctor
+ragos check
+ragos fmt
+ragos iso
+```
 
 ## Quick start
 
 ```sh
-git clone https://github.com/RAGton/ragos-nixos
-cd ragos-nixos
+git clone https://github.com/RAGton/ragos-nixos ragos-ve
+cd ragos-ve
 nix flake show --all-systems
 nix flake check --keep-going
 ```
 
-Apply a NixOS host:
+## Main host
 
-```sh
-sudo nixos-rebuild switch --flake .#inspiron
-```
+`glacier` is the main product host right now:
 
-Apply Home Manager:
+- AMD + NVIDIA workstation
+- gaming machine
+- personal hypervisor host
+- development and study lab
 
-```sh
-home-manager switch --flake .#rocha@inspiron
-```
-
-## Password bootstrap
-
-This repository intentionally ships no bootstrap password for `root` or any user.
-
-For fresh installs, set passwords manually before first boot, for example:
-
-```sh
-passwd root
-passwd rocha
-```
-
-If you need non-interactive bootstrap, inject `hashedPasswordFile` or `initialHashedPassword` from outside this public repository.
+Its real hardware layout is driven by `hosts/glacier/hardware-configuration.nix`. The host-specific `disks.nix` is reserved for provisioning flows and must not be used destructively on the already installed machine.
 
 ## Documentation
 
+- [RagOS VE overview](docs/RAGOS_VE.md)
+- [Daily operations and CLI](docs/OPERATIONS.md)
+- [Glacier host notes](docs/GLACIER.md)
 - [Documentation index](docs/INDEX.md)
-- [Makefile guide](docs/MAKEFILE_GUIDE.md)
-- [Boot and recovery](docs/BOOT_RECOVERY.md)
-- [Apply to Nina's host without formatting](docs/INSPIRON_NINA_APPLY.md)
 
 ## License
 

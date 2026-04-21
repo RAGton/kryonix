@@ -53,6 +53,7 @@
     value.source = value.flake;
   }) config.nix.registry;
   systemd.tmpfiles.rules = [
+    "L+ /etc/ragos - - - - /home/${userConfig.name}/dotfiles-nixos"
     "L+ /etc/nixos - - - - /home/${userConfig.name}/dotfiles-nixos"
   ];
 

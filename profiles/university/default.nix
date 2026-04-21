@@ -26,7 +26,7 @@ in
       xournalpp
       drawio
       evince
-      kdePackages.kalar
+      kdePackages.kalarm
       kdePackages.okular
     ];
   };

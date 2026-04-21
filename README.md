@@ -1,46 +1,63 @@
-# RAGOS
+# RagOS VE
 
-Flake pública para meus hosts NixOS e perfis Home Manager.
+RagOS VE é a edição de workstation, gaming e virtualização do meu sistema pessoal **RagOS**.
 
-- Repositório canônico: `RAGton/ragos-nixos`
-- Branch principal: `main`
-- Release mode: `Tagged`
+- Repositório atual: `RAGton/ragos-nixos`
+- Posicionamento público: **RagOS VE**
 - Idioma: PT-BR | [English](README-en.md)
 
-## Escopo público
+## O que este projeto é
 
-Este repositório publica hoje:
+Este repositório já não é apenas uma coleção de dotfiles. Ele é uma plataforma NixOS declarativa para uso real, com foco em:
+
+- workstation principal
+- gaming
+- virtualização pessoal com KVM/libvirt
+- estudo e desenvolvimento
+- branding consistente
+- base futura para ISOs instaláveis do RagOS VE
+
+## Estado atual
+
+O flake publica hoje:
 
 - `nixosConfigurations` para `inspiron`, `inspiron-nina`, `glacier` e `iso`
 - `homeConfigurations` para `rocha@inspiron`, `rocha@glacier` e `nina@inspiron-nina`
-- overlays reutilizáveis do projeto
-- `formatter`
-- `checks`
+- overlays reutilizáveis
+- formatter, checks e pacote `ragos`
 
-Há módulos e scaffolding relacionados a macOS no repositório, mas o flake público ainda não exporta `darwinConfigurations`.
+O host principal de produto neste momento é o `glacier`, tratado como:
 
-## Estrutura
+- workstation AMD + NVIDIA
+- host gamer
+- host de VMs
+- laboratório do próprio RagOS VE
 
-```text
-.
-├── flake.nix
-├── flake.lock
-├── hosts/
-├── home/
-├── modules/
-├── overlays/
-├── files/
-├── docs/
-└── Makefile
-```
+## Fluxo diário
 
-## Uso rápido
-
-Clonar o repositório:
+O fluxo operacional padrão agora é a CLI `ragos`, instalada no PATH do sistema:
 
 ```sh
-git clone https://github.com/RAGton/ragos-nixos
-cd ragos-nixos
+ragos switch
+ragos switch --update
+ragos boot --update
+ragos home
+ragos diff
+ragos doctor
+ragos check
+ragos fmt
+ragos iso
+```
+
+Ela usa `nh`, `nix`, `nvd` e o hostname atual para reduzir atrito operacional no dia a dia.
+
+## Quick start
+
+Se quiser clonar já com o naming novo:
+
+```sh
+git clone https://github.com/RAGton/ragos-nixos ragos-ve
+cd ragos-ve
 ```
 
 Inspecionar a flake:
@@ -50,71 +67,55 @@ nix flake show --all-systems
 nix flake check --keep-going
 ```
 
-Aplicar um host NixOS:
+Aplicar o host atual:
 
 ```sh
-sudo nixos-rebuild switch --flake .#inspiron
+ragos switch
 ```
 
-Aplicar Home Manager:
+Aplicar explicitamente um host:
 
 ```sh
-home-manager switch --flake .#rocha@inspiron
+ragos switch --host glacier
 ```
 
-## Bootstrap de senhas
+## Glacier
 
-Este repositório não publica senha inicial para `root` nem para usuários.
+O `glacier` usa o `hardware-configuration.nix` restaurado como fonte real de boot, root e home. O `disks.nix` fica reservado para provisionamento e **não** deve ser usado de forma destrutiva no host instalado atual.
 
-Para instalação nova, defina as senhas manualmente antes do primeiro boot com comandos como:
+Além do storage base, o host mantém um storage operacional para virtualização em:
 
-```sh
-passwd root
-passwd rocha
-```
+- `/srv/ragenterprise`
+- `/srv/ragenterprise/images`
+- `/srv/ragenterprise/iso`
+- `/srv/ragenterprise/templates`
+- `/srv/ragenterprise/snippets`
+- `/srv/ragenterprise/backups`
 
-Se você preferir bootstrap totalmente não interativo, injete `hashedPasswordFile` ou `initialHashedPassword` fora deste repositório público.
+## Branding
 
-## Makefile
+O projeto já padroniza o branding do RagOS no:
 
-O fluxo público e seguro começa por:
+- `Plymouth`
+- `GRUB`
+- `GDM`
+- wallpaper do desktop
+- `/etc/os-release` e `/etc/issue`
 
-```sh
-make help
-make flake-show
-make flake-check
-make nixos-rebuild HOSTNAME=inspiron
-make home-manager-switch HOME_TARGET=.#rocha@inspiron
-```
-
-Os alvos destrutivos e amarrados a hardware continuam disponíveis, mas exigem `ALLOW_DANGEROUS=1` e ficam separados do caminho principal.
-
-## Desktop e tooling
-
-O repositório mantém módulos para:
-
-- Hyprland com DankMaterialShell
-- GDM como display manager padrão
-- Dolphin, KIO, KIO Admin e ferramentas KDE úteis sem o shell do Plasma
-- Warp Terminal via nixpkgs (`pkgs.warp-terminal`)
-- VS Code/Insiders, Jupyter e ferramentas de desenvolvimento
-- Flatpak declarativo
-
-## Créditos
-
-- DankMaterialShell por AvengeMedia
-- Upstream do DMS: https://github.com/AvengeMedia/DankMaterialShell
+O produto é apresentado publicamente como **RagOS VE**, sem perder a identidade base do sistema `RagOS`.
 
 ## Documentação
 
+- [Visão do produto RagOS VE](docs/RAGOS_VE.md)
+- [Operação diária e CLI](docs/OPERATIONS.md)
+- [Papel do host glacier](docs/GLACIER.md)
 - [Índice da documentação](docs/INDEX.md)
-- [Guia do Makefile](docs/MAKEFILE_GUIDE.md)
-- [Boot e recovery](docs/BOOT_RECOVERY.md)
-- [Aplicar no host da Nina sem formatar](docs/INSPIRON_NINA_APPLY.md)
 
-## Release pública
+## Observações de segurança operacional
 
-As releases públicas são feitas por tag e publicadas no FlakeHub. O workflow tagged fica em [`.github/workflows/flakehub-publish-tagged.yml`](.github/workflows/flakehub-publish-tagged.yml).
+- não use `disko`, `format-*` ou `install-system` no `glacier` já instalado
+- não trate `hosts/glacier/disks.nix` como verdade do hardware atual
+- prefira `ragos test` e `ragos boot` antes de mudanças de maior risco
 
 ## Licença
 

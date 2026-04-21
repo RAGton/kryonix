@@ -10,6 +10,7 @@ Este arquivo é o **ponto de entrada** da documentação. Ele existe para:
 
 - Projeto (visão geral): [../README.md](../README.md)
 - Projeto (English): [../README-en.md](../README-en.md)
+- Visão do produto: [RAGOS_VE.md](RAGOS_VE.md)
 - Quick start (técnico): [QUICK_START.md](QUICK_START.md)
 - Status (o que está feito / pendente): [STATUS.md](STATUS.md)
 
@@ -32,6 +33,8 @@ Este arquivo é o **ponto de entrada** da documentação. Ele existe para:
 
 ### Operação (day-2)
 
+- Operação diária e CLI `ragos`: [OPERATIONS.md](OPERATIONS.md)
+- Host principal `glacier`: [GLACIER.md](GLACIER.md)
 - Makefile (atalhos e fluxo): [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)
 - Boot/recovery: [BOOT_RECOVERY.md](BOOT_RECOVERY.md)
 - Wayland session (testes): [TEST_GUIDE_WAYLAND_SESSION.md](TEST_GUIDE_WAYLAND_SESSION.md)
@@ -81,4 +84,3 @@ Este índice está em `docs/`, então:
 
 - Link para arquivos do repo (raiz) usa `../` (ex.: [../README.md](../README.md))
 - Link para subpastas de docs não usa prefixo `docs/` (ex.: [development/rust-pt_BR.md](development/rust-pt_BR.md))
-

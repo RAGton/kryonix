@@ -17,7 +17,7 @@
 # Riscos
 # - Atualizar pins (nixpkgs/home-manager) pode introduzir regressões; prefira atualizar de forma incremental.
 {
-  description = "Flake pública multi-host para NixOS e Home Manager, com overlays, checks e automação de desktop/desenvolvimento.";
+  description = "RagOS VE: plataforma NixOS pessoal para workstation, gaming, virtualizacao, desenvolvimento e futuras ISOs.";
 
   # =============================
   # Inputs (flakes externos)
@@ -249,6 +249,20 @@
 
       formatter = forAllSystems formatterFor;
       devShells = forAllSystems devShellsFor;
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+          ragosCli = pkgs.callPackage ./packages/ragos-cli.nix { };
+        in
+        {
+          default = ragosCli;
+          ragos = ragosCli;
+        }
+      );
 
       checks.x86_64-linux = {
         formatting = formattingCheck;

@@ -24,6 +24,7 @@
     ../../modules/nixos/input
     ../../modules/nixos/audio
     ../../modules/nixos/network
+    ../../modules/nixos/programs/ragos
     ../../modules/nixos/theming
     ../../modules/nixos/services
     ../../modules/nixos/desktop

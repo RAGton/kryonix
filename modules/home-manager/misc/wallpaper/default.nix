@@ -20,13 +20,15 @@
 {
   options.wallpaper = lib.mkOption {
     type = lib.types.path;
-    default = ../../../../files/wallpaper/wallpaperragos.png;
+    default = ../../../../files/wallpaper/ragos-system-4k.png;
     description = "Caminho do wallpaper padrão.";
   };
 
   options.wallpapers = lib.mkOption {
     type = lib.types.listOf lib.types.path;
     default = [
+      ../../../../files/wallpaper/ragos-system-4k.png
+      ../../../../files/wallpaper/ragos-gdm-4k.png
       ../../../../files/wallpaper/wallpaperragos.png
       ../../../../files/wallpaper/walpaper-1.png
     ];

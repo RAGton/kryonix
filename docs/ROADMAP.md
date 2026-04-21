@@ -1,10 +1,17 @@
-# Roadmap atual
+# Roadmap do RagOS VE
 
 **Atualizado em:** 2026-04-20
 
 ## Direção
 
-O roadmap atual é de **consolidação arquitetural**. A prioridade não é abrir novas frentes sem fechar as incoerências existentes.
+O roadmap atual é de **consolidação arquitetural e maturidade operacional**. A prioridade é fazer o RagOS VE soar e funcionar como plataforma real, sem abrir novas frentes frágeis.
+
+## Fase 0 — base operacional
+
+- manter `glacier` avaliando
+- manter `hardware-configuration.nix` como verdade local do host principal
+- não usar fluxos destrutivos no host instalado
+- consolidar a CLI `ragos` como entrada padrão
 
 ## Fase 1 — documentação canônica
 
@@ -47,12 +54,26 @@ O roadmap atual é de **consolidação arquitetural**. A prioridade não é abri
 - revisar governadores e política de energia
 - revisar stack NVIDIA + Wayland
 - garantir ferramentas e defaults adequados para workstation
+- manter storage de hypervisor em `/srv/ragenterprise`
 
-## Fase 7 — checks e qualidade
+## Fase 7 — branding e produto
+
+- consolidar o naming público `RagOS VE`
+- manter branding consistente em GRUB, Plymouth, GDM e desktop
+- organizar assets visuais em caminho canônico
+- melhorar a percepção do projeto como sistema operacional pessoal, não como dotfiles
+
+## Fase 8 — checks e qualidade
 
 - manter `nixfmt` verde
 - manter `flake check --keep-going` útil como baseline
 - reduzir falhas locais não estruturais antes de mudanças maiores
+
+## Fase 9 — ISO futura
+
+- manter o output `iso` como objetivo de produto
+- melhorar o fluxo de build e documentação
+- preparar a experiência de instalação sem transformar o projeto em distro genérica
 
 ## Resultado esperado
 
