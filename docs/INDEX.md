@@ -34,6 +34,7 @@ Este arquivo é o **ponto de entrada** da documentação. Ele existe para:
 ### Operação (day-2)
 
 - Operação diária e CLI `ragos`: [OPERATIONS.md](OPERATIONS.md)
+- Manual do Caelestia no RagOS VE: [CAELESTIA_MANUAL.md](CAELESTIA_MANUAL.md)
 - Host principal `glacier`: [GLACIER.md](GLACIER.md)
 - Makefile (atalhos e fluxo): [MAKEFILE_GUIDE.md](MAKEFILE_GUIDE.md)
 - Boot/recovery: [BOOT_RECOVERY.md](BOOT_RECOVERY.md)

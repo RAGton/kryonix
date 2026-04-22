@@ -359,6 +359,29 @@ in
         })
 
         (writeShellApplication {
+          name = "rag-shell-dashboard";
+          runtimeInputs = [
+            bash
+            coreutils
+          ];
+          text = ''
+            set -euo pipefail
+
+            backend="${if shellBackend == null then "none" else shellBackend}"
+
+            case "$backend" in
+              caelestia)
+                if command -v caelestia >/dev/null 2>&1; then
+                  exec caelestia shell drawers toggle dashboard
+                fi
+                ;;
+            esac
+
+            exec rag-quick-actions
+          '';
+        })
+
+        (writeShellApplication {
           name = "rag-shell-notifications";
           runtimeInputs = [
             bash
@@ -413,6 +436,30 @@ in
         })
 
         (writeShellApplication {
+          name = "rag-shell-lock";
+          runtimeInputs = [
+            bash
+            coreutils
+            systemd
+          ];
+          text = ''
+            set -euo pipefail
+
+            backend="${if shellBackend == null then "none" else shellBackend}"
+
+            case "$backend" in
+              caelestia)
+                if command -v caelestia >/dev/null 2>&1; then
+                  exec caelestia shell lock lock
+                fi
+                ;;
+            esac
+
+            exec loginctl lock-session
+          '';
+        })
+
+        (writeShellApplication {
           name = "rag-power-menu";
           runtimeInputs = [
             bash
@@ -424,6 +471,16 @@ in
           ];
           text = ''
             set -euo pipefail
+
+            backend="${if shellBackend == null then "none" else shellBackend}"
+
+            case "$backend" in
+              caelestia)
+                if command -v caelestia >/dev/null 2>&1; then
+                  exec caelestia shell drawers toggle session
+                fi
+                ;;
+            esac
 
             if command -v wlogout >/dev/null 2>&1; then
               exec wlogout -b 5
@@ -682,6 +739,16 @@ in
           ];
           text = ''
             set -euo pipefail
+
+            backend="${if shellBackend == null then "none" else shellBackend}"
+
+            case "$backend" in
+              caelestia)
+                if command -v caelestia >/dev/null 2>&1; then
+                  exec caelestia shell controlCenter open
+                fi
+                ;;
+            esac
 
             choice="$(printf '%s\n' \
               'Launcher do shell' \

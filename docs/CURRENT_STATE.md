@@ -65,6 +65,8 @@ A base atual já entrega:
 - o desktop principal já está materializado
 - o fluxo operacional já pode convergir para `ragos`
 - Caelestia já está integrado no nível de sistema sem ativação principal via Home Manager
+- o fluxo diário do shell já é Caelestia-first: launcher, control center, dashboard, sessão, lock, notificações e wallpapers
+- a galeria de wallpapers do shell usa `~/.local/share/wallpapers` como fonte declarativa
 
 ## O que ainda precisa de atenção
 
@@ -100,6 +102,7 @@ O branding público já pode ser tratado como **RagOS VE**, mas o nome do reposi
 
 - o desktop real do projeto hoje é `hyprland`
 - os hosts Hyprland ativos usam Caelestia como shell principal em nível de sistema
+- os atalhos principais do shell priorizam os drawers nativos do Caelestia e deixam rofi/wlogout só como fallback
 - documentação histórica deve continuar existindo, mas claramente marcada como histórica
 - notebook principal não deve auto-bloquear nem auto-suspender por padrão
 - `glacier` deve ser tratado como host principal para virtualização e gaming
