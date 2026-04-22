@@ -42,7 +42,7 @@ in
           Ambiente de desktop a usar.
 
           Opções:
-          - "hyprland": stack desktop padrão do projeto (Hyprland + DMS + GDM)
+          - "hyprland": stack desktop padrão do projeto (Hyprland + shell de sessão + GDM)
           - null: sem desktop (headless/servidor)
 
           O módulo compartilhado do desktop habilita o stack correspondente.

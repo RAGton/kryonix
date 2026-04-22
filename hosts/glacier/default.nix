@@ -52,7 +52,7 @@
   rag.hardware.openrgb.enable = true;
 
   rag.desktop.environment = "hyprland";
-  rag.features.dms.enable = true;
+  rag.shell.caelestia.enable = true;
 
   rag.profiles.dev.enable = true;
   rag.profiles.university.enable = true;

@@ -2,13 +2,61 @@
 {
   imports = [
     ../../../modules/home-manager/common
+    ../../../desktop/hyprland/shell-backend.nix
     ../../../desktop/hyprland/user.nix
-    ../../../desktop/hyprland/rice/dms-upstream.nix
+    ../../../desktop/hyprland/rice/caelestia-config.nix
     ../../shared/dev-workstation.nix
     ../shared/vscode.nix
   ];
 
-  rag.rice.dmsUpstream.enable = true;
+  rag.shell.backend = "caelestia";
+
+  rag.shell.caelestia.settings = {
+    appearance = {
+      transparency = {
+        enabled = true;
+        base = 0.82;
+        layers = 0.36;
+      };
+    };
+
+    border = {
+      rounding = 18;
+      smoothing = 30;
+      thickness = 8;
+    };
+
+    dashboard = {
+      enabled = true;
+      showMedia = false;
+      showWeather = false;
+    };
+
+    general.apps = {
+      terminal = [ "rag-terminal" ];
+      explorer = [ "dolphin" ];
+      audio = [ "pavucontrol" ];
+    };
+
+    launcher = {
+      showOnHover = false;
+      maxShown = 8;
+      maxWallpapers = 9;
+      favouriteApps = [
+        "app.zen_browser.zen"
+        "code"
+        "com.gexperts.Tilix"
+        "virt-manager"
+        "org.kde.dolphin"
+        "org.kde.filelight"
+        "com.anydesk.Anydesk"
+      ];
+    };
+
+    paths.wallpaperDir = "~/Pictures/Wallpapers";
+    sidebar.enabled = true;
+    utilities.enabled = true;
+  };
 
   home.packages = with pkgs; [
     atlauncher
@@ -40,34 +88,4 @@
     }
   '';
 
-  rag.rice.dmsOverrides = {
-    settings = {
-      popupTransparency = 0.76;
-      dockTransparency = 0.74;
-      cornerRadius = 14;
-      animationSpeed = 1;
-      popoutAnimationSpeed = 2;
-      modalAnimationSpeed = 1;
-      enableRippleEffects = false;
-      blurWallpaperOnOverview = false;
-      appsDockEnlargeOnHover = false;
-      showMusic = false;
-      showGpuTemp = false;
-      fontScale = 0.93;
-      appLauncherGridColumns = 3;
-    };
-
-    session = {
-      pinnedApps = [
-        "app.zen_browser.zen"
-        "code"
-        "com.gexperts.Tilix"
-        "virt-manager"
-        "org.kde.dolphin"
-        "org.kde.filelight"
-        "com.anydesk.Anydesk"
-      ];
-      nvidiaGpuTempEnabled = false;
-    };
-  };
 }

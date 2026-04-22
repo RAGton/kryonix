@@ -7,12 +7,55 @@
 {
   imports = [
     ../../../modules/home-manager/common
+    ../../../desktop/hyprland/shell-backend.nix
     ../../../desktop/hyprland/user.nix
-    ../../../desktop/hyprland/rice/dms-upstream.nix
+    ../../../desktop/hyprland/rice/caelestia-config.nix
     ../../shared/dev-workstation.nix
   ];
 
-  rag.rice.dmsUpstream.enable = true;
+  rag.shell.backend = "caelestia";
+
+  rag.shell.caelestia.settings = {
+    appearance.transparency = {
+      enabled = true;
+      base = 0.84;
+      layers = 0.28;
+    };
+
+    border = {
+      rounding = 16;
+      smoothing = 26;
+      thickness = 6;
+    };
+
+    dashboard = {
+      enabled = true;
+      showMedia = false;
+      showWeather = false;
+    };
+
+    general.apps = {
+      terminal = [ "rag-terminal" ];
+      explorer = [ "dolphin" ];
+      audio = [ "pavucontrol" ];
+    };
+
+    launcher = {
+      showOnHover = false;
+      maxShown = 8;
+      maxWallpapers = 6;
+      favouriteApps = [
+        "google-chrome"
+        "code"
+        "org.kde.dolphin"
+        "psim"
+      ];
+    };
+
+    paths.wallpaperDir = "~/Pictures/Wallpapers";
+    sidebar.enabled = true;
+    utilities.enabled = true;
+  };
 
   rag.vscode.extraExtensions = [
     "vsciot-vscode.vscode-arduino"

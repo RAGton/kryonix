@@ -4,7 +4,7 @@
 # Data: 2026-03-12
 #
 # O que é:
-# - Feature opt-in para explicitar que a UX padrão usa DMS sobre Hyprland.
+# - Feature opt-in legada para explicitar hosts ainda em DMS sobre Hyprland.
 #
 # Por quê:
 # - Mantém a decisão arquitetural visível e centralizada no sistema de features.
@@ -14,7 +14,7 @@ let
   cfg = config.rag.features.dms;
 in
 {
-  options.rag.features.dms.enable = lib.mkEnableOption "Feature DMS (DankMaterialShell)";
+  options.rag.features.dms.enable = lib.mkEnableOption "Feature legada do DMS (DankMaterialShell)";
 
   config = lib.mkIf cfg.enable {
     rag.desktop.environment = lib.mkForce "hyprland";

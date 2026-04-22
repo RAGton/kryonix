@@ -17,15 +17,12 @@
 { config, lib, ... }:
 
 let
-  # Regra do repo: nunca rodar Waybar ao mesmo tempo que DMS.
-  # DMS upstream usa systemd-user e já entrega sua própria “barra/shell”.
-  dmsEnabled =
-    (config.rag.rice.dmsUpstream.enable or false)
-    || (config.rag.rice.dms.enable or false)
-    || (config.programs.dank-material-shell.enable or false);
+  # Regra do repo: não rodar Waybar quando o shell ativo já entrega sua própria barra.
+  shellBackend = config.rag.shell.backend or null;
+  shellProvidesBar = shellBackend == "caelestia";
 in
 {
-  config = lib.mkIf (!dmsEnabled) {
+  config = lib.mkIf (!shellProvidesBar) {
     # Instala e configura o Waybar via Home Manager.
     programs.waybar = {
       enable = true;

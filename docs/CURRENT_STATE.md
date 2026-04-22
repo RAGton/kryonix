@@ -1,6 +1,6 @@
 # Estado atual do RagOS VE
 
-**Atualizado em:** 2026-04-20
+**Atualizado em:** 2026-04-22
 
 ## Resumo
 
@@ -13,7 +13,7 @@ A base atual já entrega:
 - namespace `rag.*`
 - `hosts/common/default.nix` como agregador compartilhado
 - `features/` e `profiles/` reais
-- stack principal **Hyprland + DMS**
+- stack desktop **Hyprland** com **Caelestia** como shell principal
 - CLI operacional `ragos`
 - `nixosConfigurations`, `homeConfigurations`, `overlays`, `formatter` e `checks`
 
@@ -36,20 +36,20 @@ A base atual já entrega:
 
 - notebook principal
 - Intel
-- Hyprland + DMS
+- Hyprland + Caelestia
 - profile de laptop com virtualização e desenvolvimento
 
 ### inspiron-nina
 
 - notebook da Nina
 - Intel
-- Hyprland + DMS
+- Hyprland + Caelestia
 - perfil mais leve
 
 ### glacier
 
 - desktop AMD + NVIDIA
-- Hyprland + DMS
+- Hyprland + Caelestia
 - host principal para workstation, virtualização e gaming
 - storage operacional em `/srv/ragenterprise`
 
@@ -64,7 +64,7 @@ A base atual já entrega:
 - o namespace `rag.*` já existe e é usado
 - o desktop principal já está materializado
 - o fluxo operacional já pode convergir para `ragos`
-- DMS já está integrado ao lado user-level
+- Caelestia já está integrado no nível de sistema sem ativação principal via Home Manager
 
 ## O que ainda precisa de atenção
 
@@ -76,13 +76,9 @@ Parte da documentação ainda descreve o projeto como se a arquitetura atual nã
 
 Alguns homes ainda importam desktop/rice diretamente, o que impede a consolidação completa do modelo por opções.
 
-### 3. Modelagem DMS ainda confusa
+### 3. Legado de shell ainda precisa de poda final
 
-Hoje coexistem conceitos próximos demais:
-
-- `rag.features.dms.enable`
-- `rag.rice.*`
-- `rag.desktop.environment = "hyprland"`
+Hoje a direção arquitetural já está fechada, mas ainda existem resíduos legados de DMS no repositório que não devem voltar ao caminho ativo.
 
 ### 4. Duplicação no stack Hyprland
 
@@ -103,7 +99,7 @@ O branding público já pode ser tratado como **RagOS VE**, mas o nome do reposi
 ## Decisões atuais
 
 - o desktop real do projeto hoje é `hyprland`
-- DMS é tratado como rice/shell, não como desktop separado
+- os hosts Hyprland ativos usam Caelestia como shell principal em nível de sistema
 - documentação histórica deve continuar existindo, mas claramente marcada como histórica
 - notebook principal não deve auto-bloquear nem auto-suspender por padrão
 - `glacier` deve ser tratado como host principal para virtualização e gaming
@@ -112,9 +108,20 @@ O branding público já pode ser tratado como **RagOS VE**, mas o nome do reposi
 ## Prioridades imediatas
 
 1. alinhar documentação canônica com o estado real
-2. simplificar a modelagem desktop/rice/features
-3. reduzir duplicação no stack Hyprland
-4. quebrar módulos grandes
-5. melhorar energia/idle no notebook principal
-6. refinar `glacier` como workstation principal
-7. consolidar docs e naming do RagOS VE
+2. podar os resíduos finais de DMS sem reintroduzir ativação via Home Manager
+3. simplificar a modelagem desktop/rice/features
+4. reduzir duplicação no stack Hyprland
+5. quebrar módulos grandes
+6. melhorar energia/idle no notebook principal
+7. refinar `glacier` como workstation principal
+
+## Desenvolvimento local do Caelestia
+
+- input padrão do shell: `github:caelestia-dots/shell` pinado no `flake.lock`
+- clone local de desenvolvimento recomendado no `inspiron`: `/home/rocha/src/caelestia-shell`
+- para testar o clone local sem vazar esse path para os outros hosts, usar override explícito:
+
+```bash
+nixos-rebuild test --flake .#inspiron \
+  --override-input caelestia-shell path:/home/rocha/src/caelestia-shell
+```

@@ -60,6 +60,9 @@ writeShellApplication {
           lower="$(printf '%s' "$runtime_host" | tr '[:upper:]' '[:lower:]')"
 
           case "$lower" in
+            rve-glacier)
+              printf '%s\n' "glacier"
+              ;;
             glacier)
               printf '%s\n' "glacier"
               ;;

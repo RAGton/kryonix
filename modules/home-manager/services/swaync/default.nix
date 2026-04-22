@@ -19,15 +19,12 @@
 # =============================================================================
 { config, lib, ... }:
 let
-  # DMS já publica servidor org.freedesktop.Notifications.
-  dmsEnabled =
-    (config.rag.rice.dmsUpstream.enable or false)
-    || (config.rag.rice.dms.enable or false)
-    || (config.programs.dank-material-shell.enable or false);
+  shellBackend = config.rag.shell.backend or null;
+  shellProvidesNotifications = shellBackend == "caelestia";
 in
 {
-  # Evita conflito de daemon de notificações com DMS.
-  config = lib.mkIf (!dmsEnabled) {
+  # Evita conflito de daemon de notificações com shells que já cobrem essa UX.
+  config = lib.mkIf (!shellProvidesNotifications) {
     services.swaync = {
       enable = true;
       settings = {

@@ -4,7 +4,7 @@
 # Data: 2026-03-12
 #
 # O que é:
-# - Serviços/pacotes de suporte para sessão Hyprland + DMS.
+# - Serviços/pacotes de suporte para sessão Hyprland + shell Wayland do projeto.
 #
 # Por quê:
 # - Garante lock/logout/notificações/clipboard/screenshot consistentes em todos

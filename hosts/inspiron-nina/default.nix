@@ -13,7 +13,7 @@
 # Como:
 # - Usa módulos Intel + SSD do `nixos-hardware`.
 # - Importa `hardware-configuration.nix` e `disks.nix` próprios do host.
-# - Mantém o desktop padrão do projeto (Hyprland + DMS) com perfil laptop leve.
+# - Mantém o desktop padrão do projeto (Hyprland + Caelestia) com perfil laptop leve.
 # ==============================================================================
 {
   inputs,
@@ -34,7 +34,7 @@
   rag.hardware.openrgb.enable = false;
 
   rag.desktop.environment = "hyprland";
-  rag.features.dms.enable = true;
+  rag.shell.caelestia.enable = true;
   rag.desktop.directLogin.enable = false;
 
   rag.profiles.laptop = {

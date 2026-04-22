@@ -4,7 +4,7 @@
 # Data: 2026-03-12
 #
 # O que é:
-# - Stack de áudio Wayland-first para Hyprland/DMS.
+# - Stack de áudio Wayland-first para Hyprland e shells Wayland do projeto.
 #
 # Por quê:
 # - Corrige consistência de volume/dispositivos e perfis BT em todos os hosts.

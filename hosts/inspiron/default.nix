@@ -55,9 +55,9 @@
 
   # Desktop
 
-  # Hyprland (via GDM; lockscreen via DMS)
+  # Hyprland segue como desktop; Caelestia entra como shell principal de sistema.
   rag.desktop.environment = "hyprland";
-  rag.features.dms.enable = true;
+  rag.shell.caelestia.enable = true;
   rag.desktop.directLogin.enable = false;
 
   # Profile (v2)

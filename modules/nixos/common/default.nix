@@ -210,7 +210,7 @@
 
   # Base para gerenciamento de cor/ICC (útil para HDR/WCG quando suportado)
   services.colord.enable = lib.mkDefault true;
-  # Necessário para integração de bateria/energia em apps Wayland (incluindo DMS).
+  # Necessário para integração de bateria/energia em apps Wayland da sessão.
   services.upower.enable = lib.mkDefault true;
 
   # Ajustes de entrada

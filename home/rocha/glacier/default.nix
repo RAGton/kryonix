@@ -2,16 +2,15 @@
 {
   imports = [
     ../../../modules/home-manager/common
-    # Desktop user config (hyprland com DMS)
+    ../../../modules/home-manager/programs/obsidian
+    ../../../desktop/hyprland/shell-backend.nix
     ../../../desktop/hyprland/user.nix
-    ../../../desktop/hyprland/rice/dms-upstream.nix
+    ../../../desktop/hyprland/rice/caelestia-config.nix
     ../shared/vscode.nix
   ];
 
-  # ==============================
-  # Rice: DankMaterialShell (DMS)
-  # ==============================
-  rag.rice.dmsUpstream.enable = true;
+  rag.shell.backend = "caelestia";
+
   rag.flatpak.enable = false;
 
   programs.home-manager.enable = true;
@@ -76,54 +75,67 @@
     windowrule = match:class ^(steam|steam_app_.*|heroic|lutris)$, opacity 0.97 0.93
   '';
 
-  rag.rice.dmsOverrides = {
-    settings = {
-      popupTransparency = 0.44;
-      dockTransparency = 0.42;
-      cornerRadius = 22;
-      animationSpeed = 4;
-      popoutAnimationSpeed = 5;
-      modalAnimationSpeed = 3;
-      blurWallpaperOnOverview = true;
-      appsDockEnlargeOnHover = true;
-      appsDockEnlargePercentage = 138;
-      showWorkspaceName = true;
-      fontScale = 1.0;
-      showGpuTemp = true;
+  rag.shell.caelestia.settings = {
+    appearance.transparency = {
+      enabled = true;
+      base = 0.78;
+      layers = 0.34;
     };
 
-    session = {
-      pinnedApps = [
+    border = {
+      rounding = 22;
+      smoothing = 30;
+      thickness = 9;
+    };
+
+    dashboard = {
+      enabled = true;
+      showMedia = true;
+      showWeather = false;
+    };
+
+    general.apps = {
+      terminal = [ "rag-terminal" ];
+      explorer = [ "dolphin" ];
+      audio = [ "pavucontrol" ];
+    };
+
+    launcher = {
+      showOnHover = false;
+      maxShown = 10;
+      maxWallpapers = 9;
+      favouriteApps = [
         "steam"
         "heroic"
         "lutris"
-        "com.gexperts.Tilix"
         "codium"
+        "com.gexperts.Tilix"
         "org.kde.dolphin"
         "org.kde.filelight"
         "virt-manager"
       ];
-      nvidiaGpuTempEnabled = true;
     };
+
+    paths.wallpaperDir = "~/Pictures/Wallpapers";
+    sidebar.enabled = true;
+    utilities.enabled = true;
   };
 
   home.packages = with pkgs; [
     google-chrome
   ];
 
-  xdg.mimeApps.defaultApplications = lib.mkForce {
-    "text/html" = [ "google-chrome.desktop" ];
-    "x-scheme-handler/http" = [ "google-chrome.desktop" ];
-    "x-scheme-handler/https" = [ "google-chrome.desktop" ];
-    "x-scheme-handler/ftp" = [ "google-chrome.desktop" ];
-    "application/xhtml+xml" = [ "google-chrome.desktop" ];
-    "application/x-extension-htm" = [ "google-chrome.desktop" ];
-    "application/x-extension-html" = [ "google-chrome.desktop" ];
-    "application/x-extension-shtml" = [ "google-chrome.desktop" ];
-    "application/x-extension-xhtml" = [ "google-chrome.desktop" ];
-    "application/x-extension-xht" = [ "google-chrome.desktop" ];
-    "inode/directory" = [ "org.kde.dolphin.desktop" ];
-    "application/x-directory" = [ "org.kde.dolphin.desktop" ];
+  xdg.mimeApps.defaultApplications = {
+    "text/html" = lib.mkForce [ "google-chrome.desktop" ];
+    "x-scheme-handler/http" = lib.mkForce [ "google-chrome.desktop" ];
+    "x-scheme-handler/https" = lib.mkForce [ "google-chrome.desktop" ];
+    "x-scheme-handler/ftp" = lib.mkForce [ "google-chrome.desktop" ];
+    "application/xhtml+xml" = lib.mkForce [ "google-chrome.desktop" ];
+    "application/x-extension-htm" = lib.mkForce [ "google-chrome.desktop" ];
+    "application/x-extension-html" = lib.mkForce [ "google-chrome.desktop" ];
+    "application/x-extension-shtml" = lib.mkForce [ "google-chrome.desktop" ];
+    "application/x-extension-xhtml" = lib.mkForce [ "google-chrome.desktop" ];
+    "application/x-extension-xht" = lib.mkForce [ "google-chrome.desktop" ];
   };
 
   home.stateVersion = "26.05";

@@ -4,6 +4,7 @@ let
 in
 {
   imports = [
+    ./caelestia
     ../../../desktop/hyprland/system.nix
   ];
 

@@ -54,6 +54,13 @@ UUID usado para o disco extra atual:
 
 - `479c1b04-5000-424d-90ae-f2438496711e`
 
+Layout declarativo do disco extra:
+
+- [hosts/glacier/ragenterprise-disko.nix](../hosts/glacier/ragenterprise-disko.nix)
+- uma unica particao GPT/ext4 no disco SATA extra
+- o UUID do filesystem e mantido para continuar montando `/srv/ragenterprise`
+- use este arquivo apenas para o disco extra, nunca para o NVMe do sistema
+
 Grupo operacional:
 
 - `ragenterprise`

@@ -6,7 +6,7 @@
 # - Configuração declarativa do launcher Wofi.
 #
 # Por quê:
-# - Mantém launcher opcional para setups sem DMS.
+# - Mantém launcher opcional para setups sem shell principal declarativo.
 #
 # Como:
 # - Só habilita Wofi quando DMS não está ativo.
@@ -16,13 +16,11 @@
 # ==============================================================================
 { config, lib, ... }:
 let
-  dmsEnabled =
-    (config.rag.rice.dmsUpstream.enable or false)
-    || (config.rag.rice.dms.enable or false)
-    || (config.programs.dank-material-shell.enable or false);
+  shellBackend = config.rag.shell.backend or null;
+  shellProvidesLauncher = shellBackend == "caelestia";
 in
 {
-  config = lib.mkIf (!dmsEnabled) {
+  config = lib.mkIf (!shellProvidesLauncher) {
     programs.wofi = {
       enable = true;
 

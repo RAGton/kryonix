@@ -24,14 +24,11 @@
   ...
 }:
 let
-  # DMS já fornece launcher nativo; Albert ficaria duplicado.
-  dmsEnabled =
-    (config.rag.rice.dmsUpstream.enable or false)
-    || (config.rag.rice.dms.enable or false)
-    || (config.programs.dank-material-shell.enable or false);
+  shellBackend = config.rag.shell.backend or null;
+  shellProvidesLauncher = shellBackend == "caelestia";
 in
 {
-  config = lib.mkIf (!pkgs.stdenv.isDarwin && !dmsEnabled) {
+  config = lib.mkIf (!pkgs.stdenv.isDarwin && !shellProvidesLauncher) {
     # Pacote do Albert.
     home.packages = [ pkgs.albert ];
 

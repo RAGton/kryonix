@@ -2,6 +2,12 @@
   pkgs,
   ...
 }:
+let
+  imageViewer = pkgs.loupe;
+  pdfViewer = pkgs.evince;
+  mediaPlayer = pkgs.mpv;
+  textEditor = pkgs.gnome-text-editor;
+in
 {
   xdg = {
     enable = true;
@@ -11,6 +17,21 @@
       defaultApplications = {
         "inode/directory" = [ "org.kde.dolphin.desktop" ];
         "application/x-directory" = [ "org.kde.dolphin.desktop" ];
+        "application/pdf" = [ "org.gnome.Evince.desktop" ];
+        "text/plain" = [ "org.gnome.TextEditor.desktop" ];
+        "image/jpeg" = [ "org.gnome.Loupe.desktop" ];
+        "image/png" = [ "org.gnome.Loupe.desktop" ];
+        "image/gif" = [ "org.gnome.Loupe.desktop" ];
+        "image/webp" = [ "org.gnome.Loupe.desktop" ];
+        "image/svg+xml" = [ "org.gnome.Loupe.desktop" ];
+        "image/avif" = [ "org.gnome.Loupe.desktop" ];
+        "image/heic" = [ "org.gnome.Loupe.desktop" ];
+        "video/mp4" = [ "mpv.desktop" ];
+        "video/webm" = [ "mpv.desktop" ];
+        "video/x-matroska" = [ "mpv.desktop" ];
+        "audio/mpeg" = [ "mpv.desktop" ];
+        "audio/flac" = [ "mpv.desktop" ];
+        "audio/x-wav" = [ "mpv.desktop" ];
         "application/zip" = [ "org.kde.ark.desktop" ];
         "application/x-7z-compressed" = [ "org.kde.ark.desktop" ];
         "application/x-rar" = [ "org.kde.ark.desktop" ];
@@ -28,9 +49,10 @@
         "application/zstd" = [ "org.kde.ark.desktop" ];
       };
       defaultApplicationPackages = [
-        pkgs.gnome-text-editor
-        pkgs.loupe
-        pkgs.totem
+        textEditor
+        imageViewer
+        pdfViewer
+        mediaPlayer
         pkgs.kdePackages.dolphin
         pkgs.kdePackages.ark
       ];
@@ -41,4 +63,13 @@
       createDirectories = true;
     };
   };
+
+  # Os handlers padrão precisam existir de fato no perfil do usuário; só gerar
+  # mimeapps.list sem os pacotes correspondentes faz o Dolphin cair no seletor.
+  home.packages = [
+    textEditor
+    imageViewer
+    pdfViewer
+    mediaPlayer
+  ];
 }

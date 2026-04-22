@@ -7,8 +7,7 @@
 }:
 
 let
-  isHyprland =
-    config.rag.desktop.environment == "hyprland" || config.rag.desktop.environment == "dms";
+  isHyprland = config.rag.desktop.environment == "hyprland";
 
   directLoginEnabled = (config.rag.desktop.directLogin.enable or false) && userConfig != null;
   directLoginTtyNumber = toString (config.rag.desktop.directLogin.tty or 1);
@@ -80,7 +79,7 @@ in
       ''
     );
 
-    # Kill greetd em qualquer modo do stack Hyprland/DMS (proibido aqui)
+    # Kill greetd em qualquer modo do stack Hyprland (proibido aqui)
     services.greetd.enable = lib.mkForce false;
 
     services.xserver.enable = true;
@@ -313,7 +312,7 @@ in
     assertions = [
       {
         assertion = !config.services.greetd.enable;
-        message = "greetd must not be enabled in Hyprland/DMS stack.";
+        message = "greetd must not be enabled in the Hyprland stack.";
       }
     ];
   };

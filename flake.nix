@@ -65,6 +65,14 @@
       flake = true;
     };
 
+    # Caelestia Shell
+    # Fonte padrão: GitHub pinado no lock do flake.
+    # Desenvolvimento local no inspiron: use `--override-input caelestia-shell path:/home/rocha/src/caelestia-shell`.
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # OpenAI Codex CLI (coding agent que roda localmente)
     codex = {
       url = "github:openai/codex";
