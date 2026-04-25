@@ -1,0 +1,4 @@
+[submodule "ai/kryonix-vault"]
+	path = ai/kryonix-vault
+	url = https://github.com/RAGton/kryonix-vault.git
+	branch = main
