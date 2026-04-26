@@ -228,3 +228,23 @@ Any vault use must report:
 - git diff if the vault is versioned
 
 <!-- END OBSIDIAN_CLI_ENFORCEMENT -->
+
+<!-- BEGIN OBSIDIAN_CLI_SAFE_COMMANDS_REFERENCE -->
+
+## Obsidian CLI Safe Commands
+
+When using the Obsidian brain, the agent must also follow:
+
+docs/ai/OBSIDIAN_CLI_SAFE_COMMANDS.md
+
+Safe read commands may be used after the Obsidian CLI check passes.
+
+Write commands require user approval.
+
+Dangerous commands require explicit user approval and rollback explanation.
+
+All vault commands must target:
+
+vault=kryonix-vault
+
+<!-- END OBSIDIAN_CLI_SAFE_COMMANDS_REFERENCE -->
