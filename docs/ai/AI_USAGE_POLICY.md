@@ -86,3 +86,24 @@ git checkout -- .
 - [ ] Docs/contexto foram atualizados quando comportamento publico mudou?
 - [ ] Validacao adequada foi executada ou motivo foi registrado?
 - [ ] PR pode ser revisado sem contexto excessivo?
+
+<!-- BEGIN OBSIDIAN_CLI_POLICY_REFERENCE -->
+
+## Obsidian CLI Requirement
+
+Any AI agent working on this project must follow:
+
+docs/ai/OBSIDIAN_CLI_POLICY.md
+
+Before consulting or updating the Obsidian vault, the agent must run:
+
+powershell -ExecutionPolicy Bypass -File .\scripts\Require-ObsidianCli.ps1
+
+Direct vault filesystem access is forbidden unless explicitly approved by the user.
+
+When the CLI cannot perform the required vault operation, the agent must create or update:
+
+docs/ai/VAULT_ACCESS_REQUEST.md
+docs/ai/VAULT_UPDATE_PROPOSAL.md
+
+<!-- END OBSIDIAN_CLI_POLICY_REFERENCE -->

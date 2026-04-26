@@ -166,3 +166,65 @@ Ao finalizar uma tarefa, informe:
 - como validar;
 - limitacoes ou pendencias;
 - se uma falha era nova, antiga ou causada por ambiente local.
+
+<!-- BEGIN OBSIDIAN_CLI_ENFORCEMENT -->
+
+## Obsidian CLI Brain Enforcement
+
+This project uses an Obsidian vault as the technical brain.
+
+Vault path:
+
+C:\Users\aguia\Documents\kryonix-vault
+
+Before consulting or updating the vault, the agent must read:
+
+docs/ai/OBSIDIAN_CLI_POLICY.md
+
+Before using the vault, the agent must run:
+
+powershell -ExecutionPolicy Bypass -File .\scripts\Require-ObsidianCli.ps1
+
+### Required behavior
+
+- Use Obsidian CLI as the official access gate for the vault.
+- Run obsidian help before relying on CLI behavior.
+- Do not read the entire vault.
+- Start with indexes, MOCs, project notes, playbooks and prompts.
+- Do not directly modify Markdown files in the vault unless explicitly approved.
+- If Obsidian CLI is unavailable, stop and report the issue.
+- If direct filesystem access is required, explain why and write a request to docs/ai/VAULT_ACCESS_REQUEST.md.
+
+### Brain priority
+
+When using the brain, prioritize:
+
+1. current project code
+2. current project docs
+3. docs/ai/
+4. Obsidian vault via CLI
+5. official documentation
+6. model memory
+
+### Vault update rule
+
+If a vault update is needed but cannot be safely done through Obsidian CLI, write the proposed update to:
+
+docs/ai/VAULT_UPDATE_PROPOSAL.md
+
+Do not directly modify the vault without explicit user approval.
+
+### Required report
+
+Any vault use must report:
+
+- CLI check result
+- Obsidian commands used
+- notes consulted
+- notes created or updated
+- reason for each update
+- risk
+- whether links may need review
+- git diff if the vault is versioned
+
+<!-- END OBSIDIAN_CLI_ENFORCEMENT -->
