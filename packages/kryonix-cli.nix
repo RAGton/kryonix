@@ -960,8 +960,14 @@ writeShellApplication {
             ;;
             
           brain)
-            brain_sub="''${1:-help}"
-            shift || true
+            if [[ ''${#extra_args[@]} -eq 0 ]]; then
+              brain_sub="help"
+            else
+              brain_sub="''${extra_args[0]}"
+              # Remove o primeiro elemento de extra_args para que o resto seja a query
+              extra_args=("''${extra_args[@]:1}")
+            fi
+            
             case "$brain_sub" in
               search|ask|stats|health)
                 # Tenta ler a key do ambiente, se não existir tenta do arquivo env
@@ -972,7 +978,7 @@ writeShellApplication {
 
                 case "$brain_sub" in
                   search|ask)
-                    query="''${*:-}"
+                    query="''${extra_args[*]:-}"
                     if [[ -z "$query" ]]; then echo "Uso: kryonix brain search \"pergunta\""; exit 1; fi
                     if [[ -z "$API_KEY" ]]; then echo "Erro: KRYONIX_BRAIN_KEY não encontrada."; exit 1; fi
                     
