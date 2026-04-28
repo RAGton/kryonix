@@ -31,16 +31,18 @@ in
 {
   imports = [
     ../../../modules/home-manager/common
+    ../../../modules/home-manager/programs/obsidian
     ../../../desktop/hyprland/shell-backend.nix
     ../../../desktop/hyprland/user.nix
     ../../../desktop/hyprland/rice/caelestia-config.nix
     ./caelestia-shell.nix
-    ../../shared/dev-workstation.nix
     ../shared/vscode.nix
   ];
 
   kryonix.shell.backend = "caelestia";
   kryonix.programs.aiWorkstation.enable = true;
+
+  home.stateVersion = "26.05";
 
   home.packages = with pkgs; [
     atlauncher

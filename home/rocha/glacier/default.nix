@@ -2,6 +2,7 @@
 {
   imports = [
     ../../../modules/home-manager/common
+    ../../../modules/home-manager/programs/obsidian
     ../../../desktop/hyprland/shell-backend.nix
     ../../../desktop/hyprland/user.nix
     ../../../desktop/hyprland/rice/caelestia-config.nix
