@@ -6,15 +6,8 @@
 }:
 let
   cfg = config.programs.kryonix;
-  ragosCompat = pkgs.callPackage ../../../../packages/ragos-cli.nix {
-    kryonix-cli = cfg.package;
-  };
 in
 {
-  imports = [
-    (lib.mkAliasOptionModule [ "programs" "ragos" ] [ "programs" "kryonix" ])
-  ];
-
   options.programs.kryonix = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -35,7 +28,6 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
       cfg.package
-      ragosCompat
     ];
   };
 }

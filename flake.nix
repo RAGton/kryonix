@@ -266,12 +266,10 @@
             config.allowUnfree = true;
           };
           kryonixCli = pkgs.callPackage ./packages/kryonix-cli.nix { };
-          ragosCli = pkgs.callPackage ./packages/ragos-cli.nix { };
         in
         {
           default = kryonixCli;
           kryonix = kryonixCli;
-          ragos = ragosCli;
         }
       );
 

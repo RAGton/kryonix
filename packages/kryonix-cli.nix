@@ -83,7 +83,7 @@ writeShellApplication {
           local repo_root="$1"
 
           [[ -e "$repo_root/flake.nix" ]] || return 1
-          [[ -e "$repo_root/packages/kryonix-cli.nix" || -e "$repo_root/packages/ragos-cli.nix" ]] || return 1
+          [[ -e "$repo_root/packages/kryonix-cli.nix" ]] || return 1
           [[ -d "$repo_root/hosts" ]] || return 1
         }
 
@@ -167,21 +167,6 @@ writeShellApplication {
 
           if [[ -n "''${KRYONIX_REPO:-}" ]]; then
             printf '%s\n' "$KRYONIX_REPO"
-            return 0
-          fi
-
-          if [[ -n "''${RAGOS_BOOTSTRAP_REPO:-}" ]]; then
-            printf '%s\n' "$RAGOS_BOOTSTRAP_REPO"
-            return 0
-          fi
-
-          if [[ -n "''${RAGOS_REPO_URL:-}" ]]; then
-            printf '%s\n' "$RAGOS_REPO_URL"
-            return 0
-          fi
-
-          if [[ -n "''${RAGOS_REPO:-}" ]]; then
-            printf '%s\n' "$RAGOS_REPO"
             return 0
           fi
 
@@ -306,11 +291,6 @@ writeShellApplication {
             return 0
           fi
 
-          if [[ -e /etc/ragos/flake.nix ]]; then
-            bootstrap_repo_root="/etc/ragos"
-            return 0
-          fi
-
           if [[ -e "$repo_root" && ! -e "$repo_root/flake.nix" ]]; then
             printf '%s\n' "kryonix: $repo_root existe, mas não contém flake.nix; não posso bootstrapar sem limpeza manual." >&2
             return 1
@@ -392,17 +372,7 @@ writeShellApplication {
             return 0
           fi
 
-          if [[ -n "''${RAGOS_SYSTEM_REPO:-}" ]]; then
-            printf '%s\n' "$RAGOS_SYSTEM_REPO"
-            return 0
-          fi
-
-          if [[ -e /etc/kryonix ]]; then
-            printf '%s\n' "/etc/kryonix"
-            return 0
-          fi
-
-          printf '%s\n' "/etc/ragos"
+          printf '%s\n' "/etc/kryonix"
         }
 
         is_git_repo() {
@@ -495,7 +465,7 @@ writeShellApplication {
       diff      Compara /run/current-system com o proximo toplevel
       repl      Abre nix repl na flake
       doctor    Mostra diagnostico rapido do host e do repositorio
-      git-status Mostra branch, origin e mudanças locais de /etc/kryonix (fallback: /etc/ragos)
+      git-status Mostra branch, origin e mudanças locais de /etc/kryonix
       vm        Lista VMs via libvirt
       iso       Builda a ISO publica do Kryonix
       fmt       Roda o formatter da flake
@@ -545,14 +515,10 @@ writeShellApplication {
             use_flake_input "explicit" "$explicit"
           elif [[ -n "''${KRYONIX_FLAKE:-}" ]]; then
             use_flake_input "env" "$KRYONIX_FLAKE"
-          elif [[ -n "''${RAGOS_FLAKE:-}" ]]; then
-            use_flake_input "env-ragos-compat" "$RAGOS_FLAKE"
           elif local_root="$(find_local_flake_root)"; then
             use_local_flake "dev-repo" "$local_root"
           elif [[ -e /etc/kryonix/flake.nix ]]; then
             use_local_flake "etc-kryonix" "/etc/kryonix"
-          elif [[ -e /etc/ragos/flake.nix ]]; then
-            use_local_flake "etc-ragos-compat" "/etc/ragos"
           else
             printf '%s\n' 'kryonix: não foi possível resolver uma flake.' >&2
             printf '%s\n' 'Use um destes caminhos:' >&2
