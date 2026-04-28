@@ -1,9 +1,11 @@
 {
   writeShellApplication,
   coreutils,
+  curl,
   gitMinimal,
   gnugrep,
   gnused,
+  jq,
   libvirt,
   nh,
   nix,
@@ -15,9 +17,11 @@ writeShellApplication {
   name = "kryonix";
   runtimeInputs = [
     coreutils
+    curl
     gitMinimal
     gnugrep
     gnused
+    jq
     libvirt
     nh
     nix
@@ -496,6 +500,7 @@ writeShellApplication {
       iso       Builda a ISO publica do Kryonix
       fmt       Roda o formatter da flake
       check     Roda nix flake check --keep-going
+      brain     Acessa o Kryonix Brain (search, stats, health)
     Opcoes globais:
       --host <host>    Forca o alvo da flake (ex.: glacier)
       --user <user>    Usuario para o comando home
@@ -872,6 +877,43 @@ writeShellApplication {
           check)
             cmd=(nix flake check "$flake_ref" --keep-going "''${verbose_args[@]}" "''${extra_args[@]}")
             run_flake_command "''${cmd[@]}"
+            ;;
+            
+          brain)
+            brain_sub="''${1:-help}"
+            shift || true
+            case "$brain_sub" in
+              search|ask)
+                query="''${*:-}"
+                if [[ -z "$query" ]]; then echo "Uso: kryonix brain search \"pergunta\""; exit 1; fi
+                if [[ -n "''${KRYONIX_BRAIN_URL:-}" ]]; then
+                   curl -s -X POST "$KRYONIX_BRAIN_URL/search" -H "Content-Type: application/json" -d "{\"query\": \"$query\"}" | jq -r '.answer'
+                else
+                   echo "Erro: KRYONIX_BRAIN_URL não definida. Host não está em modo CLIENTE."
+                   exit 1
+                fi
+                ;;
+              stats)
+                if [[ -n "''${KRYONIX_BRAIN_URL:-}" ]]; then
+                   curl -s "$KRYONIX_BRAIN_URL/stats" | jq .
+                else
+                   echo "Erro: KRYONIX_BRAIN_URL não definida."
+                   exit 1
+                fi
+                ;;
+              health)
+                if [[ -n "''${KRYONIX_BRAIN_URL:-}" ]]; then
+                   curl -s "$KRYONIX_BRAIN_URL/health" | jq .
+                else
+                   echo "Erro: KRYONIX_BRAIN_URL não definida."
+                   exit 1
+                fi
+                ;;
+               *)
+                 echo "Uso: kryonix brain <search|stats|health>"
+                 exit 1
+                 ;;
+            esac
             ;;
 
           *)

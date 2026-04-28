@@ -101,9 +101,12 @@
     };
   };
 
-  # Codex (AI): desligado por padrão (evita builds lentos).
-  # Para ativar quando quiser: mude para `true`.
-  kryonix.features.ai.codex.enable = false;
+  # Kryonix Brain (Distributed Architecture)
+  kryonix.features.ai.brain = {
+    enable = true;
+    role = "client";
+    serverHost = "10.0.0.2"; # GLACIER (PC Atual)
+  };
 
   networking.hostName = hostname;
 

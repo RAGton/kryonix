@@ -112,6 +112,19 @@ in
       xwayland.enable = true;
     };
 
+    # Portals: crítico para evitar delays em abertura de apps e diálogos.
+    xdg.portal = {
+      enable = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-hyprland
+        pkgs.xdg-desktop-portal-gtk
+      ];
+      config = {
+        common.default = [ "gtk" ];
+        hyprland.default = [ "hyprland" "gtk" ];
+      };
+    };
+
     # Screenshot stack (Wayland nativo) + wrapper estável para binds.
     environment.systemPackages = with pkgs; [
       grim

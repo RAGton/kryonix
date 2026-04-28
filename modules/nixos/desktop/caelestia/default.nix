@@ -60,7 +60,7 @@ let
 
       data_dirs+=(
         "$HOME/.nix-profile/share"
-        "/etc/profiles/per-user/''${USER:-''${LOGNAME:-}}/share"
+        "/etc/profiles/per-user/$(id -un)/share"
         "/run/current-system/sw/share"
         "$HOME/.local/share/flatpak/exports/share"
         "/var/lib/flatpak/exports/share"
@@ -249,7 +249,10 @@ in
         RestartSec = "5s";
         TimeoutStopSec = "5s";
         Slice = "session.slice";
-        Environment = cfg.environment;
+        Environment = [
+          "USER=%u"
+          "LOGNAME=%u"
+        ] ++ cfg.environment;
       };
     };
   };
