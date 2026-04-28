@@ -122,11 +122,7 @@ let
 
       desktop_file="$(find_desktop_file "$desktop_id" || true)"
 
-      if [ -n "$desktop_file" ]; then
-        uwsm_target="''${desktop_file}''${action_suffix}"
-      else
-        uwsm_target="''${desktop_id}''${action_suffix}"
-      fi
+      uwsm_target="''${desktop_id}''${action_suffix}"
 
       if DEBUG="" uwsm app -- "$uwsm_target" "''${extra_args[@]}"; then
         exit 0

@@ -16,3 +16,8 @@ iso-result
 activation.log
 result
 *.log
+
+# Secrets / environment
+.env
+.env.local
+.env.*

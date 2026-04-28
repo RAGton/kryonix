@@ -64,6 +64,16 @@ Escolha a validacao pelo risco:
 
 Nao rode `switch`, `boot`, `test`, `deploy`, `sync`, `format-*`, `install-system`, `disko` ou comandos com `sudo` sem pedido humano claro.
 
+## LightRAG / Brain Resilience
+- Antes de entregar qualquer alteração como pronta, rode a bateria mínima:
+  `.\rag.bat test all`
+- Se algum teste falhar:
+  - não diga que está pronto;
+  - reporte o erro;
+  - corrija;
+  - rode novamente.
+- Nunca considerar `doctor` isolado como suficiente. `Doctor + stats + search smoke + graph smoke + MCP smoke` são obrigatórios.
+
 ## Arquitetura
 
 - `flake.nix` declara inputs, outputs, hosts, Home Manager, packages, overlays, formatter e checks.

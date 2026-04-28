@@ -207,10 +207,10 @@
   services.power-profiles-daemon.enable = lib.mkForce true;
   services.tlp.enable = lib.mkForce false;
 
-  # Este notebook é usado como estação ativa; não deve suspender nem por tampa,
-  # nem por teclas ACPI, nem por idle do logind.
+  # Hibernate/hybrid ficam proibidos sempre. Suspend e permitido apenas para
+  # politicas user-level controladas, como hypridle somente em bateria.
   systemd.sleep.settings.Sleep = {
-    AllowSuspend = "no";
+    AllowSuspend = "yes";
     AllowHibernation = "no";
     AllowHybridSleep = "no";
     AllowSuspendThenHibernate = "no";
