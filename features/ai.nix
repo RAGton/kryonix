@@ -39,6 +39,10 @@ in
         default = 11434;
       };
     };
+
+    codex = {
+      enable = lib.mkEnableOption "OpenAI Codex CLI";
+    };
   };
 
   config = lib.mkMerge [
