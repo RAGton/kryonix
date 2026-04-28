@@ -399,6 +399,97 @@ writeShellApplication {
           git -C "$repo_path" status --short 2>/dev/null || true
         }
 
+        git_has_conflict_state() {
+          local repo_path="$1"
+          local git_dir
+
+          git_dir="$(git -C "$repo_path" rev-parse --absolute-git-dir 2>/dev/null || true)"
+          [[ -n "$git_dir" ]] || return 1
+
+          [[ -d "$git_dir/rebase-merge" ]] \
+            || [[ -d "$git_dir/rebase-apply" ]] \
+            || [[ -f "$git_dir/MERGE_HEAD" ]] \
+            || [[ -f "$git_dir/CHERRY_PICK_HEAD" ]]
+        }
+
+        git_has_tracked_changes() {
+          local repo_path="$1"
+
+          ! git -C "$repo_path" diff --quiet --no-ext-diff --cached \
+            || ! git -C "$repo_path" diff --quiet --no-ext-diff
+        }
+
+        ensure_kryonix_git_state() {
+          local repo_path="$1"
+          local branch
+          local origin
+
+          if ! is_git_repo "$repo_path"; then
+            printf '%s\n' "ERRO: $repo_path não é um git repo válido." >&2
+            return 1
+          fi
+
+          branch="$(git_current_branch "$repo_path")"
+          origin="$(git_origin_url "$repo_path")"
+
+          if [[ -z "$origin" ]]; then
+            printf '%s\n' "ERRO: $repo_path não possui remote origin configurado." >&2
+            return 1
+          fi
+
+          if [[ "$branch" != "main" ]]; then
+            printf '%s\n' "ERRO: branch ativa '$branch' inválida; esperado 'main'." >&2
+            return 1
+          fi
+
+          if git_has_conflict_state "$repo_path"; then
+            printf '%s\n' "ERRO: $repo_path já está com merge/rebase em andamento." >&2
+            return 1
+          fi
+        }
+
+        kryonix_pull_repo() {
+          local repo_path
+          repo_path="$(kryonix_git_repo_path)"
+          
+          ensure_kryonix_git_state "$repo_path" || return 1
+
+          if git_has_tracked_changes "$repo_path"; then
+            printf '%s\n' "ERRO: $repo_path possui mudanças locais versionadas; revise com 'kryonix git-status' antes de puxar." >&2
+            return 1
+          fi
+
+          run_command git -C "$repo_path" fetch origin
+          if ! run_command git -C "$repo_path" pull --rebase origin main; then
+             printf '%s\n' "ERRO: git pull --rebase falhou em $repo_path." >&2
+             return 1
+          fi
+          
+          run_command git -C "$repo_path" submodule update --init --recursive
+        }
+
+        kryonix_deploy_repo() {
+          local repo_path
+          repo_path="$(kryonix_git_repo_path)"
+          
+          ensure_kryonix_git_state "$repo_path" || return 1
+          
+          # Validação antes do deploy
+          run_command nix flake check "$repo_path" --keep-going || {
+            printf '%s\n' "ERRO: falha na validação da flake em $repo_path." >&2
+            return 1
+          }
+
+          cmd=(nh os switch "$repo_path" -H "$flake_host")
+          cmd+=("''${verbose_args[@]}" "''${dry_args[@]}" "''${extra_args[@]}")
+          run_command "''${cmd[@]}"
+        }
+
+        kryonix_sync_repo() {
+          kryonix_pull_repo || return 1
+          kryonix_deploy_repo
+        }
+
         print_git_changes() {
           local repo_path="$1"
           local changes
@@ -460,6 +551,9 @@ writeShellApplication {
       test      Testa a geracao atual com nh os test
       home      Aplica o Home Manager do usuario atual
       update    Atualiza os inputs da flake
+      pull      Atualiza /etc/kryonix com git fetch + git pull --rebase
+      deploy    Valida a flake e aplica /etc/kryonix no host atual
+      sync      Pull + validação + deploy do checkout /etc/kryonix
       rebuild   Builda o toplevel do host sem ativar
       clean     Limpa geracoes antigas com nh clean all
       diff      Compara /run/current-system com o proximo toplevel
@@ -703,7 +797,7 @@ writeShellApplication {
             exit 0
             ;;
 
-          clean|vm|git-status)
+          clean|vm|git-status|pull|deploy|sync)
             needs_flake=0
             ;;
 
@@ -781,6 +875,18 @@ writeShellApplication {
             run_command nvd diff /run/current-system "$target_path"
             ;;
 
+          pull)
+            kryonix_pull_repo
+            ;;
+
+          deploy)
+            kryonix_deploy_repo
+            ;;
+
+          sync)
+            kryonix_sync_repo
+            ;;
+
           repl)
             cmd=(nix repl "$flake_ref" "''${extra_args[@]}")
             run_flake_command "''${cmd[@]}"
@@ -807,12 +913,20 @@ writeShellApplication {
 
             if mount_info="$(findmnt -no SOURCE,TARGET /srv/ragenterprise 2>/dev/null)"; then
               blue_line "  storage      : $mount_info"
-            else
-              blue_line '  storage      : /srv/ragenterprise nao montado'
             fi
 
             if command -v systemctl >/dev/null 2>&1; then
               blue_line "  libvirtd     : $(systemctl is-enabled libvirtd 2>/dev/null || printf 'unknown')"
+              blue_line "  tailscaled   : $(systemctl is-active tailscaled 2>/dev/null || printf 'inactive')"
+            fi
+
+            if [[ -n "$KRYONIX_BRAIN_URL" ]]; then
+              blue_line "  brain url    : $KRYONIX_BRAIN_URL"
+              if curl -s --connect-timeout 2 "$KRYONIX_BRAIN_URL/health" >/dev/null; then
+                blue_line '  brain health : OK'
+              else
+                blue_line '  brain health : FAIL'
+              fi
             fi
 
             if drv_path="$(capture_flake_command nix eval "''${flake_ref}#nixosConfigurations.''${flake_host}.config.system.build.toplevel.drvPath" --raw 2>/dev/null)"; then
