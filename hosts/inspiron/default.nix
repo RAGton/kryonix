@@ -101,11 +101,11 @@
     };
   };
 
-  # Kryonix Brain (Distributed Architecture)
+  # Kryonix Brain (Distributed Architecture via Tailscale)
   kryonix.features.ai.brain = {
     enable = true;
     role = "client";
-    serverHost = "10.0.0.2"; # GLACIER (PC Atual)
+    serverHost = "100.108.71.36"; # GLACIER (Tailscale IP)
   };
 
   networking.hostName = hostname;

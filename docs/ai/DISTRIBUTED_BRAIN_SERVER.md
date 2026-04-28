@@ -1,64 +1,44 @@
 # Kryonix Brain Distributed Server (Glacier)
 
-Este documento descreve como manter e operar o servidor central do Kryonix Brain no host **Glacier**.
+Este documento descreve como manter e operar o servidor central do Kryonix Brain no host **Glacier** usando a rede privada **Tailscale**.
 
-## Serviços Expostos
+## Arquitetura Recomendada (Segura)
 
-- **Ollama**: Porta `11434` (Modelos de IA)
-- **Brain API**: Porta `8000` (FastAPI wrapper para LightRAG)
+- **Glacier (Server)**:
+  - Tailscale IP: `100.108.71.36`
+  - Ollama: `http://100.108.71.36:11434`
+  - Brain API: `http://100.108.71.36:8000`
 
-## Como Iniciar os Serviços
+- **Inspiron (Client)**:
+  - OLLAMA_HOST: `http://100.108.71.36:11434`
+  - KRYONIX_BRAIN_URL: `http://100.108.71.36:8000`
+
+## Como Iniciar os Serviços no Glacier
 
 ### 1. Ollama
-Certifique-se de que o Ollama está rodando no Windows. 
-A variável de ambiente `OLLAMA_HOST=0.0.0.0` deve estar configurada para permitir acesso na LAN.
+O Ollama deve estar configurado para ouvir em `0.0.0.0` (acessível via interface Tailscale).
+O acesso é protegido pelo Firewall do Windows, permitindo apenas conexões da rede Tailscale.
 
 ### 2. Brain API
-Para iniciar a API manualmente ou via automação:
+Inicie a API via script:
 ```powershell
 .\scripts\start-brain-api.ps1
 ```
-Ou via `rag.bat`:
+A API faz o bind automático no IP `100.108.71.36`.
+
+## Configuração de Acesso (Firewall)
+Para configurar as permissões restritas ao Tailscale, execute como **Administrador**:
 ```powershell
-.\rag.bat kg-api
+.\scripts\setup-tailscale-access.ps1
 ```
 
-## Persistência
-Para que a API inicie com o Windows, execute como Administrador:
+## Segurança (API Key)
+A Brain API exige autenticação para `/stats` e `/search`.
+Defina sua chave no Glacier:
 ```powershell
-SchTasks /Create /SC ONLOGON /TN "KryonixBrainAPI" /TR "powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File C:\Users\aguia\Documents\kryonix\scripts\start-brain-api.ps1"
+[Environment]::SetEnvironmentVariable("KRYONIX_BRAIN_KEY", "SUA_CHAVE_FORTE", "Machine")
 ```
+No Inspiron, os comandos `kryonix brain` usarão esta chave via variável `KRYONIX_BRAIN_KEY`.
 
-Ou use o atalho de inicialização do Windows (Win+R > shell:startup) e coloque um atalho para o script.
-
-## Firewall
-O Inspiron (ou qualquer cliente na LAN) precisa de acesso às portas 11434 e 8000.
-Comandos de Administrador:
-```powershell
-netsh advfirewall firewall add rule name="Kryonix_Ollama" dir=in action=allow protocol=TCP localport=11434
-netsh advfirewall firewall add rule name="Kryonix_Brain_API" dir=in action=allow protocol=TCP localport=8000
-```
-
-## Acesso Público (Internet)
-
-Para acessar o Glacier de fora da sua rede local:
-
-1. **Roteador**: O Port Forwarding deve apontar estas portas para o IP local `10.0.0.2`:
-   - **Ollama**: `11434` (TCP)
-   - **Brain API**: `8000` (TCP)
-   - **SSH**: `22` (TCP)
-   - **RustDesk**: `21115-21119` (TCP) e `21116` (UDP)
-
-2. **Configuração Automática**: Execute o script de setup como **Administrador**:
-   ```powershell
-   .\scripts\setup-public-exposure.ps1
-   ```
-3. **Segurança (IMPORTANTE)**: 
-   - Ao expor publicamente, defina uma chave secreta para a Brain API:
-     `[Environment]::SetEnvironmentVariable("KRYONIX_BRAIN_KEY", "sua-chave-secreta", "Machine")`
-   - Clientes deverão enviar o header `X-API-Key: sua-chave-secreta`.
-   - O Ollama não possui autenticação nativa. Considere usar um túnel (Tailscale/Cloudflare) em vez de abrir porta direta no roteador para o Ollama.
-
-## Logs
-A API emite logs estruturados no console onde for iniciada.
-Storage em: `C:\Users\aguia\Documents\kryonix-vault\11-LightRAG\rag_storage`
+---
+⚠️ **NUNCA** exponha o Ollama ou a Brain API via Port Forwarding público no roteador. Use sempre Tailscale ou VPN.

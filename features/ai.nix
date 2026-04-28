@@ -65,12 +65,13 @@ in
           fi
           ${pkgs.curl}/bin/curl -s -X POST "$KRYONIX_BRAIN_URL/search" \
             -H "Content-Type: application/json" \
+            -H "X-API-Key: ''${KRYONIX_BRAIN_KEY:-}" \
             -d "{\"query\": \"$query\", \"lang\": \"pt-BR\"}" \
             | ${pkgs.jq}/bin/jq -r '.answer'
         '')
 
         (pkgs.writeShellScriptBin "kryonix-stats" ''
-          ${pkgs.curl}/bin/curl -s "$KRYONIX_BRAIN_URL/stats" | ${pkgs.jq}/bin/jq .
+          ${pkgs.curl}/bin/curl -s -H "X-API-Key: ''${KRYONIX_BRAIN_KEY:-}" "$KRYONIX_BRAIN_URL/stats" | ${pkgs.jq}/bin/jq .
         '')
         
         (pkgs.writeShellScriptBin "kryonix-brain-health" ''

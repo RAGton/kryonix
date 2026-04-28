@@ -12,4 +12,7 @@ Write-Host "Diretório do Pacote: $PackageDir"
 Set-Location $RepoRoot
 
 # Executa o kg-api via uv
+$env:KRYONIX_BRAIN_HOST = "100.108.71.36"
+$env:KRYONIX_BRAIN_PORT = "8000"
+
 uv run --project "$PackageDir" kg-api

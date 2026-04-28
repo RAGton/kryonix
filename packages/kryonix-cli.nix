@@ -887,7 +887,10 @@ writeShellApplication {
                 query="''${*:-}"
                 if [[ -z "$query" ]]; then echo "Uso: kryonix brain search \"pergunta\""; exit 1; fi
                 if [[ -n "''${KRYONIX_BRAIN_URL:-}" ]]; then
-                   curl -s -X POST "$KRYONIX_BRAIN_URL/search" -H "Content-Type: application/json" -d "{\"query\": \"$query\"}" | jq -r '.answer'
+                   curl -s -X POST "$KRYONIX_BRAIN_URL/search" \
+                     -H "Content-Type: application/json" \
+                     -H "X-API-Key: ''${KRYONIX_BRAIN_KEY:-}" \
+                     -d "{\"query\": \"$query\"}" | jq -r '.answer'
                 else
                    echo "Erro: KRYONIX_BRAIN_URL não definida. Host não está em modo CLIENTE."
                    exit 1
@@ -895,14 +898,14 @@ writeShellApplication {
                 ;;
               stats)
                 if [[ -n "''${KRYONIX_BRAIN_URL:-}" ]]; then
-                   curl -s "$KRYONIX_BRAIN_URL/stats" | jq .
+                   curl -s -H "X-API-Key: ''${KRYONIX_BRAIN_KEY:-}" "$KRYONIX_BRAIN_URL/stats" | jq .
                 else
                    echo "Erro: KRYONIX_BRAIN_URL não definida."
                    exit 1
                 fi
                 ;;
               health)
-                if [[ -n "''${KRYONIX_BRAIN_URL:-}" ]]; then
+                if [[ -n "${KRYONIX_BRAIN_URL:-}" ]]; then
                    curl -s "$KRYONIX_BRAIN_URL/health" | jq .
                 else
                    echo "Erro: KRYONIX_BRAIN_URL não definida."
