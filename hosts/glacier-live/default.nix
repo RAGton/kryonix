@@ -18,8 +18,8 @@
   boot.loader.systemd-boot.enable = lib.mkForce false;
 
   # NÃO forçar fileSystems vazio, o módulo ISO precisa deles.
-  # fileSystems = lib.mkForce { }; 
-  
+  # fileSystems = lib.mkForce { };
+
   swapDevices = lib.mkForce [ ];
 
   # Garantir Tailscale no live para teste de rede
