@@ -28,5 +28,6 @@
         }
     ],
     "latex-workshop.latex.recipe.default": "first",
-    "python-envs.defaultEnvManager": "ms-python.python:system"
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "nixEnvSelector.nixFile": "${workspaceFolder}/flake.nix"
 }
