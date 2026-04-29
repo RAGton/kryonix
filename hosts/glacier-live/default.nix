@@ -8,7 +8,7 @@
 }:
 {
   imports = [
-    (modulesPath + "/installer/cd-dvd/installation-cd-graphical-plasma5.nix")
+    (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix")
     ../glacier
   ];
 
@@ -20,6 +20,9 @@
 
   # Garantir Tailscale no live para teste de rede
   services.tailscale.enable = true;
+
+  # Desabilitar persistência se houver, pois é Live
+  # kryonix.persistence.enable = lib.mkForce false;
 
   # Branding e customização
   networking.hostName = "glacier-live";
