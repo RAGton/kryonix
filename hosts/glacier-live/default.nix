@@ -16,7 +16,10 @@
   # Sobrescrever partes do glacier que não fazem sentido no live
   boot.loader.grub.enable = lib.mkForce false;
   boot.loader.systemd-boot.enable = lib.mkForce false;
-  fileSystems = lib.mkForce { }; # ISO gerencia isso
+
+  # NÃO forçar fileSystems vazio, o módulo ISO precisa deles.
+  # fileSystems = lib.mkForce { }; 
+  
   swapDevices = lib.mkForce [ ];
 
   # Garantir Tailscale no live para teste de rede
