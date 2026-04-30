@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -17,6 +18,10 @@ in
   networking.interfaces.enp6s0 = {
     useDHCP = false;
     ipv4.addresses = [ ];
+    wakeOnLan = {
+      enable = true;
+      policy = [ "magic" ];
+    };
   };
 
   networking.bridges.br0.interfaces = [ "enp6s0" ];
@@ -46,7 +51,6 @@ in
 
   networking.firewall.allowedTCPPorts = lib.mkAfter (
     [
-      80
       2224
     ]
     ++ lib.optionals enablePublicHttps [ 443 ]
@@ -92,6 +96,38 @@ in
   # Storage adicional para fluxo de hypervisor/workstation.
   users.groups.kryonix = { };
   users.users.rocha.extraGroups = lib.mkAfter [ "kryonix" ];
+
+  # SSH key-based authentication only (no password)
+  users.users.rocha.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMI1uwVA1Y03EBvdy34fw1LRPk3TgYcVmeUOPWrEmjYn rocha@inspiron"
+  ];
+
+  environment.systemPackages = with pkgs; [
+    git
+    curl
+    wget
+    vim
+    htop
+    pciutils
+    usbutils
+    ethtool
+    tailscale
+    iproute2
+  ];
+
+  systemd.services.wol = {
+    description = "Enable Wake-on-LAN";
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.ethtool}/bin/ethtool -s enp6s0 wol g";
+      RemainAfterExit = true;
+    };
+
+    wantedBy = [ "multi-user.target" ];
+  };
 
   # Host fixo/desktop não deve suspender por eventos de energia/logind.
   systemd.sleep.settings.Sleep = {

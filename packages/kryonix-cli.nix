@@ -72,6 +72,9 @@ writeShellApplication {
                 glacier)
                   printf '%s\n' "glacier"
                   ;;
+                nixos)
+                  printf '%s\n' "glacier"
+                  ;;
                 inspiron|inspiron-nina|iso)
                   printf '%s\n' "$lower"
                   ;;
