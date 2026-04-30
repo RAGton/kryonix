@@ -79,37 +79,8 @@
   };
 
   # Storage adicional para fluxo de hypervisor/workstation.
-  users.groups.ragenterprise = { };
-  users.users.rocha.extraGroups = lib.mkAfter [ "ragenterprise" ];
-  users.users.rag = {
-    isNormalUser = true;
-    description = "Gabriel Aguiar Rocha";
-    extraGroups = [
-      "wheel"
-      "libvirtd"
-      "kvm"
-      "ragenterprise"
-    ];
-  };
-
-  fileSystems."/srv/ragenterprise" = {
-    device = "/dev/disk/by-uuid/479c1b04-5000-424d-90ae-f2438496711e";
-    fsType = "ext4";
-    options = [
-      "defaults"
-      "nofail"
-      "x-systemd.device-timeout=10s"
-    ];
-  };
-
-  systemd.tmpfiles.rules = [
-    "z /srv/ragenterprise 2775 rocha ragenterprise - -"
-    "d /srv/ragenterprise/images 2775 rocha ragenterprise - -"
-    "d /srv/ragenterprise/iso 2775 rocha ragenterprise - -"
-    "d /srv/ragenterprise/templates 2775 rocha ragenterprise - -"
-    "d /srv/ragenterprise/snippets 2775 rocha ragenterprise - -"
-    "d /srv/ragenterprise/backups 2775 rocha ragenterprise - -"
-  ];
+  users.groups.kryonix = { };
+  users.users.rocha.extraGroups = lib.mkAfter [ "kryonix" ];
 
   # Host fixo/desktop não deve suspender por eventos de energia/logind.
   systemd.sleep.settings.Sleep = {

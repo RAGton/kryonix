@@ -61,17 +61,9 @@
     enable32Bit = true;
   };
 
-  # Initial install remote-access baseline.
+  # Remote access baseline.
   services.openssh.enable = true;
   services.tailscale.enable = true;
-
-  users.users.nixos = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "networkmanager"
-    ];
-  };
 
   security.sudo.wheelNeedsPassword = false;
 
@@ -80,11 +72,14 @@
     curl
     wget
     vim
+    htop
+    pciutils
+    usbutils
     tailscale
   ];
 
   # =========================
-  # NETWORK (Fixed IP 10.0.0.2)
+  # NETWORK (bridge / br0)
   # =========================
   networking = {
     hostName = hostname;
@@ -92,22 +87,6 @@
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
     };
-
-    # Configuração de IP estático para o servidor LAN
-    interfaces.enp14s0 = {
-      # Nome da interface ajustado para o hardware alvo (exemplo)
-      ipv4.addresses = [
-        {
-          address = "10.0.0.2";
-          prefixLength = 24;
-        }
-      ];
-    };
-    defaultGateway = "10.0.0.1";
-    nameservers = [
-      "1.1.1.1"
-      "8.8.8.8"
-    ];
   };
 
   # =========================
@@ -119,24 +98,16 @@
       grub = {
         enable = true;
         efiSupport = true;
-        device = "nodev";
+        device = "/dev/disk/by-id/nvme-IM2P33F3A_NVMe_ADATA_256GB_DL01213S0VFU";
         useOSProber = false;
-        efiInstallAsRemovable = true;
       };
       efi = {
-        canTouchEfiVariables = lib.mkForce false;
+        canTouchEfiVariables = true;
         efiSysMountPoint = "/boot";
       };
     };
 
-    kernelParams = lib.mkAfter [
-      "rootflags=subvol=@,compress=zstd,noatime"
-    ];
-
-    # Keep NVIDIA in the installed system, but do not embed its modules in the
-    # initrd. The glacier ESP is small and early NVIDIA modules make initrd huge.
     initrd.kernelModules = lib.mkForce [ ];
-    kernelModules = [ "kvm-amd" ];
     initrd.systemd.enable = true;
   };
 
