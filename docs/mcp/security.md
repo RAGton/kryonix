@@ -11,7 +11,7 @@ This document describes the threat model, restrictions, and validation gates for
 - **Attack:** Attacker steals token, impersonates user on GitHub/APIs
 - **Mitigation:** 
   - `.mcp.json` is in `.gitignore` — never committed
-  - `rag mcp-check` scans for exposed secrets (regex: `API_KEY`, `TOKEN`, `private_key`, etc.)
+  - `kryonix mcp check` scans for exposed secrets (regex: `API_KEY`, `TOKEN`, `private_key`, etc.)
   - Use environment variables (`.env`, `brain.env`) instead
   - Validation fail exit code 1 if secrets detected
 
@@ -19,7 +19,7 @@ This document describes the threat model, restrictions, and validation gates for
 - **Risk:** Agent misconfigures filesystem MCP to point to `/` or sensitive directories
 - **Attack:** Attacker reads `/etc/passwd`, `/root/.ssh/`, or project secrets
 - **Mitigation:**
-  - `rag mcp-check` validates all paths are absolute and NOT `/` or `/etc/` or `/root/`
+  - `kryonix mcp check` validates all paths are absolute and not sensitive system roots
   - Filesystem MCP **must** be bound to vault directory only (e.g., `/home/user/kryonix-vault`)
   - Documentation enforces read-only binding
   - `kryonix mcp check` verifies this constraint
@@ -35,8 +35,8 @@ This document describes the threat model, restrictions, and validation gates for
 
 ### MEDIUM Priority
 
-**Config Incompatibility (Windows vs Linux)**
-- **Risk:** User copies `.mcp.json` with Windows paths to Linux, or vice versa → servers fail to start
+**Config Incompatibility**
+- **Risk:** User copies `.mcp.json` with non-Linux paths → servers fail to start
 - **Mitigation:**
   - `.mcp.example.json` uses placeholders (e.g., `/ABSOLUTE/PATH/TO/vault`)
   - Documentation emphasizes absolute paths + platform-specific formats
@@ -48,6 +48,13 @@ This document describes the threat model, restrictions, and validation gates for
   - `kryonix mcp doctor` tests each server's availability
   - Validation warns but doesn't fail (graceful fallback)
   - Documentation provides install steps for each server
+
+**Client/server Brain runtime**
+- **Risk:** A client host is treated as if it were the Brain server and fails because Ollama, GraphML or LightRAG storage are not local
+- **Mitigation:**
+  - `inspiron` is a client and uses Glacier through SSH MCP or `KRYONIX_BRAIN_API`
+  - `kryonix test client` reports Glacier/runtime absence as `WARN`
+  - `kryonix test server` is the strict runtime gate and must be run on Glacier
 
 ### LOW Priority
 
@@ -67,7 +74,7 @@ All MCP changes must pass these gates before deployment:
 
 ### 1. Static Config Validation
 
-**File:** `rag mcp-check` (CLI command)
+**File:** `kryonix mcp check` (CLI command)
 
 Checks:
 - ✓ `.mcp.json` is valid JSON (syntactically correct)
@@ -75,16 +82,17 @@ Checks:
 - ✓ Each server entry has `command` + `args` (required)
 - ✓ No exposed secrets: regex scan for `API_KEY=`, `TOKEN=`, `private_key=`, `ghp_`, `sk-`, etc.
 - ✓ All filesystem paths are absolute (not relative or `~`)
-- ✓ No paths starting with `/` or `/etc/` or `/root/` (root/system directories)
+- ✓ No paths pointing to filesystem root or sensitive system directories
+- ✓ `/etc/kryonix` is allowed only as the managed Kryonix checkout on NixOS hosts
 - ✓ `.mcp.json` is readable (not world-writable)
 
 **Exit code:** 0 (pass) or 1 (fail with error details)
 
-**Run:** `rag mcp-check`
+**Run:** `kryonix mcp check`
 
 ### 2. Script-Level Validation
 
-**File:** `scripts/check-mcp.sh` (Bash) or `scripts/check-mcp.ps1` (PowerShell)
+**File:** `scripts/check-mcp.sh` (Bash)
 
 Checks:
 - ✓ All the above + JSON parsing via `jq`
@@ -114,7 +122,7 @@ Tests:
 **Command:** `kryonix mcp check`
 
 Combines all above + detailed diagnostics:
-- Calls `rag mcp-check` (Brain validation)
+- Calls `kryonix mcp check` (Brain validation)
 - Checks all 4 servers are configured or documented as "not yet"
 - Summarizes status per server
 
@@ -174,11 +182,13 @@ Deep inspection:
 
 Before declaring MCP work "ready":
 
-- [ ] `rag mcp-check` passes (no secrets, paths valid)
+- [ ] `kryonix mcp check` passes (no secrets, paths valid)
 - [ ] `./scripts/check-mcp.sh` passes (all servers found)
 - [ ] `pytest -q packages/kryonix-brain-lightrag/tests/test_mcp_*.py` passes (all green)
 - [ ] `kryonix mcp check` passes (system validation)
 - [ ] `kryonix mcp doctor` shows all servers ✓ or ⚠ (not ✗)
+- [ ] `kryonix test client` passes on `inspiron`; Glacier offline is WARN, not FAIL
+- [ ] `kryonix test server` passes on `glacier` before declaring runtime/infra ready
 - [ ] `.mcp.json` is in `.gitignore`
 - [ ] `.mcp.example.json` is updated and version controlled
 - [ ] No secrets in git history: `git log -p --all -S 'API_KEY\|ghp_\|sk-' | head -5` (should be empty)
@@ -198,7 +208,7 @@ Before declaring MCP work "ready":
 
 ### If path traversal attempted
 
-1. **Check config:** Run `rag mcp-check` to identify bad paths
+1. **Check config:** Run `kryonix mcp check` to identify bad paths
 2. **Fix:** Update `.mcp.json` to bind filesystem MCP to vault only
 3. **Verify:** Run `kryonix mcp check` to confirm
 4. **Audit:** Review agent logs for suspicious file access

@@ -6,38 +6,43 @@
 
 ```
 .mcp.json (user secrets, .gitignore'd)
-├── kryonix-brain     → local LightRAG (RAG search, graph, Obsidian)
+├── kryonix-brain     → Glacier Brain MCP via SSH (RAG search, graph, Obsidian)
 ├── mcp-nixos         → external (packages, options, flakes)
 ├── vault-readonly    → external (Obsidian vault, read-only)
 └── github            → external (issues, PRs, commits, code)
 ```
 
+`glacier` é o servidor Brain central. `inspiron` é cliente e não precisa ter Ollama, GraphML ou storage LightRAG local.
+
 ## Setup (60 seconds)
 
 1. Copy template: `cp .mcp.example.json .mcp.json`
-2. Update paths: Replace `/ABSOLUTE/PATH` placeholders with real paths
-3. Add secrets: `export GITHUB_TOKEN=ghp_...` (in `.env`, not `.mcp.json`)
-4. Validate: `./scripts/check-mcp.sh` (should show 4 ✓)
-5. Register: In Claude/Cursor settings, point to `.mcp.json`
+2. Keep `kryonix-brain` pointing to `ssh glacier` or configure a local proxy with `KRYONIX_BRAIN_API=http://glacier:8000`
+3. Update only Linux absolute placeholders such as `/ABSOLUTE/PATH/TO/kryonix-vault`
+4. Add secrets through environment variables, never in `.mcp.json`
+5. Validate: `./scripts/check-mcp.sh`
+6. Register: In Claude/Cursor settings, point to `.mcp.json`
 
 ## Validation
 
 | Command | Purpose |
 |---------|---------|
-| `rag mcp-check` | Brain config + detect secrets |
+| `kryonix mcp check` | Brain config + detect secrets |
 | `./scripts/check-mcp.sh` | All servers syntax + files exist |
 | `kryonix mcp check` | System-level validation |
 | `kryonix mcp doctor` | Detailed diagnostics + STDIO test |
 | `pytest -q packages/kryonix-brain-lightrag/tests/test_mcp_*.py` | Contract tests |
+| `kryonix test client` | Client validation without local Ollama/storage |
+| `kryonix test server` | Glacier runtime validation |
 
-**All must pass before deployment.**
+Client-side deployment can pass with runtime WARN when Glacier is offline. Server-side readiness is validated on Glacier with `kryonix test server`.
 
 ## Safety Rules
 
 | Rule | Why | Check |
 |------|-----|-------|
-| No secrets in `.mcp.json` | Prevent git leaks | `rag mcp-check` detects regex |
-| All paths absolute | Prevent relative path escape | `rag mcp-check` validates |
+| No secrets in `.mcp.json` | Prevent git leaks | `kryonix mcp check` detects regex |
+| All paths absolute | Prevent relative path escape | `kryonix mcp check` validates |
 | Filesystem server read-only | Prevent accidental writes | Manual review + docs |
 | STDIO is pure JSON | Prevent protocol corruption | `test_mcp_stdio_clean.py` |
 | `.mcp.json` in `.gitignore` | Protect user config | Verified at commit time |
@@ -67,10 +72,12 @@
 | Problem | Solution |
 |---------|----------|
 | "Server not found" | Run `./scripts/check-mcp.sh` to find which server failed |
-| Secrets leaked | Run `rag mcp-check`; rotate tokens at provider |
+| Secrets leaked | Run `kryonix mcp check`; rotate tokens at provider |
 | Path errors | Paths must be absolute; see `.mcp.example.json` for format |
 | STDIO corruption | Run `kryonix mcp doctor`; check logs in stderr |
 | Slow queries | Normal first run (caches built); check internet for external servers |
+| Ollama missing on Inspiron | Expected client state; run server checks on Glacier |
+| GraphML missing on Inspiron | Expected client state; use `kryonix graph stats --local` on Glacier |
 
 ## Files
 
@@ -86,7 +93,7 @@
 
 ```bash
 # Validate + fix
-rag mcp-check                 # Check Brain config + secrets
+kryonix mcp check             # Check Brain config + secrets
 ./scripts/check-mcp.sh        # All servers validation
 kryonix mcp check             # System validation
 kryonix mcp doctor            # Diagnostics

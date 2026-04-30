@@ -17,7 +17,7 @@ Mandatory rule:
 
 Before consulting or updating the vault, run:
 
-powershell -ExecutionPolicy Bypass -File .\scripts\Require-ObsidianCli.ps1
+kryonix vault scan
 
 Then inspect available commands with:
 
@@ -25,7 +25,7 @@ obsidian help
 
 Vault:
 
-C:\Users\aguia\Documents\kryonix-vault
+/home/rocha/Documents/kryonix-vault
 
 Rules:
 

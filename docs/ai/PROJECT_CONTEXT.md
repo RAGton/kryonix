@@ -71,7 +71,7 @@ sudo nixos-install
 - `features/`: capacidades opt-in.
 - `profiles/`: presets por papel.
 - `desktop/hyprland/`: desktop real e rice.
-- `packages/`: CLI `kryonix` e wrapper legado `ragos`.
+- `packages/`: CLI `kryonix` e Brain/LightRAG interno.
 - `overlays/`: overrides e patches de pacotes.
 - `context/`: memoria curta operacional ja existente.
 - `docs/ai/`: contexto curto para LLMs.
@@ -99,8 +99,8 @@ sudo nixos-install
 
 - O codigo real prevalece sobre docs historicas.
 - `Kryonix` e o nome publico atual.
-- `kryonix.*` e namespace ativo; `rag.*` e alias temporario.
-- `kryonix` e a CLI primaria; `ragos` e compatibilidade temporaria.
+- `kryonix.*` e namespace ativo.
+- `kryonix` e a CLI publica unica.
 - Hyprland e o desktop real.
 - Caelestia e o shell/rice principal.
 - DMS e legado em transicao.

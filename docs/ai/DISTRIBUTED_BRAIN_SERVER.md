@@ -21,15 +21,15 @@ O acesso é protegido pelo Firewall do Windows, permitindo apenas conexões da r
 
 ### 2. Brain API
 Inicie a API via script:
-```powershell
-.\scripts\start-brain-api.ps1
+```sh
+kryonix brain api
 ```
 A API faz o bind automático no IP `100.108.71.36`.
 
 ## Configuração de Acesso (Firewall)
 Para configurar as permissões restritas ao Tailscale, execute como **Administrador**:
-```powershell
-.\scripts\setup-tailscale-access.ps1
+```sh
+kryonix doctor
 ```
 
 ## Segurança (API Key)
@@ -37,7 +37,7 @@ A Brain API exige autenticação para `/stats` e `/search`.
 
 ### No Glacier (Server)
 Defina sua chave de forma persistente como Administrador:
-```powershell
+```sh
 $Key = [guid]::NewGuid().ToString("N")
 [Environment]::SetEnvironmentVariable("KRYONIX_BRAIN_KEY", $Key, "Machine")
 Write-Host "Sua nova chave é: $Key"

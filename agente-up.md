@@ -57,7 +57,7 @@ DADOS:
 - Brain API: http://100.108.71.36:8000
 - Ollama: http://100.108.71.36:11434
 - SSH Inspiron: rocha@inspiron.ghoul-pike.ts.net
-- Repo Glacier: C:\Users\aguia\Documents\kryonix
+- Repo Glacier: /etc/kryonix
 - Repo Inspiron: /etc/kryonix
 - Secret local Inspiron: /etc/kryonix/brain.env
 
@@ -66,7 +66,7 @@ FASE 0 — NÃO EDITAR AINDA: DIAGNÓSTICO GERAL
 ============================================================
 
 No Glacier:
-cd C:\Users\aguia\Documents\kryonix
+cd /etc/kryonix
 
 Rodar:
 git status
@@ -82,8 +82,8 @@ curl.exe http://100.108.71.36:11434/api/tags
 $Key = [Environment]::GetEnvironmentVariable("KRYONIX_BRAIN_KEY", "Machine")
 curl.exe -H "X-API-Key: $Key" http://100.108.71.36:8000/stats
 
-.\rag.bat stats
-.\rag.bat test all
+kryonix brain stats
+kryonix test all
 
 No Inspiron via SSH:
 ssh rocha@inspiron.ghoul-pike.ts.net
@@ -422,10 +422,10 @@ Objetivo:
 Melhorar /search para resposta técnica, específica e grounded.
 
 No Glacier:
-cd C:\Users\aguia\Documents\kryonix
+cd /etc/kryonix
 
 Diagnóstico:
-.\rag.bat search "Como funciona o pipeline de RAG do Kryonix?" --lang pt-BR --verbose
+kryonix brain search "Como funciona o pipeline de RAG do Kryonix?" --lang pt-BR --verbose
 
 API:
 $Key = [Environment]::GetEnvironmentVariable("KRYONIX_BRAIN_KEY", "Machine")
@@ -487,9 +487,9 @@ Melhorar ranking:
 - não hardcodar só uma query.
 
 Rodar:
-.\rag.bat stats
-.\rag.bat test all
-.\rag.bat search "Como funciona o pipeline de RAG do Kryonix?" --lang pt-BR --verbose
+kryonix brain stats
+kryonix test all
+kryonix brain search "Como funciona o pipeline de RAG do Kryonix?" --lang pt-BR --verbose
 
 Testar no Inspiron:
 source /etc/kryonix/brain.env

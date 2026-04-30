@@ -97,7 +97,7 @@ docs/ai/OBSIDIAN_CLI_POLICY.md
 
 Before consulting or updating the Obsidian vault, the agent must run:
 
-powershell -ExecutionPolicy Bypass -File .\scripts\Require-ObsidianCli.ps1
+kryonix vault scan
 
 Direct vault filesystem access is forbidden unless explicitly approved by the user.
 

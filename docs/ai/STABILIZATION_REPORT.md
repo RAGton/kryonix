@@ -33,6 +33,6 @@ Este documento resume as ações realizadas para estabilizar o ambiente distribu
 - `kryonix brain search "pergunta"`: Consulta o cérebro no Glacier via rede privada.
 
 ### Comandos Úteis (Glacier)
-- `.\rag.bat doctor`: Verifica saúde do Grafo e API.
-- `.\rag.bat search "pergunta" --verbose`: Busca local com detalhes de grounding.
-- `.\rag.bat start --restart`: Reinicia o servidor de IA.
+- `kryonix brain doctor`: Verifica saúde do Grafo e API.
+- `kryonix brain search "pergunta" --verbose`: Busca local com detalhes de grounding.
+- `kryonix brain api`: Reinicia o servidor de IA.

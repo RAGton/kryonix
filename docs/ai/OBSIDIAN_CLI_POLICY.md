@@ -6,7 +6,7 @@ The Obsidian vault is the technical brain for this project.
 
 Vault path:
 
-C:\Users\aguia\Documents\kryonix-vault
+/home/rocha/Documents/kryonix-vault
 
 This project requires agents to use Obsidian CLI as the official access gate for the vault.
 
@@ -14,7 +14,7 @@ This project requires agents to use Obsidian CLI as the official access gate for
 
 Before consulting, opening, searching, updating, creating, renaming or deleting anything in the vault, the agent must run:
 
-powershell -ExecutionPolicy Bypass -File .\scripts\Require-ObsidianCli.ps1
+kryonix vault scan
 
 If the check fails, stop immediately.
 
@@ -26,7 +26,7 @@ Before using the brain:
 
 1. Read AGENTS.md.
 2. Read docs/ai/OBSIDIAN_CLI_POLICY.md.
-3. Run scripts/Require-ObsidianCli.ps1.
+3. Run kryonix vault scan.
 4. Run obsidian help to inspect available CLI commands.
 5. Use Obsidian CLI whenever the needed operation is supported.
 6. If Obsidian CLI does not support the needed operation, create a proposal in docs/ai/VAULT_ACCESS_REQUEST.md instead of directly accessing the vault.
@@ -96,5 +96,5 @@ After using the vault, the agent must report:
 
 All Obsidian CLI commands that access the brain must explicitly target the Kryonix vault:
 
-```powershell
+```sh
 vault=kryonix-vault

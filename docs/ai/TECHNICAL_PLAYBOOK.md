@@ -31,7 +31,7 @@ O Brain é o motor de conhecimento do projeto.
 - **IPs Fixos**:
   - Glacier: `100.108.71.36`
   - Inspiron: `100.91.45.6`
-- **Firewall**: O script `scripts/setup-tailscale-access.ps1` endurece o Glacier restringindo acesso ao range `100.64.0.0/10`.
+- **Firewall**: O script `NixOS firewall module` endurece o Glacier restringindo acesso ao range `100.64.0.0/10`.
 
 ## 4. Troubleshooting
 

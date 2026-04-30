@@ -58,7 +58,7 @@ Só declare pronto se todos os checks obrigatórios passarem.
 - `nix flake check` passando.
 - `nixos-rebuild dry-build` passando.
 - `nixos-rebuild test` passando antes de `switch`.
-- `rag.bat test all` passando no Glacier.
+- `kryonix test all` passando no Glacier.
 - LightRAG com `sources`, `grounding` e `chunks > 0`.
 - MCP sem lixo no stdout.
 - Inspiron acessando Brain/Ollama via Tailscale.
@@ -158,7 +158,7 @@ Inspiron
 ```txt
 Brain API: http://100.108.71.36:8000
 Ollama:    http://100.108.71.36:11434
-Vault:     C:\Users\aguia\Documents\kryonix-vault   # estado atual Windows
+Vault:     /home/rocha/Documents/kryonix-vault   # estado atual Windows
 Storage:   kryonix-vault\11-LightRAG\rag_storage
 ```
 
@@ -172,9 +172,9 @@ Uma entrega só está pronta se:
 [Glacier]
 - Brain API health OK
 - Ollama tags OK
-- rag doctor OK
-- rag stats OK
-- rag test all OK
+- kryonix brain doctor OK
+- kryonix brain stats OK
+- kryonix test all OK
 - /search retorna answer + grounding + sources
 - storage íntegro
 - git limpo
@@ -202,22 +202,22 @@ Antes de qualquer refatoração:
 
 ### Glacier
 
-```powershell
-cd C:\Users\aguia\Documents\kryonix
+```sh
+cd /etc/kryonix
 
 git status
 git submodule status
 git -C packages\kryonix-brain-lightrag status
 git -C ai\kryonix-vault status
 
-.\rag.bat doctor
-.\rag.bat stats
-.\rag.bat test all
+kryonix brain doctor
+kryonix brain stats
+kryonix test all
 ```
 
 Testar API:
 
-```powershell
+```sh
 $Key = [Environment]::GetEnvironmentVariable("KRYONIX_BRAIN_KEY", "Machine")
 
 curl.exe --connect-timeout 5 http://100.108.71.36:8000/health
@@ -227,7 +227,7 @@ curl.exe --connect-timeout 10 -H "X-API-Key: $Key" http://100.108.71.36:8000/sta
 
 Testar busca com contrato completo:
 
-```powershell
+```sh
 curl.exe -H "X-API-Key: $Key" `
   -H "Content-Type: application/json" `
   -X POST `
@@ -455,9 +455,9 @@ Cliente MCP no Inspiron
 
 No Glacier:
 
-```powershell
-.\rag.bat mcp-check
-.\rag.bat test all
+```sh
+kryonix mcp check
+kryonix test all
 ```
 
 No Inspiron:
@@ -815,7 +815,7 @@ Criar checks para:
 - `nix flake check`;
 - `nixos-rebuild dry-build` dos hosts;
 - LightRAG unit tests;
-- `rag test all`;
+- `kryonix test all`;
 - desktop entry audit;
 - secret scan;
 - conflict markers;

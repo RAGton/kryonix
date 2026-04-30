@@ -2,7 +2,7 @@
 
 ## 1. Status do Backup (Windows)
 - **Data/Hora**: 2026-04-28 23:15
-- **Local**: `C:\Users\aguia\Documents\kryonix-backups\2026-04-28_23-15`
+- **Local**: `/srv/kryonix-backups\2026-04-28_23-15`
 - **Tamanho Total**: ~507 MB
 - **Integridade**: Checksums gerados em `manifest.csv`.
 

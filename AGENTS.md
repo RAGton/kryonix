@@ -65,21 +65,27 @@ Escolha a validacao pelo risco:
 Nao rode `switch`, `boot`, `test`, `deploy`, `sync`, `format-*`, `install-system`, `disko` ou comandos com `sudo` sem pedido humano claro.
 
 ## LightRAG / Brain Resilience
-- Antes de entregar qualquer alteração como pronta, rode a bateria mínima:
-  `.\rag.bat test all`
-- Se algum teste falhar:
+- A arquitetura oficial separa cliente e servidor:
+  - `glacier` é o servidor Brain: Ollama, Kryonix Brain, storage LightRAG, MCP Brain, vault e índice.
+  - `inspiron` é cliente NixOS/workstation: usa `kryonix-cli` e consulta o Brain remoto via `KRYONIX_BRAIN_API`.
+- No `inspiron`, não exija Ollama, GraphML ou storage LightRAG local para declarar build/configuração pronta.
+- Antes de entregar alteração como pronta em nível de build/configuração, rode a bateria mínima:
+  `kryonix test all`, `kryonix test client`, `kryonix test mcp` e `nix flake check --keep-going`.
+- Falhas de runtime do Glacier offline, Ollama indisponível, índice vazio, GraphML ausente ou vault vazio devem ser `WARN` no cliente, não `FAIL`.
+- Se algum teste obrigatório de código/configuração falhar:
   - não diga que está pronto;
   - reporte o erro;
   - corrija;
   - rode novamente.
-- Nunca considerar `doctor` isolado como suficiente. `Doctor + stats + search smoke + graph smoke + MCP smoke` são obrigatórios.
+- Nunca considerar `doctor` isolado como suficiente. No cliente: `CLI + MCP + remote health/search quando KRYONIX_BRAIN_API existir`. No servidor: `kryonix test server`, `kryonix brain doctor --local`, `kryonix graph stats --local` e serviços locais.
+- Critério de entrega no cliente: "Kryonix está PRONTO em nível de build/configuração. Runtime depende do Glacier."
 
 ## MCP Deliverable Rules
 
 Antes de submeter qualquer alteração MCP ou nova configuração de servidor:
 
 **Validation gates (todos devem passar):**
-- `rag mcp-check` passa (sem secrets, caminhos válidos, config legível)
+- `kryonix mcp check` passa (sem secrets, caminhos válidos, config legível)
 - `./scripts/check-mcp.sh` passa (sintaxe + existência de arquivos)
 - `pytest -q packages/kryonix-brain-lightrag/tests/test_mcp_*.py` passa (todos 3 arquivos de teste)
 - `kryonix mcp check` passa (validação no nível do sistema)
@@ -98,23 +104,24 @@ Antes de submeter qualquer alteração MCP ou nova configuração de servidor:
 - Ao adicionar validação: atualize `docs/mcp/security.md` com novos checks
 
 **Critério de pronto:**
-- Todos os testes passam: `pytest -q`
+- Testes Python passam
 - Sem poluição de stdout: `kryonix mcp check` mostra status limpo
 - Nenhum secret exposto: scan de regex passa
 - Documentação completa: todos 4 servidores documentados ou marcados como "a configurar"
+- Validação server-side fica pendente quando o Glacier estiver offline
 
 ## Arquitetura
 
 - `flake.nix` declara inputs, outputs, hosts, Home Manager, packages, overlays, formatter e checks.
 - `hosts/` contem hardware, boot e papel por maquina.
 - `hosts/common/` agrega base compartilhada.
-- `lib/options.nix` define o namespace publico `kryonix.*` e aliases temporarios `rag.*`.
+- `lib/options.nix` define o namespace publico `kryonix.*` e aliases legados internos temporarios.
 - `modules/nixos/**` implementa sistema, desktop, servicos, rede, branding e installer.
 - `features/**` habilita capacidades opt-in.
 - `profiles/**` compoe papeis reutilizaveis.
 - `desktop/hyprland/**` concentra a stack desktop real.
 - `home/**` contem configuracao Home Manager por usuario/host.
-- `packages/kryonix-cli.nix` e a CLI primaria; `packages/ragos-cli.nix` e compatibilidade legada.
+- `packages/kryonix-cli.nix` e a CLI primaria. Interfaces legadas não são caminho operacional público.
 
 ## Backend/API
 
@@ -214,20 +221,22 @@ This project uses an Obsidian vault as the technical brain.
 
 Vault path:
 
-C:\Users\aguia\Documents\kryonix-vault
+Default safe state: `/home/rocha/.local/share/kryonix/kryonix-vault`
+
+Real Obsidian vaults must be selected explicitly with `LIGHTRAG_VAULT_DIR`.
 
 Before consulting or updating the vault, the agent must read:
 
 docs/ai/OBSIDIAN_CLI_POLICY.md
 
-Before using the vault, the agent must run:
+Before using the vault, the agent must run the Linux/NixOS gate:
 
-powershell -ExecutionPolicy Bypass -File .\scripts\Require-ObsidianCli.ps1
+kryonix vault scan
 
 ### Required behavior
 
-- Use Obsidian CLI as the official access gate for the vault.
-- Run obsidian help before relying on CLI behavior.
+- Use `kryonix vault ...` and `kryonix brain ...` as the official access gate for the vault.
+- Run `kryonix brain health` before relying on Brain behavior.
 - Do not read the entire vault.
 - Start with indexes, MOCs, project notes, playbooks and prompts.
 - Do not directly modify Markdown files in the vault unless explicitly approved.

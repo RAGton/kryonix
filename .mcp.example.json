@@ -1,5 +1,13 @@
 {
   "mcpServers": {
+    "kryonix-brain": {
+      "command": "ssh",
+      "args": [
+        "glacier",
+        "cd /etc/kryonix && uv run --project packages/kryonix-brain-lightrag python -m kryonix_brain_lightrag.server"
+      ],
+      "description": "Recommended Brain MCP path for client hosts: run the MCP server on Glacier through SSH. For HTTP proxy mode, set KRYONIX_BRAIN_API=http://glacier:8000 in the client environment."
+    },
     "mcp-nixos": {
       "command": "uvx",
       "args": ["mcp-nixos"],
@@ -21,19 +29,6 @@
         "GITHUB_TOKEN": "ghp_your_token_here_DO_NOT_COMMIT"
       },
       "description": "GitHub issues, PRs, commits, file access (IMPORTANT: set token in .env, not here)"
-    },
-    "kryonix-brain": {
-      "command": "uv",
-      "args": [
-        "run",
-        "--project",
-        "packages/kryonix-brain-lightrag",
-        "python",
-        "-m",
-        "kryonix_brain_lightrag.server"
-      ],
-      "cwd": "/ABSOLUTE/PATH/TO/kryonix",
-      "description": "LightRAG-based knowledge graph + Obsidian search (IMPORTANT: cwd must be project root, e.g. /home/user/kryonix)"
     }
   }
 }

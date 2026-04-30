@@ -8,8 +8,8 @@ Este documento descreve o plano de migração do servidor Glacier do Windows 11 
 - Validação via `nix flake check`.
 
 ## Fase 2: Backup e Preparação
-1. **Backup do Brain**: Executar `.\scripts\backup-glacier-brain.ps1` no Windows.
-2. **Local de Backup**: O backup será salvo em `C:\Users\aguia\Documents\kryonix-backups\`.
+1. **Backup do Brain**: Executar `kryonix brain storage-check` no Windows.
+2. **Local de Backup**: O backup será salvo em `/srv/kryonix-backups\`.
 3. **Mapeamento de HW**: Confirmar UUIDs dos discos e nomes de interfaces de rede (`ip link`).
 
 ## Fase 3: Instalação
@@ -36,4 +36,4 @@ Este documento descreve o plano de migração do servidor Glacier do Windows 11 
 - **Downtime**: O Inspiron continuará funcional, mas sem IA durante a migração (algumas horas).
 
 ## Rollback
-Caso a instalação falhe ou o hardware não responda, o Windows poderá ser restaurado a partir de uma imagem de disco ou reinstalado, reativando os serviços via `rag.bat` no ambiente original.
+Caso a instalação falhe ou o hardware não responda, o Windows poderá ser restaurado a partir de uma imagem de disco ou reinstalado, reativando os serviços via `kryonix` no ambiente original.

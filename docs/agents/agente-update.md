@@ -450,8 +450,8 @@ Toda troca de modelo exige teste:
 ```bash
 ollama list
 curl http://localhost:11434/api/tags
-.\rag.bat search "Como funciona o pipeline de RAG do Kryonix?" --lang pt-BR --verbose
-.\rag.bat test all
+kryonix brain search "Como funciona o pipeline de RAG do Kryonix?" --lang pt-BR --verbose
+kryonix test all
 ```
 
 Critérios:
@@ -960,9 +960,9 @@ sudo nixos-rebuild switch --flake .#inspiron --show-trace
 
 No Glacier:
 
-```powershell
-.\rag.bat stats
-.\rag.bat test all
+```sh
+kryonix brain stats
+kryonix test all
 ```
 
 API:
@@ -980,9 +980,9 @@ kryonix brain search "Como funciona o pipeline de RAG do Kryonix?"
 ### 15.3 Mudança no Vault
 
 ```bash
-rag index --incremental
-rag stats
-rag test all
+kryonix brain index --incremental
+kryonix brain stats
+kryonix test all
 ```
 
 Não indexar arquivos gerados, caches ou `rag_storage`.

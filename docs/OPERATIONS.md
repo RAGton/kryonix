@@ -1,94 +1,128 @@
-# Operação do RagOS VE
+# Operacao do Kryonix
 
-**Atualizado em:** 2026-04-20
+**Atualizado em:** 2026-04-29
 
-## Fluxo padrão
+## Fluxo oficial
 
-A CLI `ragos` é o ponto de entrada operacional do projeto. Ela usa `nh`, `nix` e `nvd` por baixo e detecta o host atual para reduzir comandos manuais.
+A CLI `kryonix` e o ponto de entrada operacional do projeto. O fluxo oficial e NixOS/Linux, com checkout em `/etc/kryonix` nos hosts instalados.
 
-## Resolução da flake
+## Resolucao da flake
 
 A origem da flake segue esta ordem:
 
 1. `--flake <path|uri>` informado no comando
-2. variável de ambiente `RAGOS_FLAKE`
-3. checkout local do RagOS VE no diretório atual ou em algum pai, reconhecido pelos marcadores do projeto
-4. `/etc/ragos/flake.nix`, quando o sistema já foi instalado
-5. erro com instrução clara para informar a flake manualmente
-
-Em modo `--verbose`, a CLI mostra o host atual, a flake resolvida e o modo detectado (`explicit`, `env`, `dev-repo` ou `etc-ragos`).
-
-No uso diário, o checkout local do RagOS VE tem precedência sobre `/etc/ragos`. Em máquinas instaladas, a origem padrão passa a ser `/etc/ragos`.
+2. variavel de ambiente `KRYONIX_FLAKE`
+3. checkout local do Kryonix no diretorio atual ou em algum pai
+4. `/etc/kryonix/flake.nix`, quando o sistema ja foi instalado
+5. erro com instrucao clara para informar a flake manualmente
 
 ## Comandos do dia a dia
 
 ```sh
-ragos switch
-ragos pull
-ragos deploy
-ragos sync
-ragos switch --update
-ragos boot --update
-ragos test
-ragos home
-ragos diff
-ragos doctor
-ragos git-status
-ragos check
-ragos fmt
-ragos iso
+kryonix doctor
+kryonix git-status
+kryonix check
+kryonix fmt
+kryonix diff
+kryonix test
+kryonix boot
+kryonix switch
+kryonix home
+kryonix iso
+```
+
+## Brain, Graph, MCP e Vault
+
+Arquitetura oficial:
+
+- `glacier`: servidor central com Ollama, Kryonix Brain, LightRAG storage, MCP Brain, vault e índice.
+- `inspiron`: cliente NixOS/workstation. Não exige Ollama, GraphML ou storage local; usa API remota quando `KRYONIX_BRAIN_API` está definido.
+
+No cliente, configure a API remota quando o Glacier estiver disponível:
+
+```sh
+export KRYONIX_BRAIN_API=http://glacier:8000
+```
+
+Operação no `inspiron`:
+
+```sh
+kryonix brain health
+kryonix brain stats
+kryonix brain search "Como funciona o pipeline RAG do Kryonix?"
+kryonix brain ask "pergunta"
+kryonix brain doctor --remote
+
+kryonix mcp check
+kryonix mcp doctor
+kryonix mcp print-config
+
+kryonix test client
+kryonix test mcp
+```
+
+Operação no `glacier`:
+
+```sh
+systemctl status ollama --no-pager
+systemctl status kryonix-brain --no-pager
+kryonix brain doctor --local
+kryonix brain stats --local
+kryonix brain storage-check
+kryonix brain ollama-check
+
+kryonix graph stats --local
+kryonix graph top --local --limit 10
+kryonix graph heal --local
+kryonix graph repair --local
+kryonix test server
+```
+
+Validação de build/configuração:
+
+```sh
+kryonix vault scan
+kryonix vault index
+kryonix test all
 ```
 
 ## O que cada comando faz
 
-- `ragos switch`: aplica a configuração do host atual com `nh os switch`
-- `ragos pull`: entra em `/etc/ragos`, faz `git fetch` e `git pull --rebase`, abortando em Git quebrado, branch incorreta ou conflito
-- `ragos deploy`: valida a flake de `/etc/ragos` e roda `nh os switch /etc/ragos -H <host>`
-- `ragos sync`: executa `ragos pull` e, se o Git estiver íntegro, valida a flake e faz o deploy
-- `ragos switch --update`: atualiza inputs e aplica
-- `ragos boot`: prepara a próxima geração para o próximo boot
-- `ragos test`: testa a geração sem persistir como default
-- `ragos home`: aplica o Home Manager do usuário atual
-- `ragos update`: atualiza os inputs da flake
-- `ragos clean`: limpa gerações antigas com `nh clean all`
-- `ragos diff`: compara `/run/current-system` com a próxima geração
-- `ragos repl`: abre `nix repl` na flake
-- `ragos doctor`: mostra host, flake, mount de storage e avaliação rápida
-- `ragos git-status`: mostra branch, `origin` e mudanças locais de `/etc/ragos`
-- `ragos vm`: lista VMs via `virsh`
-- `ragos iso`: builda a ISO pública do projeto
-- `ragos fmt`: roda o formatter da flake
-- `ragos check`: roda `nix flake check --keep-going`
+- `kryonix switch`: aplica a configuracao do host atual com `nh os switch`
+- `kryonix boot`: prepara a proxima geracao para o proximo boot
+- `kryonix test`: testa a geracao NixOS sem persistir como default
+- `kryonix test all`: roda checks de código/configuração, MCP e cliente; runtime remoto vira WARN quando o Glacier estiver offline
+- `kryonix test client`: valida CLI/MCP e integração remota se `KRYONIX_BRAIN_API` existir; não exige Ollama/storage local
+- `kryonix test server`: valida runtime local do Glacier; exige Ollama, storage e GraphML
+- `kryonix test mcp`: valida configuração MCP sem depender de Ollama local
+- `kryonix home`: aplica o Home Manager do usuario atual
+- `kryonix check`: roda `nix flake check --keep-going`
+- `kryonix fmt`: roda o formatter da flake
+- `kryonix diff`: compara `/run/current-system` com a proxima geracao
+- `kryonix doctor`: mostra host, flake, storage e avaliacao rapida
+- `kryonix brain ...`: opera o Brain/LightRAG
+- `kryonix graph ...`: opera o grafo do Brain
+- `kryonix mcp ...`: valida MCP sem expor secrets
 
-## Exemplos úteis
+## Definição de pronto
 
-```sh
-ragos switch --verbose
-ragos pull
-ragos deploy
-ragos sync
-ragos switch --host glacier
-ragos home --user rocha
-ragos diff
-ragos doctor
-ragos git-status
-```
+No `inspiron`, a refatoração pode estar pronta em nível de build/configuração quando `check-mcp`, `kryonix mcp check`, `kryonix mcp doctor`, `kryonix test client`, `kryonix test mcp` e `nix flake check` passam. Ausência local de Ollama, GraphML ou storage LightRAG é esperada em cliente.
+
+No `glacier`, pronto em nível de runtime/infra exige `kryonix test server`, `kryonix brain doctor --local`, `kryonix brain stats --local`, `kryonix graph stats --local` e os serviços `ollama` e `kryonix-brain` ativos.
 
 ## Fluxo recomendado no `glacier`
 
-1. `ragos fmt`
-2. `ragos check`
-3. `ragos diff`
-4. `ragos test`
-5. `ragos boot`
+1. `kryonix fmt`
+2. `kryonix check`
+3. `kryonix diff`
+4. `kryonix test`
+5. `kryonix boot`
 
-Use `ragos switch` quando a mudança já estiver segura para ativação imediata.
+Use `kryonix switch` quando a mudanca ja estiver segura para ativacao imediata.
 
-## Observações
+## Observacoes
 
-- o hostname em runtime do host principal pode ser `RVE-GLACIER`, mas o target da flake continua `glacier`
-- a CLI já faz esse mapeamento automaticamente
-- fora do checkout local, a CLI usa `/etc/ragos` como origem padrão instalada
-- `/etc/ragos` deve ser um checkout Git em `main` com `origin`; `ragos git-status` é o preflight rápido antes de aplicar mudanças
-- `ragos pull` aborta quando encontra mudanças locais versionadas, merge/rebase em andamento ou conflito no `git pull --rebase`
-- `ragos deploy` e `ragos sync` abortam quando `nix flake check` falha
+- fora do checkout local, a CLI usa `/etc/kryonix` como origem padrao instalada
+- `/etc/kryonix` deve ser um checkout Git em `main` com `origin`
+- `kryonix git-status` e o preflight rapido antes de aplicar mudancas
+- `kryonix pull`, `kryonix deploy` e `kryonix sync` abortam em Git quebrado ou flake invalida

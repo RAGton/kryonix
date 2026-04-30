@@ -3,7 +3,7 @@
 ## Mapa de modulos
 
 - `flake.nix`: inputs, helpers, hosts, homes, packages, checks e overlays.
-- `lib/options.nix`: opcoes publicas `kryonix.*` e alias legado `rag.*`.
+- `lib/options.nix`: opcoes publicas `kryonix.*` e aliases internos temporarios.
 - `hosts/common/default.nix`: base compartilhada importada por hosts.
 - `hosts/<host>/default.nix`: papel, hardware e opcoes do host.
 - `hosts/<host>/hardware-configuration.nix`: verdade local de boot, discos e hardware.
@@ -21,7 +21,7 @@
 - `desktop/hyprland/user.nix`: configuracao user-level Hyprland, ainda grande.
 - `home/<user>/<host>/default.nix`: Home Manager por usuario/host.
 - `packages/kryonix-cli.nix`: CLI operacional principal.
-- `packages/ragos-cli.nix`: wrapper legado.
+- `packages/kryonix-brain-lightrag/`: Brain/LightRAG usado pela CLI `kryonix`.
 - `overlays/default.nix`: patches e overrides de nixpkgs.
 
 ## Onde mexer por tipo de tarefa
@@ -32,7 +32,7 @@
 - Perfil de papel: `profiles/`.
 - Ferramentas de usuario: `home/` ou `modules/home-manager/`.
 - Desktop Hyprland/Caelestia: `desktop/hyprland/` e modulos relacionados.
-- CLI operacional: `packages/kryonix-cli.nix`; manter compatibilidade em `packages/ragos-cli.nix` quando necessario.
+- CLI operacional: `packages/kryonix-cli.nix`.
 - Overlay/patch de pacote: `overlays/default.nix` e `overlays/patches/`.
 - CI: `.github/workflows/ci.yml`.
 - Contexto para IA: `AGENTS.md`, `AGENTS_KRYONIX_EVOLUTION.md`, `context/`, `docs/ai/`, `skills/`.
@@ -70,17 +70,14 @@
 
 1. `--flake`
 2. `KRYONIX_FLAKE`
-3. `RAGOS_FLAKE` como compatibilidade
-4. checkout local
-5. `/etc/kryonix`
-6. `/etc/ragos` como compatibilidade
+3. checkout local
+4. `/etc/kryonix`
 
-### Rename Kryonix/RagOS
+### Superficie publica Kryonix
 
-- `kryonix` e primario.
-- `ragos` deve continuar funcionando temporariamente.
-- `kryonix.*` e namespace publico.
-- `rag.*` ainda existe como alias temporario.
+- `kryonix` e a unica CLI publica.
+- `kryonix.*` e o namespace publico.
+- aliases legados internos podem existir apenas para nao quebrar hosts antigos.
 
 ## Contratos importantes
 

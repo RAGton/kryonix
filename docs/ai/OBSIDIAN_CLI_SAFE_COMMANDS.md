@@ -42,6 +42,6 @@ obsidian sync on vault=kryonix-vault
 
 The agent may run safe read commands without additional approval after passing:
 
-powershell -ExecutionPolicy Bypass -File .\scripts\Require-ObsidianCli.ps1
+kryonix vault scan
 
 The agent must request approval before write or dangerous commands.

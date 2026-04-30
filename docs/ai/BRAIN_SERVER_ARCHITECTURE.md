@@ -43,9 +43,9 @@ Kryonix uses a distributed Brain architecture to separate heavy AI workloads fro
 
 ## Storage & Persistence
 
-- **Location**: `C:\Users\aguia\Documents\kryonix-vault\11-LightRAG\rag_storage` (on Glacier).
+- **Location**: `/home/rocha/Documents/kryonix-vault/11-LightRAG/rag_storage` (on Glacier).
 - **Format**: LightRAG Knowledge Graph (JSON/Parquet/Vectors).
-- **Integrity**: Validated via `kryonix brain stats` and `rag.bat doctor`.
+- **Integrity**: Validated via `kryonix brain stats` and `kryonix brain doctor`.
 
 ## Security
 

@@ -14,12 +14,12 @@ Per-server setup guides for integrating MCP servers with Claude, Cursor, and oth
 ## kryonix-brain (LightRAG)
 
 ### Purpose
-Local knowledge graph + Obsidian vault search. Provides RAG-based synthesis, entity relationships, and document retrieval.
+Server-side knowledge graph + Obsidian vault search. Provides RAG-based synthesis, entity relationships, and document retrieval from Glacier.
 
 ### Prerequisites
-- Python 3.11+
-- `uv` package manager
-- LightRAG installed: `cd packages/kryonix-brain-lightrag && uv sync`
+- SSH access from the client to `glacier`
+- On Glacier: Python 3.11+, `uv`, Ollama, Kryonix Brain storage and vault/index
+- On clients such as `inspiron`: only `kryonix-cli` and the MCP client config are required
 
 ### Configuration
 
@@ -29,26 +29,30 @@ Add to `.mcp.json`:
 {
   "mcpServers": {
     "kryonix-brain": {
-      "command": "uv",
+      "command": "ssh",
       "args": [
-        "run",
-        "--project", "packages/kryonix-brain-lightrag",
-        "python", "-m", "kryonix_brain_lightrag.server"
+        "glacier",
+        "cd /etc/kryonix && uv run --project packages/kryonix-brain-lightrag python -m kryonix_brain_lightrag.server"
       ],
-      "cwd": "/ABSOLUTE/PATH/TO/kryonix",
-      "description": "LightRAG knowledge graph + Obsidian vault search"
+      "description": "Kryonix Brain MCP on Glacier"
     }
   }
 }
 ```
 
 ### Key Parameters
-- `cwd` (required): Absolute path to Kryonix project root (e.g., `/home/user/kryonix`)
-- `command`: Must be `uv` (package manager)
-- `args`: Invoke the MCP server module directly
+- `command`: `ssh`
+- first arg: SSH host (`glacier`)
+- second arg: command executed on Glacier from `/etc/kryonix`
+
+For CLI HTTP integration without MCP stdio forwarding, set:
+
+```bash
+export KRYONIX_BRAIN_API=http://glacier:8000
+```
 
 ### Environment Variables (Optional)
-Set in `.env` or `brain.env`:
+Set server-side variables on Glacier in the runtime environment. On clients, prefer only `KRYONIX_BRAIN_API`.
 
 ```bash
 # LLM Provider
@@ -66,6 +70,9 @@ LIGHTRAG_PROFILE_NAME=balanced  # safe, balanced, query, quality
 
 # Language
 RESPONSE_LANGUAGE=pt-BR
+
+# Client HTTP integration
+KRYONIX_BRAIN_API=http://glacier:8000
 ```
 
 ### Available Tools
@@ -89,13 +96,19 @@ RESPONSE_LANGUAGE=pt-BR
 
 ```bash
 # Quick check
-rag mcp-check
+kryonix mcp check
 
 # Detailed diagnostics
 kryonix mcp doctor | grep kryonix-brain
 
-# Test server availability
-rag stats
+# Client-side test; local Ollama/storage is not required
+kryonix test client
+kryonix brain stats --remote
+
+# Server-side test on Glacier
+kryonix test server
+kryonix brain doctor --local
+kryonix graph stats --local
 ```
 
 ### Troubleshooting
@@ -103,9 +116,10 @@ rag stats
 | Issue | Solution |
 |-------|----------|
 | `Module not found: kryonix_brain_lightrag` | Run `cd packages/kryonix-brain-lightrag && uv sync` |
-| Server hangs on startup | Check `OLLAMA_BASE_URL` is running; try `http://127.0.0.1:11434/api/tags` |
-| Vault not indexed | Run `rag index --full` to reindex vault |
-| Obsidian not mounted | Check `LIGHTRAG_VAULT_DIR` path exists and is readable |
+| Server hangs on startup | Run server checks on Glacier; check `OLLAMA_BASE_URL` there |
+| Vault not indexed | On Glacier, run `kryonix brain index --full` to reindex vault |
+| Obsidian not mounted | On Glacier, check `LIGHTRAG_VAULT_DIR` path exists and is readable |
+| Ollama missing on Inspiron | Expected client state; configure `KRYONIX_BRAIN_API` or SSH MCP to Glacier |
 | Portuguese prompts not working | Verify `RESPONSE_LANGUAGE=pt-BR` in `.env` |
 
 ---
@@ -481,7 +495,7 @@ After configuring servers, run:
 
 ```bash
 ./scripts/check-mcp.sh           # Validates all 4
-rag mcp-check                    # Brain-specific
+kryonix mcp check                # Brain-specific
 kryonix mcp doctor               # Detailed diagnostics
 ```
 
