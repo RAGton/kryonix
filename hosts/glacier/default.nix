@@ -98,7 +98,8 @@
       grub = {
         enable = true;
         efiSupport = true;
-        device = "/dev/disk/by-id/nvme-IM2P33F3A_NVMe_ADATA_256GB_DL01213S0VFU";
+        # UEFI-only: do not try to install GRUB as an i386-pc blocklist loader.
+        device = "nodev";
         useOSProber = false;
       };
       efi = {
