@@ -67,7 +67,12 @@
   services.kryonix.tailscale = {
     advertiseExitNode = true;
     authKeyFile = /root/tailscale-authkey.secret;
+    extraUpFlags = [ "--hostname=RVE-GLACIER" ];
   };
+
+  # The Brain API unit still points at an unpackaged runtime/env and must not
+  # make host activation fail until that server deployment path is finished.
+  systemd.services.kryonix-brain-api.wantedBy = lib.mkForce [ ];
 
   security.sudo.wheelNeedsPassword = false;
 

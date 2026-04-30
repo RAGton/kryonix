@@ -151,7 +151,7 @@ in
 
         # Só roda se ainda não está conectado.
         if ${pkgs.tailscale}/bin/tailscale status --json 2>/dev/null | ${pkgs.jq}/bin/jq -e '.Self.Online == true' >/dev/null; then
-          exit 0
+          exec ${pkgs.tailscale}/bin/tailscale set ${tailscaleUpArgs}
         fi
 
         if [ -z "${lib.optionalString (cfg.authKeyFile != null) (toString cfg.authKeyFile)}" ]; then

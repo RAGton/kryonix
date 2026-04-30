@@ -3,6 +3,9 @@
   lib,
   ...
 }:
+let
+  enablePublicHttps = false;
+in
 {
   # Preserva a identidade e o acesso remoto do host atual,
   # mesmo que o output da flake continue se chamando `glacier`.
@@ -36,13 +39,16 @@
     };
   };
 
-  networking.firewall.allowedTCPPorts = lib.mkAfter [
-    443
-    2224
-  ];
+  networking.firewall.allowedTCPPorts = lib.mkAfter (
+    [
+      80
+      2224
+    ]
+    ++ lib.optionals enablePublicHttps [ 443 ]
+  );
 
-  # Mantém o endpoint HTTPS simples já usado no host remoto atual.
-  security.acme = {
+  # Enable after Cloudflare credential files exist on the host.
+  security.acme = lib.mkIf enablePublicHttps {
     acceptTerms = true;
     defaults = {
       email = "aguiarrocha36@gmail.com";
@@ -67,8 +73,8 @@
     recommendedOptimisation = true;
 
     virtualHosts."rve.ragenterprise.com.br" = {
-      useACMEHost = "rve.ragenterprise.com.br";
-      forceSSL = true;
+      useACMEHost = lib.mkIf enablePublicHttps "rve.ragenterprise.com.br";
+      forceSSL = enablePublicHttps;
       locations."/" = {
         return = "200 'RVE online\\n'";
         extraConfig = ''
