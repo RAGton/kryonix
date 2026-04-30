@@ -209,7 +209,7 @@ let
   effectivePackage = cfg.package.overrideAttrs (old: {
     patches = (old.patches or [ ]) ++ [ launcherPatch ];
     postPatch = (old.postPatch or "") + ''
-      sed -i '/QS_NO_RELOAD_POPUP/d' shell.qml
+      sed -i '/pragma DefaultEnv/d' shell.qml
     '';
   });
 in
