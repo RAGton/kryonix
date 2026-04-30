@@ -1,19 +1,82 @@
 # Kryonix — Instruções de Repositório para Copilot
 
-Leia `AGENTS.md` e `context/INDEX.md` antes de propor mudanças amplas.
+## 1. Fontes de verdade
 
-Trate o código real como fonte de verdade. Para documentação, priorize `docs/CURRENT_STATE.md`, `docs/OPERATIONS.md`, `docs/ROADMAP.md` e o índice curto em `context/`.
+Antes de propor mudanças amplas, leia obrigatoriamente:
 
-Mantenha mudanças pequenas, reversíveis e alinhadas ao estado atual do projeto.
+- `AGENTS.md`
+- `context/INDEX.md`
+- `docs/CURRENT_STATE.md`
+- `docs/OPERATIONS.md`
+- `docs/ROADMAP.md`
 
-Hyprland é o desktop real. Caelestia é a camada principal de shell/rice. DMS é legado em transição e não deve receber novos acoplamentos.
+O código real do repositório é a fonte principal de verdade.
 
-Não reintroduza `wofi`. Preserve `uwsm` no caminho de lançamento dos apps e prefira desktop entries válidos para apps gráficos em vez de atalhos frágeis ou parsing manual de `Exec=`.
+Prioridade de contexto:
 
-Ao tocar em Nix, não mexa em `flake.lock` sem necessidade real. Em árvore suja, prefira validação com `path:$PWD` para não perder arquivos ainda não rastreados.
+1. Código atual do repo
+2. `AGENTS.md`
+3. `context/`
+4. `docs/CURRENT_STATE.md`
+5. `docs/OPERATIONS.md`
+6. `docs/ROADMAP.md`
+7. Vault/Kryonix Brain, quando disponível
+8. Documentação oficial
+9. Memória geral do modelo
 
-No `glacier`, não use `disko`, `format-*`, `install-system` ou `hosts/glacier/disks.nix` para mudanças incrementais.
+Se houver conflito, priorize o código real e registre a inconsistência.
 
-Quando a mudança alterar comportamento público, atualize a documentação mínima no mesmo patch e registre decisão/incidente em `context/` se isso ajudar futuras iterações.
+---
 
-Ao validar, se a mudança tocar desktop/host/flake, prefira esta ordem: `nix flake show`, `nix flake check --keep-going`, builds dos hosts afetados e só então testes operacionais.
+## 2. Princípio central
+
+Faça sempre a menor mudança correta, segura e reversível.
+
+Priorize:
+
+1. correção real
+2. integridade de dados
+3. bootabilidade
+4. rollback
+5. simplicidade
+6. testes
+7. documentação mínima
+
+Nunca declare pronto sem validação.
+
+---
+
+## 3. Regras gerais de mudança
+
+- Não faça refactor amplo sem necessidade.
+- Não misture correção funcional com limpeza estética.
+- Não quebre compatibilidade sem motivo explícito.
+- Não remova código legado se ele ainda for usado.
+- Não introduza abstrações genéricas sem consumidor real.
+- Não esconda erros com `try/catch` ou `|| true` sem justificativa.
+- Não silencie falhas críticas.
+
+Mudanças devem ser pequenas, revisáveis e fáceis de reverter.
+
+---
+
+## 4. NixOS / Flakes
+
+Ao tocar em Nix:
+
+- não mexa em `flake.lock` sem necessidade real;
+- não atualize inputs casualmente;
+- preserve estrutura declarativa;
+- prefira módulos pequenos;
+- evite lógica imperativa;
+- use opções explícitas;
+- use `mkEnableOption`, `mkIf`, `mkMerge`, `mkDefault` quando adequado;
+- use `mkForce` apenas com justificativa clara;
+- não invente opções NixOS;
+- valide opções com documentação oficial ou MCP `mcp-nixos`, quando disponível.
+
+Em árvore suja, prefira validação com:
+
+```bash
+nix flake show path:$PWD
+nix flake check path:$PWD --keep-going --show-trace

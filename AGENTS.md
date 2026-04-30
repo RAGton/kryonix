@@ -74,6 +74,35 @@ Nao rode `switch`, `boot`, `test`, `deploy`, `sync`, `format-*`, `install-system
   - rode novamente.
 - Nunca considerar `doctor` isolado como suficiente. `Doctor + stats + search smoke + graph smoke + MCP smoke` são obrigatórios.
 
+## MCP Deliverable Rules
+
+Antes de submeter qualquer alteração MCP ou nova configuração de servidor:
+
+**Validation gates (todos devem passar):**
+- `rag mcp-check` passa (sem secrets, caminhos válidos, config legível)
+- `./scripts/check-mcp.sh` passa (sintaxe + existência de arquivos)
+- `pytest -q packages/kryonix-brain-lightrag/tests/test_mcp_*.py` passa (todos 3 arquivos de teste)
+- `kryonix mcp check` passa (validação no nível do sistema)
+- `kryonix mcp doctor` mostra todos servidores ✓ ou ⚠ (não ✗)
+
+**Invariantes de segurança (inegociáveis):**
+- Nenhum secret em `.mcp.json`: chaves API, tokens, chaves SSH devem estar em variáveis de ambiente ou `.env`
+- Nenhum acesso de escrita fora do vault: servidor filesystem deve ser read-only e vinculado apenas ao vault
+- Stdout deve ser JSON-RPC puro: server.py redireciona todos os logs para stderr via módulo logging
+- `.mcp.json` está em `.gitignore`: instância do usuário nunca é commitada; use `.mcp.example.json` como template
+- Nenhum acesso a diretório root: todos os caminhos devem ser absolutos e dentro de $HOME ou diretório do projeto
+
+**Documentação (deve ser atualizada):**
+- Ao adicionar novo servidor: atualize `docs/mcp/client-configs.md` com guia de setup
+- Ao modificar estrutura de config: atualize `.mcp.example.json` e `docs/mcp/README.md`
+- Ao adicionar validação: atualize `docs/mcp/security.md` com novos checks
+
+**Critério de pronto:**
+- Todos os testes passam: `pytest -q`
+- Sem poluição de stdout: `kryonix mcp check` mostra status limpo
+- Nenhum secret exposto: scan de regex passa
+- Documentação completa: todos 4 servidores documentados ou marcados como "a configurar"
+
 ## Arquitetura
 
 - `flake.nix` declara inputs, outputs, hosts, Home Manager, packages, overlays, formatter e checks.

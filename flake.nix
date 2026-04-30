@@ -1,5 +1,5 @@
 # Flake principal do repo
-# Autor: rag
+# Autor: ragton
 #
 # O que é
 # - Fonte única de verdade para hosts NixOS e perfis Home Manager.

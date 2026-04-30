@@ -1018,6 +1018,61 @@ writeShellApplication {
             esac
             ;;
 
+          mcp)
+            if [[ ''${#extra_args[@]} -eq 0 ]]; then
+              mcp_sub="print-config"
+            else
+              mcp_sub="''${extra_args[0]}"
+              # Remove the first element for remaining args
+              extra_args=("''${extra_args[@]:1}")
+            fi
+
+            case "$mcp_sub" in
+              check)
+                if command -v rag &> /dev/null; then
+                  cmd=(rag mcp-check)
+                  run_flake_command "''${cmd[@]}"
+                else
+                  printf 'rag command not found. Run: cd packages/kryonix-brain-lightrag && uv sync\n' >&2
+                  exit 1
+                fi
+                ;;
+              doctor)
+                # Run standard doctor, then add MCP info if available
+                cmd=(kryonix doctor)
+                run_command "''${cmd[@]}"
+                if command -v rag &> /dev/null; then
+                  printf '\n%s\n' "MCP Servers:"
+                  if [[ -f .mcp.json ]]; then
+                    cmd=(bash scripts/check-mcp.sh)
+                    run_command "''${cmd[@]}"
+                  else
+                    printf '  .mcp.json not found\n' >&2
+                  fi
+                else
+                  printf '%s\n' "MCP: rag not available"
+                fi
+                ;;
+              print-config)
+                if [[ -f .mcp.json ]]; then
+                  cmd=(jq .mcpServers .mcp.json)
+                  run_command "''${cmd[@]}"
+                elif [[ -f .mcp.example.json ]]; then
+                  printf 'Using .mcp.example.json (copy to .mcp.json to use)\n'
+                  cmd=(jq .mcpServers .mcp.example.json)
+                  run_command "''${cmd[@]}"
+                else
+                  printf 'Error: .mcp.json or .mcp.example.json not found\n' >&2
+                  exit 1
+                fi
+                ;;
+              *)
+                printf 'Usage: kryonix mcp <check|doctor|print-config>\n' >&2
+                exit 1
+                ;;
+            esac
+            ;;
+
           *)
             printf 'Comando desconhecido: %s\n\n' "$subcommand" >&2
             print_usage >&2
