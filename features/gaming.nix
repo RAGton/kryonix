@@ -53,8 +53,16 @@ in
     lutris = {
       enable = lib.mkOption {
         type = lib.types.bool;
-        default = true;
-        description = "Habilita Lutris";
+        default = false;
+        description = "Habilita Lutris. Desligado por padrão para não puxar Wine/i686 no build base.";
+      };
+    };
+
+    wineTools = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Habilita ferramentas Wine/Proton fora do Steam (protontricks, DXVK, VKD3D e afins).";
       };
     };
 
@@ -107,7 +115,7 @@ in
       dedicatedServer.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
 
-      protontricks.enable = true;
+      protontricks.enable = cfg.wineTools.enable;
       gamescopeSession.enable = cfg.steam.gamescope;
 
       extraCompatPackages = lib.optional (pkgs ? proton-ge-bin) pkgs.proton-ge-bin;
@@ -151,11 +159,11 @@ in
         (lib.optional (pkgs ? vkbasalt) vkbasalt)
         (lib.optional (pkgs ? vulkan-tools) vulkan-tools)
         (lib.optional (pkgs ? mesa-demos) mesa-demos)
-        (lib.optional (pkgs ? umu-launcher) umu-launcher)
-        (lib.optional (pkgs ? protonup-qt) protonup-qt)
-        (lib.optional (pkgs ? protontricks) protontricks)
-        (lib.optional (pkgs ? dxvk) dxvk)
-        (lib.optional (pkgs ? vkd3d-proton) vkd3d-proton)
+        (lib.optional (cfg.wineTools.enable && pkgs ? umu-launcher) umu-launcher)
+        (lib.optional (cfg.wineTools.enable && pkgs ? protonup-qt) protonup-qt)
+        (lib.optional (cfg.wineTools.enable && pkgs ? protontricks) protontricks)
+        (lib.optional (cfg.wineTools.enable && pkgs ? dxvk) dxvk)
+        (lib.optional (cfg.wineTools.enable && pkgs ? vkd3d-proton) vkd3d-proton)
         (lib.optional (
           isNvidia && pkgs ? nvtopPackages && pkgs.nvtopPackages ? nvidia
         ) pkgs.nvtopPackages.nvidia)

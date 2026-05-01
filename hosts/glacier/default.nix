@@ -25,17 +25,19 @@
   # PROFILES (Blueprint)
   # =========================
   kryonix.profiles.server-ai.enable = true;
-  # Disabled during the initial install to avoid pulling heavy gaming packages
-  # such as Lutris while keeping the hardware/session essentials below.
-  kryonix.profiles.workstation-gamer.enable = true;
 
-  # Keep the non-gaming parts normally provided by workstation-gamer.
-  kryonix.desktop.environment = "hyprland";
-  kryonix.shell.caelestia.enable = true;
+  # Workstation/gaming ficam separados do perfil server-ai para que o Glacier
+  # continue buildando como servidor mesmo se a camada gamer for desligada.
+  kryonix.features.workstation.enable = true;
+  kryonix.features.openrgb.enable = true;
   kryonix.features.gaming = {
     enable = true;
     steam.enable = true;
-    lutris.enable = true;
+    steam.gamescope = true;
+    gamemode.enable = true;
+    mangohud.enable = true;
+    lutris.enable = false;
+    wineTools.enable = false;
     heroic.enable = true;
   };
 

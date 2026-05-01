@@ -22,7 +22,9 @@
   # Importa todos os módulos de features
   # Cada um define suas próprias opções e só ativa quando enable = true
   imports = [
+    ./workstation.nix
     ./gaming.nix
+    ./openrgb.nix
     ./virtualization.nix
     ./development.nix
     ./ai.nix

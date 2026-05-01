@@ -23,6 +23,16 @@
   inputs,
   ...
 }:
+let
+  antigravityPackage =
+    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default.override
+      {
+        extraBwrapArgs = [
+          "--bind-try /etc/kryonix/ /etc/kryonix/"
+          "--symlink kryonix /etc/ragos"
+        ];
+      };
+in
 {
   imports = [
     (
@@ -134,6 +144,6 @@
     python3Packages.virtualenv
 
     ripgrep
-    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    antigravityPackage
   ];
 }

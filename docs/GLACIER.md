@@ -4,7 +4,7 @@
 
 ## Papel do host
 
-`glacier` é o host principal do RagOS VE para:
+`glacier` é o host principal do Kryonix para:
 
 - workstation diária
 - gaming
@@ -78,8 +78,8 @@ O host hoje está posicionado como:
 - 16 GiB RAM DDR5
 - NVIDIA RTX 4060
 - kernel Zen com build local
-- Hyprland + DMS
-- GDM com branding RagOS VE
+- Hyprland + Caelestia
+- GDM com branding Kryonix
 - libvirt/KVM como hypervisor principal
 
 ## Rede e acesso preservados
@@ -95,8 +95,28 @@ Compatibilidade mantida a partir do host remoto atual:
 ## Comandos recomendados
 
 ```sh
-ragos doctor
-ragos diff
-ragos test
-ragos boot
+kryonix doctor
+kryonix diff
+kryonix test
+kryonix boot
+```
+
+## Rebuild remoto seguro
+
+Primeiro apenas build:
+
+```sh
+NIX_CONFIG="experimental-features = nix-command flakes" nh os build .#glacier -L --show-trace
+```
+
+Teste temporário:
+
+```sh
+NIX_CONFIG="experimental-features = nix-command flakes" nh os test .#glacier -L --show-trace
+```
+
+Switch só depois:
+
+```sh
+NIX_CONFIG="experimental-features = nix-command flakes" nh os switch .#glacier -L --show-trace
 ```

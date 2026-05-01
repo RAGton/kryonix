@@ -1,60 +1,26 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
-
-with lib;
 
 let
   cfg = config.kryonix.profiles.workstation-gamer;
 in
 {
   options.kryonix.profiles.workstation-gamer = {
-    enable = mkEnableOption "Profile de Workstation e Gaming (Glacier)";
+    enable = lib.mkEnableOption "Profile de Workstation e Gaming (Glacier)";
   };
 
-  config = mkIf cfg.enable {
-    # Desktop environment (Hyprland + Caelestia)
-    kryonix.desktop.environment = "hyprland";
-    kryonix.shell.caelestia.enable = true;
+  config = lib.mkIf cfg.enable {
+    kryonix.features.workstation.enable = lib.mkDefault true;
 
-    # Gaming features
     kryonix.features.gaming = {
-      enable = true;
-      steam.gamescope = true;
-      performanceGovernor = true;
+      enable = lib.mkDefault true;
+      steam.gamescope = lib.mkDefault true;
+      lutris.enable = lib.mkDefault false;
+      wineTools.enable = lib.mkDefault false;
+      performanceGovernor = lib.mkDefault true;
     };
-
-    # Drivers NVIDIA (RTX 4060)
-    services.xserver.videoDrivers = [ "nvidia" ];
-    hardware.nvidia = {
-      modesetting.enable = true;
-      open = false; # Usa o driver proprietário para melhor suporte a gaming/CUDA
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      prime = {
-        sync.enable = lib.mkForce false;
-        offload.enable = lib.mkForce false;
-      };
-    };
-
-    # OpenGL e Vulkan
-    hardware.graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
-
-    # Apps de produtividade e gaming
-    environment.systemPackages = with pkgs; [
-      discord
-      obs-studio
-      vlc
-      gimp
-      libreoffice
-    ];
-
-    # Wine para apps Windows
-    kryonix.features.development.tools.wine.enable = true;
   };
 }

@@ -51,7 +51,7 @@
   # =========================
 
   # Hardware toggles
-  kryonix.hardware.openrgb.enable = false;
+  kryonix.features.openrgb.enable = false;
 
   # Desktop
 

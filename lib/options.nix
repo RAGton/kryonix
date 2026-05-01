@@ -82,8 +82,8 @@ in
       openrgb = {
         enable = lib.mkOption {
           type = lib.types.bool;
-          default = true;
-          description = "Habilita OpenRGB (pacotes + regras udev) via módulo common";
+          default = false;
+          description = "Compatibilidade legada. Use kryonix.features.openrgb.enable.";
         };
       };
     };

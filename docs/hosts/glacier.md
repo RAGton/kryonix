@@ -13,7 +13,9 @@ Glacier é o servidor principal do ecossistema Kryonix, atuando como o "Cérebro
 
 ## Papéis (Profiles)
 - **Server AI**: Hospeda Ollama, Brain API e Knowledge Graph.
-- **Workstation Gamer**: Estação de trabalho Hyprland com suporte total a NVIDIA e Gaming (Steam).
+- **Workstation**: Hyprland/Caelestia e aplicativos gráficos, controlado por `kryonix.features.workstation.enable`.
+- **Gaming**: Steam, GameMode, MangoHud e Gamescope, controlado por `kryonix.features.gaming.enable`.
+- **OpenRGB**: RGB declarado por `kryonix.features.openrgb.enable`.
 
 ## Serviços
 - **Ollama**: Backend de LLM e Embeddings.
@@ -24,4 +26,6 @@ Glacier é o servidor principal do ecossistema Kryonix, atuando como o "Cérebro
 - **Tailscale**: VPN mesh para integração com o host Inspiron.
 
 ## Configuração Declarativa
-A configuração está localizada em `hosts/glacier/default.nix` e utiliza os perfis modulares em `profiles/server-ai.nix` e `profiles/workstation-gamer.nix`.
+A configuração está localizada em `hosts/glacier/default.nix`.
+
+O perfil `server-ai` é obrigatório no Glacier. Workstation, gaming e OpenRGB são features separadas. Lutris e ferramentas Wine/Proton ficam desligadas por padrão para não puxar `openldap-i686-linux`; habilite explicitamente apenas quando esse caminho estiver buildável.

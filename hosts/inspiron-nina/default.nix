@@ -31,7 +31,7 @@
     ./hardware-configuration.nix
   ];
 
-  kryonix.hardware.openrgb.enable = false;
+  kryonix.features.openrgb.enable = false;
 
   kryonix.desktop.environment = "hyprland";
   kryonix.shell.caelestia.enable = true;
