@@ -56,16 +56,7 @@
     extraUpFlags = [ "--hostname=RVE-GLACIER" ];
   };
 
-  # =========================
-  # BRAIN API — override temporário
-  # =========================
-  # O wantedBy é controlado pelo brain.nix via cadeia de dependências
-  # (ollama → kryonix-lightrag → kryonix-brain-api).
-  # Mantém mkForce [] até o primeiro nixos-rebuild switch validado no Glacier.
-  # REMOVER esta linha após o primeiro switch bem-sucedido.
-  systemd.services.kryonix-brain-api.wantedBy = lib.mkForce [ ];
 
-  # =========================
   # KERNEL ZEN (hardware-specific)
   # =========================
   kernelZen = {
