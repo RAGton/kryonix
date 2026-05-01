@@ -34,16 +34,31 @@
   kryonix.shell.caelestia.enable = true;
   kryonix.features.gaming = {
     enable = false;
-    steam.enable = false;
-    lutris.enable = false;
-    heroic.enable = false;
+    steam.enable = true;
+    lutris.enable = true;
+    heroic.enable = true;
   };
 
   # Perfis adicionais herdados
   kryonix.profiles.dev.enable = true;
   kryonix.profiles.university.enable = true;
   kryonix.profiles.ti.enable = true;
+  
+  kernelZen = {
+    enable = true;
 
+    kernel = "zen";
+    forceLocalBuild = true;
+    useLLVMStdenv = true;
+    extraMakeFlags = [ ];
+
+    # ⚠️ só recomendo isso se for desktop single-user.
+    disableMitigations = lib.mkDefault false;
+
+    # Removido: parâmetros agressivos do scheduler podem causar travamentos
+    # O kernel Zen já vem otimizado para desktop
+    extraKernelParams = [ ];
+  };
   # Drivers NVIDIA (RTX 4060)
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
