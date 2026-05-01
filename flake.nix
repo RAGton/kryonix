@@ -124,7 +124,6 @@
               --no-write-lock-file \
               --option max-jobs 0 \
               --option builders "" \
-              --option builders-use-substitutes true \
               nixpkgs-stable#deno \
               --command deno "$@"
           '';
