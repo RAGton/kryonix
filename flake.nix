@@ -1,5 +1,5 @@
 # Flake principal do repo
-# Autor: ragton
+# Autor: Gabriel Aguiar Rocha (RAGton)
 #
 # O que é
 # - Fonte única de verdade para hosts NixOS e perfis Home Manager.
@@ -200,9 +200,9 @@
         rocha = {
           avatar = ./files/avatar/ragton.jpeg;
           email = "gabriel.rag@proton.me";
-          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGIlk6EkcD7aTDYYmZVr636Jo1Vz9zDqUWiwzEpBgmMY gabriel.rag@proton.me";
+          gitKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBGuSbAo10qmoGSb7qHqiPxdX0+w7/ejAtY4GxlouWNQ rocha@glacier git signing";
           gitSigningKeyPath = ".ssh/id_ed25519_git_signing";
-          fullName = "Gabriel Rocha";
+          fullName = "Gabriel Aguiar Rocha (RAGton)";
           name = "rocha";
         };
         nina = {

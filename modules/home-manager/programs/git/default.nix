@@ -1,5 +1,5 @@
 # =============================================================================
-# Autor: rag
+# Autor: Gabriel Aguiar Rocha (RAGton)
 #
 # O que é:
 # - Módulo Home Manager para configurar `git` e `delta`.
@@ -31,8 +31,14 @@
       isSshSigningKey = hasGitKey && lib.hasPrefix "ssh-" userConfig.gitKey;
     in
     lib.mkIf isSshSigningKey {
-      ".config/git/allowed_signers".text = "${userConfig.email} ${userConfig.gitKey}\n";
+      ".config/git/allowed_signers" = {
+        text = "${userConfig.email} ${userConfig.gitKey}\n";
+        force = true;
+      };
     };
+
+  # Forçar a criação da config do Git para evitar conflitos de ativação
+  xdg.configFile."git/config".force = true;
 
   # Git: identidade e preferências globais do usuário.
   programs.git = {
@@ -49,6 +55,8 @@
             name = userConfig.fullName;
           };
           pull.rebase = "true";
+          init.defaultBranch = "main";
+          push.autoSetupRemote = true;
         }
         (lib.mkIf isSshSigningKey {
           gpg = {
@@ -93,9 +101,11 @@
     enable = true;
     enableDefaultConfig = false;
     matchBlocks."github.com" = {
+      hostname = "github.com";
       user = "git";
       identitiesOnly = true;
-      identityFile = "~/.ssh/id_ed25519";
+      identityFile =
+        if userConfig ? gitSigningKeyPath then "~/${userConfig.gitSigningKeyPath}" else "~/.ssh/id_ed25519";
       extraOptions = {
         AddKeysToAgent = "yes";
         PreferredAuthentications = "publickey";

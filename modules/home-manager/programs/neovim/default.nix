@@ -57,10 +57,9 @@
   };
 
   # Importa a configuração Lua a partir deste repositório.
-  xdg.configFile = {
-    "nvim" = {
-      source = ./lazyvim;
-      recursive = true;
-    };
+  xdg.configFile."nvim" = {
+    source = ./lazyvim;
+    recursive = false;
+    force = true;
   };
 }

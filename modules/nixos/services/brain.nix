@@ -245,12 +245,13 @@ in
             pkgs.ollama;
         host = "0.0.0.0";
         port = 11434;
-      # keep_alive=0: modelo descarregado da VRAM imediatamente após uso.
-      # Crítico para liberar GPU quando Ollama para (kryonix ollama stop).
-      environmentVariables = {
-        OLLAMA_KEEP_ALIVE = cfg.ollama.keepAlive;
-      };
-    });
+        # keep_alive=0: modelo descarregado da VRAM imediatamente após uso.
+        # Crítico para liberar GPU quando Ollama para (kryonix ollama stop).
+        environmentVariables = {
+          OLLAMA_KEEP_ALIVE = cfg.ollama.keepAlive;
+        };
+      }
+    );
 
     # Sem autostart: wantedBy vazio = Ollama não sobe no boot.
     # Start manual: kryonix ollama start  →  systemctl start ollama
@@ -285,7 +286,10 @@ in
       before = [ "kryonix-brain-api.service" ];
       wantedBy = [ "multi-user.target" ];
       environment = {
-        LD_LIBRARY_PATH = "${lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib pkgs.zlib ]}";
+        LD_LIBRARY_PATH = "${lib.makeLibraryPath [
+          pkgs.stdenv.cc.cc.lib
+          pkgs.zlib
+        ]}";
         KRYONIX_BRAIN_HOME = "/home/rocha/.local/share/kryonix/kryonix-vault";
         LIGHTRAG_VAULT_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/vault";
         LIGHTRAG_WORKING_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/storage";
@@ -319,7 +323,10 @@ in
       # Remover o mkForce [] para que suba automaticamente após ollama+lightrag.
       wantedBy = [ "multi-user.target" ];
       environment = {
-        LD_LIBRARY_PATH = "${lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib pkgs.zlib ]}";
+        LD_LIBRARY_PATH = "${lib.makeLibraryPath [
+          pkgs.stdenv.cc.cc.lib
+          pkgs.zlib
+        ]}";
         KRYONIX_BRAIN_HOME = "/home/rocha/.local/share/kryonix/kryonix-vault";
         LIGHTRAG_VAULT_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/vault";
         LIGHTRAG_WORKING_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/storage";

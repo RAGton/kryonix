@@ -1,6 +1,6 @@
 # ==============================================================================
 # Módulo: hosts/common (agregador de composição NixOS)
-# Autor: Gabriel Rocha (rag) + Codex
+# Autor: Gabriel Aguiar Rocha (RAGton) + Codex
 # Data: 2026-03-12
 #
 # O que é:

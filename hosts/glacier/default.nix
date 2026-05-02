@@ -56,7 +56,6 @@
     extraUpFlags = [ "--hostname=RVE-GLACIER" ];
   };
 
-
   # KERNEL ZEN (hardware-specific)
   # =========================
   kernelZen = {
