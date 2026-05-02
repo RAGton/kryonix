@@ -585,6 +585,12 @@ writeShellApplication {
               local project_dir
 
               project_dir="$(brain_project_dir)" || return 1
+              if [[ -f "/etc/kryonix/brain.env" ]]; then
+                set -a
+                # shellcheck disable=SC1091
+                source "/etc/kryonix/brain.env"
+                set +a
+              fi
               export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
               run_command uv run --project "$project_dir" python -m kryonix_brain_lightrag.cli "$@"
             }
@@ -595,6 +601,12 @@ writeShellApplication {
               shift
 
               project_dir="$(brain_project_dir)" || return 1
+              if [[ -f "/etc/kryonix/brain.env" ]]; then
+                set -a
+                # shellcheck disable=SC1091
+                source "/etc/kryonix/brain.env"
+                set +a
+              fi
               export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
               run_command uv run --project "$project_dir" python -m "$module" "$@"
             }
@@ -710,6 +722,12 @@ writeShellApplication {
 
               local project_dir
               project_dir="$(brain_project_dir)" || return 1
+              if [[ -f "/etc/kryonix/brain.env" ]]; then
+                set -a
+                # shellcheck disable=SC1091
+                source "/etc/kryonix/brain.env"
+                set +a
+              fi
               export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
               run_command uv run --project "$project_dir" python -c '
     from kryonix_brain_lightrag import config
