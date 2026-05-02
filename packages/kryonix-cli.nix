@@ -15,6 +15,7 @@
   uv,
   stdenv,
   zlib,
+  openrgb,
 }:
 writeShellApplication {
   name = "kryonix";
@@ -32,6 +33,7 @@ writeShellApplication {
     nixos-install-tools
     util-linux
     uv
+    openrgb
   ];
   text = ''
                 set -euo pipefail
@@ -1021,6 +1023,7 @@ writeShellApplication {
                     "  vault     Opera o vault via Brain (scan, index)"
                     "  ollama    Controla o serviço Ollama (start, stop, status, run, vram, pull)"
                     "  ai        Interage com a camada de IA (continue, status, checkpoint)"
+                    "  rgb       Controla LEDs via OpenRGB (off, list, set)"
                     "Opcoes globais:"
                     "  --host <host>    Forca o alvo da flake (ex.: glacier)"
                     "  --user <user>    Usuario para o comando home"
@@ -1344,7 +1347,7 @@ writeShellApplication {
                     exit 0
                     ;;
 
-                  clean|vm|git-status|pull|deploy|sync|brain|graph|mcp|vault)
+                  clean|vm|git-status|pull|deploy|sync|brain|graph|mcp|vault|rgb)
                     needs_flake=0
                     ;;
 
@@ -1534,6 +1537,34 @@ writeShellApplication {
                   check)
                     cmd=(nix flake check "$flake_ref" --keep-going "''${verbose_args[@]}" "''${extra_args[@]}")
                     run_flake_command "''${cmd[@]}"
+                    ;;
+
+                  rgb)
+                    if [[ ''${#extra_args[@]} -eq 0 ]]; then
+                      printf 'Uso: kryonix rgb <off|list|set>\n' >&2
+                      exit 1
+                    fi
+                    rgb_sub="''${extra_args[0]}"
+                    extra_args=("''${extra_args[@]:1}")
+
+                    case "$rgb_sub" in
+                      off)
+                        printf '🌑 Desligando todos os LEDs...\n'
+                        openrgb --mode static --color 000000
+                        ;;
+                      list)
+                        openrgb --list-devices
+                        ;;
+                      set)
+                        color="''${extra_args[0]:-000000}"
+                        printf '🎨 Definindo cor %s...\n' "$color"
+                        openrgb --mode static --color "$color"
+                        ;;
+                      *)
+                        printf 'Uso: kryonix rgb <off|list|set> [cor]\n' >&2
+                        exit 1
+                        ;;
+                    esac
                     ;;
 
                   brain)

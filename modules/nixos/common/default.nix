@@ -181,6 +181,17 @@
   # Rede
   networking.networkmanager.enable = true;
   networking.hostName = lib.mkDefault hostname;
+  networking.firewall = {
+    enable = lib.mkDefault true;
+    allowedTCPPorts = [
+      21115 21116 21117 21118 21119 # RustDesk
+      6568 7070                     # AnyDesk
+    ];
+    allowedUDPPorts = [
+      21116                         # RustDesk
+      7070                          # AnyDesk
+    ];
+  };
 
   # Desabilita serviços systemd que impactam o boot
   systemd.services = lib.mkMerge [

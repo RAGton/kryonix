@@ -34,10 +34,20 @@ in
   };
 
   config = lib.mkIf enableOpenrgb {
+    # Habilita I2C para controle de DRAM e periféricos
+    hardware.i2c.enable = true;
+
     services.hardware.openrgb = {
       enable = true;
       package = cfg.package;
     };
+
+    # Garante que o usuário rocha tenha acesso ao hardware sem sudo
+    users.users.rocha.extraGroups = [ 
+      "i2c" 
+      "video" 
+      "input"
+    ];
 
     environment.systemPackages = [ cfg.package ];
     services.udev.packages = [ cfg.package ];

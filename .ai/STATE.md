@@ -1,7 +1,7 @@
 # Kryonix AI State
 
 - **Objetivo atual**: Brain global operacional. Indexação TOTAL do projeto + vault.
-- **Último passo concluído**: 
+- **Último passo concluído**: VS Code Insiders activated and Zen Browser set as default browser. (2026-05-02T11:08:54Z)
   - Backup criado em `backups/pre-full-index-20260502-000103`
   - **Llama 3.1:8b** configurado como modelo padrão para extração de qualidade.
   - Storage resetado para garantir indexação limpa e consistente.

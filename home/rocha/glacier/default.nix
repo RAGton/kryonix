@@ -17,7 +17,7 @@
   kryonix.shell.backend = "caelestia";
   kryonix.programs.aiWorkstation.enable = true;
 
-  kryonix.flatpak.enable = false;
+  kryonix.flatpak.enable = true;
 
   programs.home-manager.enable = true;
 
@@ -34,8 +34,8 @@
 
   kryonix.vscode = {
     enable = true;
-    edition = "codium";
-    delivery = "nixpkgs";
+    edition = "insiders";
+    delivery = "managed-download";
   };
 
   # Ajustes específicos do host NVIDIA.
@@ -134,16 +134,16 @@
   ];
 
   xdg.mimeApps.defaultApplications = {
-    "text/html" = lib.mkForce [ "google-chrome.desktop" ];
-    "x-scheme-handler/http" = lib.mkForce [ "google-chrome.desktop" ];
-    "x-scheme-handler/https" = lib.mkForce [ "google-chrome.desktop" ];
-    "x-scheme-handler/ftp" = lib.mkForce [ "google-chrome.desktop" ];
-    "application/xhtml+xml" = lib.mkForce [ "google-chrome.desktop" ];
-    "application/x-extension-htm" = lib.mkForce [ "google-chrome.desktop" ];
-    "application/x-extension-html" = lib.mkForce [ "google-chrome.desktop" ];
-    "application/x-extension-shtml" = lib.mkForce [ "google-chrome.desktop" ];
-    "application/x-extension-xhtml" = lib.mkForce [ "google-chrome.desktop" ];
-    "application/x-extension-xht" = lib.mkForce [ "google-chrome.desktop" ];
+    "text/html" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "x-scheme-handler/http" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "x-scheme-handler/https" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "x-scheme-handler/ftp" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "application/xhtml+xml" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "application/x-extension-htm" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "application/x-extension-html" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "application/x-extension-shtml" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "application/x-extension-xhtml" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
+    "application/x-extension-xht" = lib.mkForce [ "app.zen_browser.zen.desktop" ];
   };
 
   home.stateVersion = "26.05";
