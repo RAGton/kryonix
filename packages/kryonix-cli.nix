@@ -13,6 +13,8 @@
   nixos-install-tools,
   util-linux,
   uv,
+  stdenv,
+  zlib,
 }:
 writeShellApplication {
   name = "kryonix";
@@ -583,6 +585,7 @@ writeShellApplication {
               local project_dir
 
               project_dir="$(brain_project_dir)" || return 1
+              export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
               run_command uv run --project "$project_dir" python -m kryonix_brain_lightrag.cli "$@"
             }
 
@@ -592,6 +595,7 @@ writeShellApplication {
               shift
 
               project_dir="$(brain_project_dir)" || return 1
+              export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
               run_command uv run --project "$project_dir" python -m "$module" "$@"
             }
 
@@ -698,15 +702,15 @@ writeShellApplication {
             }
 
             kryonix_brain_health() {
-              local project_dir
-
               parse_brain_mode "$@"
               if brain_should_use_remote "$brain_mode"; then
                 brain_remote_curl GET /health
                 return $?
               fi
 
+              local project_dir
               project_dir="$(brain_project_dir)" || return 1
+              export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
               run_command uv run --project "$project_dir" python -c '
     from kryonix_brain_lightrag import config
     print("Kryonix Brain health")
