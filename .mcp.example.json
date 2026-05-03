@@ -1,34 +1,21 @@
 {
   "mcpServers": {
     "kryonix-brain": {
-      "command": "ssh",
+      "command": "/run/current-system/sw/bin/uv",
       "args": [
-        "glacier",
-        "cd /etc/kryonix && uv run --project packages/kryonix-brain-lightrag python -m kryonix_brain_lightrag.server"
+        "--quiet",
+        "run",
+        "--project",
+        "/etc/kryonix/packages/kryonix-brain-lightrag",
+        "kg-server"
       ],
-      "description": "Recommended Brain MCP path for client hosts: run the MCP server on Glacier through SSH. For HTTP proxy mode, set KRYONIX_BRAIN_API=http://glacier:8000 in the client environment."
+      "cwd": "/etc/kryonix"
     },
     "mcp-nixos": {
-      "command": "uvx",
-      "args": ["mcp-nixos"],
-      "description": "Query NixOS packages, options, Home Manager, nix-darwin, flakes"
-    },
-    "vault-readonly": {
-      "command": "npx",
+      "command": "/run/current-system/sw/bin/uvx",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/ABSOLUTE/PATH/TO/kryonix-vault"
-      ],
-      "description": "Read-only access to Obsidian vault (IMPORTANT: must be absolute path, e.g. /home/user/kryonix-vault)"
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "ghp_your_token_here_DO_NOT_COMMIT"
-      },
-      "description": "GitHub issues, PRs, commits, file access (IMPORTANT: set token in .env, not here)"
+        "mcp-nixos"
+      ]
     }
   }
 }

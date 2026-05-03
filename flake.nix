@@ -57,20 +57,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # DankMaterialShell (DMS) - Rice para Hyprland (assets/configs)
-    # Repo: https://github.com/AvengeMedia/DankMaterialShell
-    # Obs.: flake=false porque é um repositório de dotfiles/configs, não um flake Nix.
-    dms = {
-      url = "github:AvengeMedia/DankMaterialShell";
-      flake = false;
-    };
-
-    # DankMaterialShell (DMS) como flake (para acessar packages/modules upstream)
-    dms-flake = {
-      url = "github:AvengeMedia/DankMaterialShell";
-      flake = true;
-    };
-
     # Caelestia Shell
     # Fonte padrão: GitHub pinado no lock do flake.
     # Desenvolvimento local: use `--override-input caelestia-shell path:../caelestia-shell`
@@ -241,7 +227,6 @@
             inherit inputs outputs;
             userConfig = users.${username};
             nhModules = "${self}/modules/home-manager";
-            dmsPkgs = if inputs ? dms-flake then inputs.dms-flake.packages.${system} else { };
           };
           modules = [ ./home/${username}/${hostname} ];
         };

@@ -898,7 +898,6 @@ packages/**                  pacotes/CLI
 
 - Hyprland é o desktop ativo.
 - Caelestia é o shell/rice principal.
-- DMS é legado/transição e não deve receber novos acoplamentos sem decisão explícita.
 - Docs antigas podem mencionar “Celestial Shell”; confirme no código real.
 
 ### 19.2 Regras de desktop
