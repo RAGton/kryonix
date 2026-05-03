@@ -49,6 +49,13 @@ in
     };
   };
 
+  programs.ssh.matchBlocks."github.com" = {
+    hostname = "github.com";
+    user = "git";
+    identityFile = "~/.ssh/id_ed25519_git_signing";
+    identitiesOnly = true;
+  };
+
   networking.firewall.allowedTCPPorts = lib.mkAfter (
     [
       2224

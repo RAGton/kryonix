@@ -16,6 +16,23 @@
       "args": [
         "mcp-nixos"
       ]
+    },
+    "vault-readonly": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/rocha/.local/share/kryonix/kryonix-vault"
+      ],
+      "description": "Read-only access to Obsidian vault"
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "description": "GitHub issues, PRs, commits, file access"
     }
   }
 }
