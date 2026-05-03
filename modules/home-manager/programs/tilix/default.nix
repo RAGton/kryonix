@@ -34,10 +34,19 @@ let
     runtimeInputs = [
       pkgs.bash
       pkgs.coreutils
+      pkgs.warp-terminal
       pkgs.tilix
     ];
     text = ''
       set -euo pipefail
+
+      # Se o Warp Terminal estiver disponível, tenta ele primeiro
+      if command -v warp-terminal >/dev/null 2>&1; then
+        # Nota: warp-terminal às vezes falha ao abrir janelas em Wayland sem variáveis explícitas
+        # ou se o pacote Oz CLI estiver conflitando. 
+        # Aqui tentamos o lançamento via uwsm.
+        exec uwsm app -- warp-terminal "$@"
+      fi
 
       profile_name="${tilixProfileName}"
       geometry="170x45"

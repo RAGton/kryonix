@@ -36,9 +36,9 @@ let
       cfg.edition
     ]
   );
-  kryonixWallpaper = ../../../../files/wallpaper/kryonix-system-4k.png;
-  kryonixGdmWallpaper = ../../../../files/wallpaper/kryonix-system-4k.png;
-  kryonixAvatar = ../../../../files/wallpaper/kryonix-ava.png;
+  kryonixWallpaper = ../../../../files/wallpaper/01.png;
+  kryonixGdmWallpaper = ../../../../files/wallpaper/01.png;
+  kryonixAvatar = ../../../../files/avatar/ragton.jpeg;
   grubSplash =
     pkgs.runCommand "kryonix-grub-splash.png"
       {

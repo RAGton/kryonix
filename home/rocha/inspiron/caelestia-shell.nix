@@ -188,10 +188,11 @@
     general = {
       logo = "caelestia";
       apps = {
-        terminal = [ "warp-terminal" ];
+        terminal = [ "kryonix-terminal" ];
         explorer = [ "dolphin" ];
         audio = [ "pavucontrol" ];
         playback = [ "mpv" ];
+        screenshot = [ "rag-screenshot" "edit-area" ];
       };
     };
 
@@ -200,7 +201,7 @@
       vimKeybinds = true;
       enableDangerousActions = false;
       maxShown = 9;
-      maxWallpapers = 9;
+      maxWallpapers = 12;
       specialPrefix = "@";
       useFuzzy = {
         apps = false;
@@ -219,6 +220,7 @@
         "org.kde.dolphin"
         "org.kde.filelight"
         "com.anydesk.Anydesk"
+        "rag-screenshot"
       ];
     };
 

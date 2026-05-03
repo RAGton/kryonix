@@ -64,7 +64,7 @@ in
             fi
             ;;
 
-          edit-area)
+          edit-area | edit-output)
             tmp="''${TMPDIR:-/tmp}/screenshot-area-$ts.png"
             geometry="$(slurp)" || exit 0
             grim -g "$geometry" "$tmp"
@@ -349,7 +349,7 @@ in
         choice="$(printf '%s\n' 'Launcher' 'Terminal' 'Files' 'Windows' 'Calc' 'Screenshot' 'Record' 'Clipboard' 'Audio' 'Network' 'Power' | rofi -dmenu -i -p 'Quick')" || exit 0
         case "$choice" in
           Launcher) exec rag-shell-launcher ;;
-          Terminal) exec uwsm app -- foot ;; # Fallback
+          Terminal) exec kryonix-terminal ;;
           Files) exec uwsm app -- dolphin ;;
           Windows) exec rag-window-menu ;;
           Calc) exec rag-calc-menu ;;

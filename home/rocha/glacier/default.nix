@@ -104,12 +104,13 @@
       terminal = [ "kryonix-terminal" ];
       explorer = [ "dolphin" ];
       audio = [ "pavucontrol" ];
+      screenshot = [ "rag-screenshot" "edit-area" ];
     };
 
     launcher = {
       showOnHover = false;
       maxShown = 10;
-      maxWallpapers = 9;
+      maxWallpapers = 12;
       favouriteApps = [
         "obsidian"
         "steam"
@@ -121,6 +122,7 @@
         "org.kde.dolphin"
         "org.kde.filelight"
         "virt-manager"
+        "rag-screenshot"
       ];
     };
 

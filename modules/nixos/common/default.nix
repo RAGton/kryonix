@@ -227,22 +227,6 @@
     LC_TIME = "pt_BR.UTF-8";
   };
 
-  # Habilita suporte a Bluetooth
-  hardware.bluetooth = {
-    enable = true;
-    powerOnBoot = true;
-
-    # BlueZ: ajustes para melhorar compatibilidade/qualidade (BT audio)
-    # - Experimental habilita suporte a recursos/códigos mais novos quando disponíveis.
-    # - Manter como mkDefault para facilitar override.
-    settings = {
-      General = {
-        Name = lib.mkDefault hostname;
-        Experimental = lib.mkDefault true;
-      };
-    };
-  };
-
   # Base para gerenciamento de cor/ICC (útil para HDR/WCG quando suportado)
   services.colord.enable = lib.mkDefault true;
   # Necessário para integração de bateria/energia em apps Wayland da sessão.

@@ -20,16 +20,25 @@
 {
   options.wallpaper = lib.mkOption {
     type = lib.types.path;
-    default = ../../../../files/wallpaper/kryonix-system-4k.png;
+    default = ../../../../files/wallpaper/12.png;
     description = "Caminho do wallpaper padrão.";
   };
 
   options.wallpapers = lib.mkOption {
     type = lib.types.listOf lib.types.path;
     default = [
-      ../../../../files/wallpaper/kryonix-system-4k.png
-      ../../../../files/wallpaper/wallpaper-kryonix.png
-      ../../../../files/wallpaper/walpaper-1.png
+      ../../../../files/wallpaper/01.png
+      ../../../../files/wallpaper/02.png
+      ../../../../files/wallpaper/03.png
+      ../../../../files/wallpaper/04.png
+      ../../../../files/wallpaper/05.png
+      ../../../../files/wallpaper/06.png
+      ../../../../files/wallpaper/07.png
+      ../../../../files/wallpaper/08.png
+      ../../../../files/wallpaper/09.png
+      ../../../../files/wallpaper/10.png
+      ../../../../files/wallpaper/11.png
+      ../../../../files/wallpaper/12.png
     ];
     description = "Lista de wallpapers para instalar em ~/.local/share/wallpapers (galeria).";
   };
