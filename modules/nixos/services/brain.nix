@@ -134,10 +134,28 @@ in
       '';
     };
 
+    repoPath = mkOption {
+      type = types.str;
+      default = "/etc/kryonix";
+      description = "Caminho raiz do repositório Kryonix.";
+    };
+
     packageDir = mkOption {
       type = types.str;
       default = "/etc/kryonix/packages/kryonix-brain-lightrag";
       description = "Diretório do pacote Python kryonix-brain-lightrag (usado pelo uv run).";
+    };
+
+    ollamaAutoStart = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Habilita o daemon do Ollama no boot.";
+    };
+
+    modelWarmupOnBoot = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Se true, faz o warmup do LightRAG (o que carrega os modelos no Ollama) no boot.";
     };
 
     ollama = {
@@ -149,16 +167,6 @@ in
 
       # Workaround: default não pode referenciar cfg.role aqui por avaliação lazy.
       # Hosts server devem setar ollama.enable = true explicitamente.
-
-      autoStart = mkOption {
-        type = types.bool;
-        default = false;
-        description = ''
-          Se true, Ollama sobe automaticamente no boot.
-          Se false (padrão), requer start manual via: kryonix ollama start
-          Manter false no Glacier para preservar VRAM para gaming.
-        '';
-      };
 
       model = mkOption {
         type = types.str;
@@ -200,16 +208,43 @@ in
       };
     };
 
+    brainHome = mkOption {
+      type = types.path;
+      default = "/home/rocha/.local/share/kryonix/kryonix-vault";
+      description = ''
+        Diretório home do Brain.
+        Alvo futuro limpo: /var/lib/kryonix-brain
+      '';
+    };
+
     storagePath = mkOption {
       type = types.path;
       default = "/home/rocha/.local/share/kryonix/kryonix-vault/storage";
-      description = "Caminho para o storage do LightRAG (apenas server).";
+      description = ''
+        Caminho para o storage do LightRAG (apenas server).
+        Alvo futuro limpo: /var/lib/kryonix-brain/storage
+      '';
     };
 
     vaultPath = mkOption {
       type = types.path;
-      default = "/home/rocha/.local/share/kryonix/kryonix-vault";
-      description = "Caminho para o Vault Obsidian montado/local (apenas server).";
+      default = "/home/rocha/.local/share/kryonix/kryonix-vault/vault";
+      description = ''
+        Caminho para o Vault Obsidian montado/local (apenas server).
+        Alvo futuro limpo: /var/lib/kryonix-brain/vault
+      '';
+    };
+
+    user = mkOption {
+      type = types.str;
+      default = "rocha";
+      description = "Usuário que executará os serviços do Brain.";
+    };
+
+    group = mkOption {
+      type = types.str;
+      default = "users";
+      description = "Grupo que executará os serviços do Brain.";
     };
   };
 
@@ -256,7 +291,7 @@ in
     # Sem autostart: wantedBy vazio = Ollama não sobe no boot.
     # Start manual: kryonix ollama start  →  systemctl start ollama
     systemd.services.ollama = mkIf cfg.ollama.enable {
-      wantedBy = mkForce (if cfg.ollama.autoStart then [ "multi-user.target" ] else [ ]);
+      wantedBy = mkForce (if cfg.ollamaAutoStart then [ "multi-user.target" ] else [ ]);
     };
 
     # ── VRAM check (oneshot antes do ollama) ───────────────────────
@@ -290,17 +325,17 @@ in
           pkgs.stdenv.cc.cc.lib
           pkgs.zlib
         ]}";
-        KRYONIX_BRAIN_HOME = "/home/rocha/.local/share/kryonix/kryonix-vault";
-        LIGHTRAG_VAULT_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/vault";
-        LIGHTRAG_WORKING_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/storage";
+        KRYONIX_BRAIN_HOME = "${cfg.vaultPath}";
+        LIGHTRAG_VAULT_DIR = "${cfg.vaultPath}/vault";
+        LIGHTRAG_WORKING_DIR = "${cfg.storagePath}";
       };
       serviceConfig = {
         Type = "oneshot";
         RemainAfterExit = true;
         ExecStart = lightragWarmupScript;
         EnvironmentFile = cfg.environmentFile;
-        User = "rocha";
-        Group = "users";
+        User = cfg.user;
+        Group = cfg.group;
         WorkingDirectory = cfg.packageDir;
       };
     };
@@ -327,9 +362,9 @@ in
           pkgs.stdenv.cc.cc.lib
           pkgs.zlib
         ]}";
-        KRYONIX_BRAIN_HOME = "/home/rocha/.local/share/kryonix/kryonix-vault";
-        LIGHTRAG_VAULT_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/vault";
-        LIGHTRAG_WORKING_DIR = "/home/rocha/.local/share/kryonix/kryonix-vault/storage";
+        KRYONIX_BRAIN_HOME = "${cfg.vaultPath}";
+        LIGHTRAG_VAULT_DIR = "${cfg.vaultPath}/vault";
+        LIGHTRAG_WORKING_DIR = "${cfg.storagePath}";
       };
       serviceConfig = {
         ExecStart = brainApiStartScript;
@@ -337,8 +372,8 @@ in
         EnvironmentFile = cfg.environmentFile;
         Restart = "on-failure";
         RestartSec = "10";
-        User = "rocha";
-        Group = "users";
+        User = cfg.user;
+        Group = cfg.group;
       };
     };
 

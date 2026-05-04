@@ -2,59 +2,66 @@
 
 ## Overview
 
-Kryonix uses a distributed Brain architecture to separate heavy AI workloads from daily workstation tasks.
+Kryonix uses a distributed Brain architecture to separate heavy AI workloads from daily workstation tasks. The system is fully declarative via NixOS.
 
 ### Topology
 
 - **Glacier (Server)**:
-  - Role: Central Intelligence Server.
-  - OS: Windows 11 (Transitioning to NixOS).
+  - Role: Central Intelligence Server & IA Powerhouse.
+  - OS: NixOS (Declarative).
   - Services: 
-    - Ollama (LLM/Embeddings).
-    - Kryonix Brain API (LightRAG wrapper).
-    - LightRAG Storage (Knowledge Graph).
-    - Obsidian Vault (Source of truth).
+    - Ollama (LLM/Embeddings) - Accelerated by NVIDIA RTX 4060.
+    - Kryonix Brain API (FastAPI wrapper for LightRAG).
+    - LightRAG Storage (Knowledge Graph & Vector DB).
+    - Obsidian Vault (Canonical Technical Brain).
     - MCP (Model Context Protocol) Server.
-  - Connectivity: Fixed Tailscale IP `100.108.71.36`.
+  - Connectivity: 
+    - LAN: `10.0.0.2`
+    - Tailscale: (Configured for remote access)
+    - SSH Port: `2224`
 
 - **Inspiron (Client)**:
-  - Role: Daily Workstation.
+  - Role: Daily Workstation & Development Environment.
   - OS: NixOS.
   - Services:
     - Kryonix CLI (Brain Client).
     - Desktop (Hyprland/Caelestia).
-  - Connectivity: Accesses Glacier via Tailscale.
+  - Connectivity: Accesses Glacier via LAN or Tailscale.
 
 ## Service Map
 
 ### Brain API
-- **Endpoint**: `http://100.108.71.36:8000`
-- **Auth**: `X-API-Key` (Environment variable `KRYONIX_BRAIN_KEY`).
+- **Endpoint**: `http://10.0.0.2:8000` (LAN) / `http://glacier:8000` (Tailscale)
+- **Auth**: `X-API-Key` (Defined in `/etc/kryonix/brain.env`).
 - **Endpoints**:
   - `/health`: System health and storage status.
   - `/stats`: Graph metrics (entities, relations, docs).
   - `/search`: RAG query with sources and grounding.
 
 ### Ollama
-- **Endpoint**: `http://100.108.71.36:11434`
+- **Endpoint**: `http://10.0.0.2:11434`
 - **Primary Models**:
-  - LLM: `qwen2.5-coder:7b` (High quality) / `qwen2.5-coder:3b` (Fast).
-  - Embedding: `nomic-embed-text:latest`.
+  - LLM: `qwen2.5-coder:7b` (Default)
+  - Embedding: `nomic-embed-text:latest`
+- **VRAM Optimization**: `keep_alive=0` ensures the GPU is freed immediately after inference, supporting the "Gamer Server" profile.
 
 ## Storage & Persistence
 
-- **Location**: `/home/rocha/Documents/kryonix-vault/11-LightRAG/rag_storage` (on Glacier).
-- **Format**: LightRAG Knowledge Graph (JSON/Parquet/Vectors).
-- **Integrity**: Validated via `kryonix brain stats` and `kryonix brain doctor`.
+- **Location**: Managed via `kryonix.services.brain` options.
+  - Storage: `/var/lib/kryonix/brain/storage`
+  - Vault: `/var/lib/kryonix/vault`
+- **Format**: LightRAG Knowledge Graph (GraphML) + NanoVectorDB.
+- **Integrity**: Guaranteed by atomic writes and validated via `kryonix brain health`.
 
 ## Security
 
-- **Network**: All cross-host communication MUST go through Tailscale.
-- **Secrets**: `KRYONIX_BRAIN_KEY` must never be committed to Git. It is managed via `brain.env` (Inspiron) and Windows Environment Variables (Glacier).
+- **Network**: Communication restricted to LAN (`br0`) and Tailscale (`tailscale0`) via NixOS firewall.
+- **Secrets**: `KRYONIX_BRAIN_KEY` is stored in `/etc/kryonix/brain.env` (permissions 600) and never committed to Git.
+- **Access**: Managed via `kryonix.services.brain.user` and `group` (Default: `rocha:users`).
 
 ## Operational Workflow
 
-1. **Indexing**: Glacier indexes the repository and Vault.
-2. **Persistence**: Storage is backed up locally before major changes.
-3. **Consumption**: Inspiron queries the API via CLI or integrated apps (Obsidian).
-4. **Validation**: Both nodes run periodic health checks to ensure connectivity and graph consistency.
+1. **Deployment**: Fully declarative via `nh os switch` or `nixos-rebuild`.
+2. **Startup**: `ollama`, `kryonix-lightrag`, and `kryonix-brain-api` start automatically on boot (configured in `glacier-ai` profile).
+3. **Indexing**: Controlled ingestion via `kryonix brain ingest`.
+4. **Maintenance**: Periodic health checks via `kryonix-brain-doctor`.
