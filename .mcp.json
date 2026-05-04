@@ -18,9 +18,12 @@
     "vault-readonly": {
       "command": "/home/rocha/.npm-global/bin/mcp-server-filesystem",
       "args": [
-        "/home/rocha/.local/share/kryonix/kryonix-vault"
+        "/etc/kryonix",
+        "/home/rocha/.local/share/kryonix/kryonix-vault",
+        "/var/lib/kryonix",
+        "/var/lib/kryonix-brain"
       ],
-      "description": "Read-only access to Obsidian vault"
+      "description": "Readonly filesystem access"
     },
     "github": {
       "command": "/home/rocha/.npm-global/bin/mcp-server-github",
