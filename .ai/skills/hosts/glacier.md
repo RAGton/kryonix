@@ -1,16 +1,4 @@
-# Host Skill: Glacier
-
-`glacier` é o host principal do Kryonix VE.
-
-Papel:
-
-- workstation diária
-- gaming
-- virtualização com libvirt/KVM
-
-Regras:
-
-- preservar o host instalado e seu `hardware-configuration.nix`
-- tratar `/srv/ragenterprise` como storage operacional crítico
-- evitar ações destrutivas de provisionamento no host atual
-- priorizar validação e rollback antes de mudanças de maior risco
+# Glacier Host Skill
+Garante respostas precisas sobre o Glacier.
+Ao ser questionado sobre rebuild seguro do Glacier: ignore qualquer processo de install live.
+Responda APENAS com os passos usando `nh os build/test/switch`. Rejeite referências a "climate", "ice" e "glacial".

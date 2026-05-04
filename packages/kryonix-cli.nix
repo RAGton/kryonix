@@ -14,9 +14,20 @@
   util-linux,
   uv,
   stdenv,
+  lib,
+  libffi,
+  openssl,
   zlib,
   openrgb,
 }:
+let
+  runtimeLibPath = lib.makeLibraryPath [
+    stdenv.cc.cc.lib
+    zlib
+    libffi
+    openssl
+  ];
+in
 writeShellApplication {
   name = "kryonix";
   runtimeInputs = [
@@ -596,7 +607,7 @@ writeShellApplication {
                       export LIGHTRAG_VAULT_DIR="''${LIGHTRAG_VAULT_DIR:-$KRYONIX_BRAIN_HOME/vault}"
                       export LIGHTRAG_WORKING_DIR="''${KRYONIX_BRAIN_HOME}/storage"
                       export LIGHTRAG_CAG_DIR="''${KRYONIX_BRAIN_HOME}/cag"
-                      export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
+                      export LD_LIBRARY_PATH="${runtimeLibPath}:''${LD_LIBRARY_PATH:-}"
                       run_command uv run --project "$project_dir" python -m kryonix_brain_lightrag.cli "$@"
                     }
 
@@ -631,7 +642,7 @@ writeShellApplication {
                       export LIGHTRAG_VAULT_DIR="''${LIGHTRAG_VAULT_DIR:-$KRYONIX_BRAIN_HOME/vault}"
                       export LIGHTRAG_WORKING_DIR="''${LIGHTRAG_WORKING_DIR:-$KRYONIX_BRAIN_HOME/storage}"
                       export LIGHTRAG_CAG_DIR="''${KRYONIX_BRAIN_HOME}/cag"
-                      export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
+                      export LD_LIBRARY_PATH="${runtimeLibPath}:''${LD_LIBRARY_PATH:-}"
                       run_command uv run --project "$project_dir" python -m "$module" "$@"
                     }
 
@@ -755,7 +766,7 @@ writeShellApplication {
                       export KRYONIX_BRAIN_HOME="/home/rocha/.local/share/kryonix/kryonix-vault"
                       export LIGHTRAG_VAULT_DIR="/home/rocha/.local/share/kryonix/kryonix-vault/vault"
                       export LIGHTRAG_WORKING_DIR="/home/rocha/.local/share/kryonix/kryonix-vault/storage"
-                      export LD_LIBRARY_PATH="${stdenv.cc.cc.lib}/lib:${zlib}/lib:''${LD_LIBRARY_PATH:-}"
+                      export LD_LIBRARY_PATH="${runtimeLibPath}:''${LD_LIBRARY_PATH:-}"
                       run_command uv run --project "$project_dir" python -c '
     from kryonix_brain_lightrag import config
     print("Kryonix Brain health")

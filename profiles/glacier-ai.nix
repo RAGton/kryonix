@@ -56,7 +56,7 @@ in
     kryonix.services.brain = {
       enable = true;
       role = "server";
-      
+
       # NÃO iniciar automaticamente no boot (se quiser manter disabled).
       # Start manual: kryonix ollama start → systemctl start ollama
       # Mas o user pediu para habilitar por padrão e remover o model warmup do boot.

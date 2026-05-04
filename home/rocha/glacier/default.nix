@@ -104,7 +104,10 @@
       terminal = [ "kryonix-terminal" ];
       explorer = [ "dolphin" ];
       audio = [ "pavucontrol" ];
-      screenshot = [ "rag-screenshot" "edit-area" ];
+      screenshot = [
+        "rag-screenshot"
+        "edit-area"
+      ];
     };
 
     launcher = {

@@ -27,6 +27,12 @@ with lib;
 
 let
   cfg = config.kryonix.services.brain;
+  runtimeLibPath = lib.makeLibraryPath [
+    pkgs.stdenv.cc.cc.lib
+    pkgs.zlib
+    pkgs.libffi
+    pkgs.openssl
+  ];
 
   # Script de verificação de VRAM antes de iniciar o Ollama.
   # Aborta se VRAM livre < vramMinGiB * 1024 MiB.
@@ -65,6 +71,7 @@ let
     set -euo pipefail
     echo "kryonix-lightrag: iniciando warmup do índice LightRAG..."
     cd "${cfg.packageDir}"
+    export LD_LIBRARY_PATH="${runtimeLibPath}:''${LD_LIBRARY_PATH:-}"
     ${pkgs.uv}/bin/uv run python - <<'PYEOF'
     import asyncio, sys
 
@@ -94,6 +101,7 @@ let
   brainApiStartScript = pkgs.writeShellScript "kryonix-brain-api-start" ''
     set -euo pipefail
     cd "${cfg.packageDir}"
+    export LD_LIBRARY_PATH="${runtimeLibPath}:''${LD_LIBRARY_PATH:-}"
     exec ${pkgs.uv}/bin/uv run python -m kryonix_brain_lightrag.api
   '';
 
@@ -321,10 +329,7 @@ in
       before = [ "kryonix-brain-api.service" ];
       wantedBy = [ "multi-user.target" ];
       environment = {
-        LD_LIBRARY_PATH = "${lib.makeLibraryPath [
-          pkgs.stdenv.cc.cc.lib
-          pkgs.zlib
-        ]}";
+        LD_LIBRARY_PATH = runtimeLibPath;
         KRYONIX_BRAIN_HOME = "${cfg.vaultPath}";
         LIGHTRAG_VAULT_DIR = "${cfg.vaultPath}/vault";
         LIGHTRAG_WORKING_DIR = "${cfg.storagePath}";
@@ -358,10 +363,7 @@ in
       # Remover o mkForce [] para que suba automaticamente após ollama+lightrag.
       wantedBy = [ "multi-user.target" ];
       environment = {
-        LD_LIBRARY_PATH = "${lib.makeLibraryPath [
-          pkgs.stdenv.cc.cc.lib
-          pkgs.zlib
-        ]}";
+        LD_LIBRARY_PATH = runtimeLibPath;
         KRYONIX_BRAIN_HOME = "${cfg.vaultPath}";
         LIGHTRAG_VAULT_DIR = "${cfg.vaultPath}/vault";
         LIGHTRAG_WORKING_DIR = "${cfg.storagePath}";

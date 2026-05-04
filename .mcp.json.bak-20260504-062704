@@ -13,24 +13,21 @@
     },
     "mcp-nixos": {
       "command": "/home/rocha/.local/bin/mcp-nixos",
-      "args": [
-        "--stdio"
-      ]
+      "args": ["--stdio"]
     },
     "vault-readonly": {
       "command": "/home/rocha/.npm-global/bin/mcp-server-filesystem",
       "args": [
         "/etc/kryonix",
         "/home/rocha/.local/share/kryonix/kryonix-vault",
-        "/var/lib/kryonix"
+        "/var/lib/kryonix",
+        "/var/lib/kryonix-brain"
       ],
       "description": "Readonly filesystem access"
     },
     "github": {
       "command": "/home/rocha/.npm-global/bin/mcp-server-github",
-      "args": [
-        "--stdio"
-      ],
+      "args": ["--stdio"],
       "description": "GitHub issues, PRs, commits, file access"
     }
   }

@@ -192,7 +192,10 @@
         explorer = [ "dolphin" ];
         audio = [ "pavucontrol" ];
         playback = [ "mpv" ];
-        screenshot = [ "rag-screenshot" "edit-area" ];
+        screenshot = [
+          "rag-screenshot"
+          "edit-area"
+        ];
       };
     };
 
