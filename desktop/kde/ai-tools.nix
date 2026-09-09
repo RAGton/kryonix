@@ -30,7 +30,7 @@ let
     exec ${pkgs.nodejs_22}/bin/npx -y mmx-cli "$@"
   '';
   minimaxPackage = pkgs.minimax-cli or minimaxWrapper;
-  
+
   agyWrapper = pkgs.writeShellScriptBin "agy" ''
     export PATH="${pkgs.curl}/bin:${pkgs.coreutils}/bin:$PATH"
     AGY_BIN="$HOME/.local/bin/agy"
@@ -40,13 +40,17 @@ let
     fi
     exec "$AGY_BIN" "$@"
   '';
-  
-  # O caminho absoluto para o tema WhiteSur-dark garante que os ícones funcionem 
+
+  # O caminho absoluto para o tema WhiteSur-dark garante que os ícones funcionem
   # mesmo que o icon-cache do sistema não seja reconstruído a tempo.
   whiteSurPath = "${pkgs.whitesur-icon-theme}/share/icons/WhiteSur-dark";
 in
 {
-  home.packages = [ minimaxPackage agyWrapper ] ++ lib.optional (!aiWorkstationEnabled) claudePackage;
+  home.packages = [
+    minimaxPackage
+    agyWrapper
+  ]
+  ++ lib.optional (!aiWorkstationEnabled) claudePackage;
 
   xdg.desktopEntries = {
     claude = {

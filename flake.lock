@@ -377,16 +377,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1785433883,
-        "narHash": "sha256-ZU6knz8K8vw6YxqzizmZq6IAWlOVyAz9nAZgne/oQ9U=",
+        "lastModified": 1787360812,
+        "narHash": "sha256-z5Vaek7lqCuDrj29t44rJZEAhfbKO3dD2bP99Ih9/Z0=",
         "owner": "RAGton",
         "repo": "kryx-cli",
-        "rev": "9284336690e99eb91b4a138e9d55e5bbd7db9c5d",
+        "rev": "c9a9883bcf557d0bf69b4b7b01216d904e3be271",
         "type": "github"
       },
       "original": {
         "owner": "RAGton",
-        "ref": "v0.2.0",
+        "ref": "v0.3.1",
         "repo": "kryx-cli",
         "type": "github"
       }

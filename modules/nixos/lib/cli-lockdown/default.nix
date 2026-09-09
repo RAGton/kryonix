@@ -1,4 +1,9 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   cfg = config.kryonix.security.cliLockdown;
 
@@ -63,10 +68,11 @@ in
     # - Subprocessos herdam o PATH explicitamente, então kryx ainda usa o real
     home-manager.sharedModules = [
       ({ pkgs, ... }: {
-        home.packages = let
-          makeWrapper = binName:
-            pkgs.writeShellScriptBin binName (guardScript binName);
-        in builtins.map makeWrapper cfg.blockedCommands;
+        home.packages =
+          let
+            makeWrapper = binName: pkgs.writeShellScriptBin binName (guardScript binName);
+          in
+          builtins.map makeWrapper cfg.blockedCommands;
       })
     ];
   };

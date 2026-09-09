@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.kryonix.kcp;
@@ -50,7 +55,10 @@ in
       ProtectSystem = "strict";
       ProtectHome = true;
       PrivateTmp = true;
-      ReadWritePaths = [ "/var/lib/kryonix" "/var/log/kryxd" ];
+      ReadWritePaths = [
+        "/var/lib/kryonix"
+        "/var/log/kryxd"
+      ];
     };
 
     # Proxy reverso so em porta privilegiada (443/80) - evita surpresas em dev
@@ -60,7 +68,12 @@ in
       recommendedOptimisation = true;
       recommendedGzipSettings = true;
       virtualHosts."_" = {
-        listen = [ { addr = "0.0.0.0"; port = cfg.uiPort; } ];
+        listen = [
+          {
+            addr = "0.0.0.0";
+            port = cfg.uiPort;
+          }
+        ];
         locations."/api/" = {
           proxyPass = "http://127.0.0.1:${toString cfg.apiPort}";
           proxyWebsockets = true;

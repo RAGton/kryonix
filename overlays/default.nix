@@ -274,16 +274,13 @@
   # O que é
   # - Expõe pacotes de tema customizados consumidos pela sessão KDE.
   #
-  # Como
-  # - `pkgs.bonafides-theme` (Kvantum + desktoptheme + color-schemes + Aurorae +
-  #   wallpapers) é usado em desktop/kde/{kvantum,theme,tiling}.nix.
+  # - Expõe pacotes de tema customizados consumidos pela sessão KDE.
   kryonix-themes =
     final: _prev:
     let
       kryonixAssets = inputs.kryonix-assets.packages.${final.system}.default;
     in
     {
-      bonafides-theme = final.callPackage ../packages/bonafides-theme.nix { };
       # macOS Tahoe Liquid Glass theme (v0.47.2 LTS) — opt-in, NÃO default.
       # Ativado apenas quando kryonix.desktop.kde.theme.preset = "tahoe-liquid".
       macos-tahoe-liquid-theme = final.callPackage ../packages/macos-tahoe-liquid.nix { };

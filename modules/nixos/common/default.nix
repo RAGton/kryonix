@@ -337,7 +337,10 @@
       "wheel"
     ]
     ++ lib.optionals config.programs.wireshark.enable [ "wireshark" ]
-    ++ lib.optionals config.virtualisation.libvirtd.enable [ "libvirtd" "kvm" ];
+    ++ lib.optionals config.virtualisation.libvirtd.enable [
+      "libvirtd"
+      "kvm"
+    ];
     isNormalUser = true;
     shell = pkgs.zsh;
   }

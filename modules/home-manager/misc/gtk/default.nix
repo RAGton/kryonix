@@ -12,8 +12,8 @@
 
     # Tema padrão do stack Hyprland/DMS: base GNOME/Libadwaita.
     theme = lib.mkDefault {
-      name = "adw-gtk3-dark";
-      package = pkgs.adw-gtk3;
+      name = "Breeze-Dark";
+      package = pkgs.kdePackages.breeze-gtk;
     };
 
     iconTheme = lib.mkDefault {
@@ -22,7 +22,7 @@
     };
 
     cursorTheme = {
-      name = "Bibata-Modern-Classic";
+      name = "Bibata-Modern-Ice";
       package = pkgs.bibata-cursors;
       size = 24;
     };

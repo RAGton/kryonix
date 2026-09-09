@@ -50,51 +50,51 @@ let
       venvPip = "${venvDir}/bin/pip";
     in
     pkgs.writeShellScript "jupyter-system-bootstrap-${username}" ''
-      set -euo pipefail
+            set -euo pipefail
 
-      export HOME="${userHome}"
-      # Garante que binários do pip (como zmq/cryptography) encontrem libs do sistema
-      export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libffi}/lib:${pkgs.openssl}/lib:$LD_LIBRARY_PATH"
+            export HOME="${userHome}"
+            # Garante que binários do pip (como zmq/cryptography) encontrem libs do sistema
+            export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.zlib}/lib:${pkgs.libffi}/lib:${pkgs.openssl}/lib:$LD_LIBRARY_PATH"
 
-      mkdir -p "$HOME/.local/share"
+            mkdir -p "$HOME/.local/share"
 
-      if [ ! -x "${venvPython}" ]; then
-        ${python}/bin/python -m venv "${venvDir}"
-      fi
+            if [ ! -x "${venvPython}" ]; then
+              ${python}/bin/python -m venv "${venvDir}"
+            fi
 
-      "${venvPip}" install --upgrade pip setuptools wheel
+            "${venvPip}" install --upgrade pip setuptools wheel
 
-      # Garante tooling de notebook/lab no venv (mutável).
-      "${venvPip}" install --upgrade jupyterlab
+            # Garante tooling de notebook/lab no venv (mutável).
+            "${venvPip}" install --upgrade jupyterlab
 
-      if [ "${lib.boolToString cfg.kernels.python}" = "true" ]; then
-        "${venvPip}" install --upgrade ipykernel
-        "${venvPython}" -m ipykernel install --user --name python-venv --display-name "Python (venv)"
-      fi
+            if [ "${lib.boolToString cfg.kernels.python}" = "true" ]; then
+              "${venvPip}" install --upgrade ipykernel
+              "${venvPython}" -m ipykernel install --user --name python-venv --display-name "Python (venv)"
+            fi
 
-      if [ "${lib.boolToString cfg.kernels.rust}" = "true" ]; then
-        ${pkgs.evcxr}/bin/evcxr_jupyter --install
-      fi
+            if [ "${lib.boolToString cfg.kernels.rust}" = "true" ]; then
+              ${pkgs.evcxr}/bin/evcxr_jupyter --install
+            fi
 
-${lib.optionalString (cfg.kernels.cpp && pkgs ? xeus-cling) ''
-  if [ "${lib.boolToString cfg.kernels.cpp}" = "true" ]; then
-    for k in xcpp11-jupyter-kernel xcpp14-jupyter-kernel xcpp17-jupyter-kernel; do
-      if [ -x "${pkgs.xeus-cling}/bin/$k" ]; then
-        "${pkgs.xeus-cling}/bin/$k" install --user || true
-      fi
-    done
-  fi
-''}
-
-      if [ "${lib.boolToString cfg.kernels.node}" = "true" ]; then
-        if [ "${lib.boolToString hasIjavascript}" = "true" ]; then
-          ${lib.optionalString hasIjavascript "${ijavascriptPkg}/bin/ijsinstall --user"}
-          :
-        else
-          echo "kernel Node (ijavascript) não disponível neste nixpkgs" >&2
-          exit 1
+      ${lib.optionalString (cfg.kernels.cpp && pkgs ? xeus-cling) ''
+        if [ "${lib.boolToString cfg.kernels.cpp}" = "true" ]; then
+          for k in xcpp11-jupyter-kernel xcpp14-jupyter-kernel xcpp17-jupyter-kernel; do
+            if [ -x "${pkgs.xeus-cling}/bin/$k" ]; then
+              "${pkgs.xeus-cling}/bin/$k" install --user || true
+            fi
+          done
         fi
-      fi
+      ''}
+
+            if [ "${lib.boolToString cfg.kernels.node}" = "true" ]; then
+              if [ "${lib.boolToString hasIjavascript}" = "true" ]; then
+                ${lib.optionalString hasIjavascript "${ijavascriptPkg}/bin/ijsinstall --user"}
+                :
+              else
+                echo "kernel Node (ijavascript) não disponível neste nixpkgs" >&2
+                exit 1
+              fi
+            fi
     '';
 
 in

@@ -3,7 +3,7 @@
 #
 # O que é:
 # - Stack de sistema do ambiente "kde": SDDM (Wayland) + Plasma 6 + pacotes base
-#   (Krohnkite para tiling, Nordzy cursor para o greeter/sistema).
+#   (Krohnkite para tiling, Bibata cursor para o greeter/sistema).
 #
 # Por quê:
 # - KDE é o ambiente principal de longo prazo do Kryonix. Toda a lógica de DE fica
@@ -154,8 +154,8 @@ in
       # ficar visível ao KWin; habilitado declarativamente no HM (kwinrc).
       kdePackages.krohnkite
 
-      # Cursor Nordzy (usado pelo SDDM/greeter e disponível ao sistema).
-      nordzy-cursor-theme
+      # Cursor Bibata (usado pelo SDDM/greeter e disponível ao sistema).
+      bibata-cursors
 
       # Utilitários Wayland úteis e ferramentas KDE de linha de comando usadas
       # pelos atalhos/declarações do Home Manager.

@@ -2,12 +2,12 @@
 # desktop/kde/theme.nix — Camada visual do KDE (Home Manager)
 #
 # Arquitetura visual:
-# - Global Theme: BonaFides Dark (lookAndFeel "BonaFides-Dark-Color-Global-6")
-# - Desktop Theme: BonaFides-Color-Plasma (FrameSVG profissional completo)
-#   ou kryonix-blue-glass (herda SVGs do BonaFides via fallback, aplica paleta
-#   Kryonix navy: 11,18,32 / accent 59,130,246 via ColorScheme-Background)
+# - Global Theme: Breeze Dark (nativo)
+# - Desktop Theme: Breeze (nativo)
+# - Color Scheme: KryonixDark (gerado por scheme.nix)
+# - Decorador de Janelas: Breeze (sem Kvantum ou Aurorae)
 # - Blur + transparência (KWin effects)
-# - Cursor Nordzy-cursors, tamanho 24
+# - Cursor Bibata-Modern-Ice, tamanho 24
 # - Top bar: 28px, fixa, full-width, sem pager
 # - Dock: 40px, flutuante, auto-hide, icons-only
 # - Dolphin otimizado
@@ -36,8 +36,8 @@ in
     enable = true;
     gtk.enable = true;
     x11.enable = true;
-    package = pkgs.nordzy-cursor-theme;
-    name = "Nordzy-cursors";
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Ice";
     size = 24;
   };
 
@@ -64,22 +64,23 @@ in
   };
 
   home.packages = [
-    pkgs.whitesur-kde
-    pkgs.whitesur-icon-theme
+    pkgs.kdePackages.breeze
+    pkgs.kdePackages.breeze-gtk
+    pkgs.papirus-icon-theme
   ];
 
   programs.plasma = {
     # ATENÇÃO: overrideConfig força a reescrita do plasma-manager. Se causar problemas com applets, remova.
     overrideConfig = false;
 
-    # --- Tema WhiteSur-KDE (macOS/Hyprland Glass) ----------------------------
+    # --- Tema Nativo Breeze + Kryonix Dark ----------------------------
     workspace = {
-      lookAndFeel = "com.github.vinceliuice.WhiteSur-dark";
-      theme = "WhiteSur-dark";
-      colorScheme = "WhiteSurDark";
-      iconTheme = "WhiteSur-dark";
+      lookAndFeel = "org.kde.breezedark.desktop";
+      theme = "default";
+      colorScheme = "KryonixDark";
+      iconTheme = "Papirus-Dark";
       cursor = {
-        theme = "Nordzy-cursors";
+        theme = "Bibata-Modern-Ice";
         size = 24;
       };
       wallpaperSlideShow = {
@@ -103,13 +104,6 @@ in
         Duration = 200;
         HorizontalGap = 30;
         VerticalGap = 20;
-      };
-      "org.kde.kdecoration2" = {
-        library = "org.kde.kwin.aurorae";
-        theme = "__aurorae__svg__WhiteSur-dark";
-        ButtonsOnLeft = "XIA";
-        ButtonsOnRight = "";
-        BorderSize = "None";
       };
     };
 

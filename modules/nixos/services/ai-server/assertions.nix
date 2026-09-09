@@ -28,9 +28,7 @@ in
     assertions = [
       # 1) Exposição pública exige acknowledgement explícito.
       {
-        assertion =
-          cfg.remoteAccess.mode != "publicSsh"
-          || cfg.remoteAccess.acknowledgePublicExposure;
+        assertion = cfg.remoteAccess.mode != "publicSsh" || cfg.remoteAccess.acknowledgePublicExposure;
         message = ''
           kryonix.services.aiServer.remoteAccess: configurar
           mode = "publicSsh" exige acknowledgePublicExposure = true
@@ -43,9 +41,7 @@ in
       #    mas declarado também aqui para falhar cedo no eval do aiServer.
       {
         assertion =
-          !cfg.inference.enable
-          || cfg.inference.provider != "llama-cpp"
-          || cfg.inference.modelPath != null;
+          !cfg.inference.enable || cfg.inference.provider != "llama-cpp" || cfg.inference.modelPath != null;
         message = ''
           kryonix.services.aiServer.inference: provider = "llama-cpp"
           exige inference.modelPath apontando para um arquivo .gguf.
@@ -55,9 +51,7 @@ in
 
       # 3) Autonomia "unrestricted" exige acknowledgement.
       {
-        assertion =
-          cfg.autonomy.level != "unrestricted"
-          || cfg.autonomy.acknowledgeUnrestricted;
+        assertion = cfg.autonomy.level != "unrestricted" || cfg.autonomy.acknowledgeUnrestricted;
         message = ''
           kryonix.services.aiServer.autonomy: level = "unrestricted"
           exige acknowledgeUnrestricted = true (o agente poderá
@@ -71,9 +65,7 @@ in
       #    enquanto, este slot fica inutilizado: assertion documenta a
       #    intenção sem quebrar nada (custom só vira funcional em PR 2).
       {
-        assertion =
-          cfg.agent.provider != "custom"
-          || cfg.agent.command or null != null;
+        assertion = cfg.agent.provider != "custom" || cfg.agent.command or null != null;
         message = ''
           kryonix.services.aiServer.agent: provider = "custom" exige
           declarar agent.command (caminho do binário). Implementação

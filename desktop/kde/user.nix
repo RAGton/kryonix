@@ -26,7 +26,7 @@
     ./ai-tools.nix
     ./theme.nix
     ./scheme.nix
-    ./kvantum.nix
+
     ./tiling.nix
     ./focus.nix
     ./lockscreen.nix

@@ -24,10 +24,8 @@
 # `osConfig` é o config do NixOS, disponível no Home Manager integrado
 # (home-manager.users.<name>); usamos `or "bonafides"` por robustez.
 # =============================================================================
-{ lib, osConfig, ... }:
+{ ... }:
 let
-  selected = osConfig.kryonix.desktop.kde.theme.colorScheme or "bonafides";
-  active = selected == "kryonix-dark";
   palette = import ../branding/kryonix/palette.nix;
 
   # --- Tokens Kryonix (hex → "R,G,B" para o formato .colors) ----------------
@@ -137,9 +135,8 @@ in
   # Sempre disponível em ~/.local/share/color-schemes/ (seleção manual também).
   xdg.dataFile."color-schemes/KryonixDark.colors".text = colorsFile;
 
-  # Ativação opt-in: sobrepõe o esquema/accent BonaFides definidos em theme.nix.
-  programs.plasma = lib.mkIf active {
-    workspace.colorScheme = lib.mkForce "KryonixDark";
-    configFile.kdeglobals.General.AccentColor = lib.mkForce accent;
+  programs.plasma = {
+    workspace.colorScheme = "KryonixDark";
+    configFile.kdeglobals.General.AccentColor = accent;
   };
 }
