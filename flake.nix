@@ -104,7 +104,7 @@
 
     # Hermes Agent (Nous Research)
     hermes-agent = {
-      url = "github:NousResearch/hermes-agent/v2026.7.7.2";
+      url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Kryonix Home Brain (scanner determinístico)
