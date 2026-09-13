@@ -148,14 +148,14 @@
     };
 
     # Novo CLI em Rust (standalone)
-    # Pinned em `v0.2.0` (tag semver) para garantir que `nix flake update`
-    # sempre traga o kryx-cli COM o bypass de lockdown (`discover_real_nix_dir`
-    # em `modules.rs`) + subcomando `check` para flake validation (t_aa0e609b,
-    # commit 9284336), nunca revertendo para o rev pré-fix `5ab75997`
-    # (que tem o problema do chicken-and-egg com o cli-lockdown wrapper).
-    # Refs: V22b (semver), V34a (kryx-cli semver stabilization), V36b (check).
+    # Pinned em `v0.3.2` (tag semver). v0.3.2 corrige o ciclo "switch no-op":
+    # update.rs agora só faz stash se houver mudanças reais fora de flake.lock,
+    # e adiciona --no-stash + --cleanup-stash. Resolve o incidente do inspiron
+    # em 2026-09-13 (67 stashes acumulados, nh reusing cached store path).
+    # Refs: V22b (semver), V34a (kryx-cli semver stabilization), V36b (check),
+    #       stash-fix (kryx-cli#b371468).
     kryx-cli = {
-      url = "github:RAGton/kryx-cli/v0.3.1";
+      url = "github:RAGton/kryx-cli/v0.3.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
