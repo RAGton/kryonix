@@ -54,7 +54,7 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  boot.supportedFilesystems = [ "zfs" ];
+  boot.supportedFilesystems = lib.mkDefault [ ];
 
   # Configuração padrão para o Home Manager integrado ao NixOS
   home-manager = {
