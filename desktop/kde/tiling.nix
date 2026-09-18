@@ -1,20 +1,29 @@
 # =============================================================================
-# desktop/kde/tiling.nix — Tiling (Krohnkite) + desktops virtuais + scratchpad
+# desktop/kde/tiling.nix — Tiling (Polonium) + desktops virtuais + scratchpad
 #
 # O que é:
-# - Habilita o KWin/Script Krohnkite de forma declarativa e define 10 desktops
-#   virtuais nomeados (o 10º é o "Scratchpad").
+# - Habilita o KWin/Script Polonium (zeroxoneafour/polonium) de forma declarativa
+#   via plasma-manager (`programs.plasma.kwin.scripts.polonium`) e define 10
+#   desktops virtuais nomeados (o 10º é o "Scratchpad").
+# - Polonium é o substituto moderno do Krohnkite (legado, instável em Plasma 6)
+#   e tem suporte first-class no plasma-manager.
 #
 # Por quê:
-# - plasma-manager (rev pinada) NÃO tem suporte first-class a Krohnkite — só a
-#   "polonium". Por isso usamos o fallback declarativo via kwinrc, conforme
-#   autorizado: instala-se o pacote no sistema (modules/nixos/desktop/kde) e
-#   habilita-se aqui via `Plugins.krohnkiteEnabled = true`.
+# - Krohnkite não tem suporte first-class em plasma-manager — exigia fallback
+#   declarativo via kwinrc manual. Polonium tem `programs.plasma.kwin.scripts.polonium.*`
+#   com tipos Nix apropriados, validação e merge automático com kwinrc.
 #
 # Como:
-# - kwinrc [Plugins] krohnkiteEnabled=true + ajustes em [Script-krohnkite].
-# - kwin.virtualDesktops cria os 10 desktops (escreve kwinrc [Desktops]).
-# - borderlessMaximizedWindows melhora a integração com tiling.
+# - programs.plasma.kwin.scripts.polonium.enable = true → escreve
+#   [Plugins] poloniumEnabled=true e [Script-polonium] com as settings.
+# - programs.plasma.kwin.virtualDesktops cria os 10 desktops (kwinrc [Desktops]).
+# - programs.plasma.kwin.borderlessMaximizedWindows melhora a integração.
+# - borderless removido do polonium config (polonium tem borderVisibility nativo)
+#   — antes era window-rule "no border" agressiva que impedia arrastar janelas.
+#
+# Riscos:
+# - Polonium é Wayland-only (oficial). Hosts em X11 vão carregar mas não tilar.
+# - Requer KWin 6.4+ (Plasma 6.4+).
 # =============================================================================
 { ... }:
 {
@@ -23,7 +32,8 @@
       # Janelas maximizadas sem borda (melhor integração com tiling).
       borderlessMaximizedWindows = true;
 
-      # Convenção Kryonix: 10 desktops virtuais nomeados (0/10 = Scratchpad).
+      # Convenção Kryonix: 10 desktops virtuais nomeados (scratchpad fica
+      # no desktop 10 e é ativado por atalho separado).
       virtualDesktops = {
         number = 10;
         rows = 1;
@@ -42,39 +52,46 @@
       };
     };
 
-    # Habilita o Krohnkite (pacote vem do sistema: kdePackages.krohnkite) e
-    # ajusta alguns parâmetros de tiling. Chaves desconhecidas são ignoradas
-    # pelo KWin, então é seguro manter um conjunto enxuto.
-    configFile.kwinrc = {
-      Plugins.krohnkiteEnabled = true;
-      "Script-krohnkite" = {
-        enableColumnsLayout = true;
-        screenGapTop = 8;
-        screenGapBottom = 8;
-        screenGapLeft = 8;
-        screenGapRight = 8;
-        tileLayoutGap = 8;
+    # Polonium via plasma-manager (first-class) — substitui a config manual
+    # via kwinrc que era usada para o Krohnkite.
+    #
+    # Settings alinhadas com a paleta/identidade Kryonix:
+    #   - engine: half (master-stack clássico; bom default).
+    #   - borderVisibility: noBorderTiled (bordas só em janelas flutuantes —
+    #     melhor UX que noBorderAll que quebra arrastar).
+    #   - filter.processes: processos que não devem ser tilados (system UI).
+    #   - tilePopups: false (popups ficam flutuantes, como Breeze).
+    kwin.scripts.polonium = {
+      enable = true;
+
+      settings = {
+        # Estilo de tiling — "half" = master-stack (familiar p/ Hyprland/Sway users).
+        layout.engine = "half";
+        layout.insertionPoint = "right";
+        layout.rotate = false;
+
+        # Bordas nativas do polonium (substitui window-rule noborder antiga).
+        borderVisibility = "noBorderTiled";
+
+        # Comportamento.
+        maximizeSingleWindow = false;
+        resizeAmount = 30;
+        callbackDelay = 10;
+        saveOnTileEdit = true;
+        tilePopups = false;
+        enableDebug = false;
+
+        # Filtros (processos que ficam flutuantes — system UI do KDE).
+        filter.processes = [
+          "krunner"
+          "yakuake"
+          "kded"
+          "polkit"
+          "plasmashell"
+          "xwaylandvideobridge"
+        ];
+        filter.windowTitles = [ ];
       };
     };
-
-    # Remove as barras de título / bordas de TODAS as janelas, requisito do
-    # tiling (Krohnkite). Em plasma-manager (rev pinada) a opção correta é
-    # `window-rules` (NÃO `kwin.rules`, que não existe): cada regra vira uma
-    # seção em kwinrulesrc. Aqui casamos qualquer windowClass por regex e
-    # forçamos `noborder = true`.
-    window-rules = [
-      {
-        description = "Kryonix: remover bordas/barras de titulo (tiling Krohnkite)";
-        match.window-class = {
-          value = ".*";
-          type = "regex";
-          match-whole = false;
-        };
-        apply.noborder = {
-          value = true;
-          apply = "force";
-        };
-      }
-    ];
   };
 }

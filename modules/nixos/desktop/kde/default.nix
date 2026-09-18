@@ -3,19 +3,24 @@
 #
 # O que é:
 # - Stack de sistema do ambiente "kde": SDDM (Wayland) + Plasma 6 + pacotes base
-#   (Krohnkite para tiling, Bibata cursor para o greeter/sistema).
+#   (Polonium para tiling, Bibata cursor para o greeter/sistema).
 #
 # Por quê:
 # - KDE é o ambiente principal de longo prazo do Kryonix. Toda a lógica de DE fica
 #   no engine; hosts apenas selecionam `kryonix.desktop.environment = "kde"`.
+# - Polonium substituiu o Krohnkite (legado, instável em Plasma 6) — ver
+#   packages/kryonix-polonium.nix. Suporte first-class no plasma-manager via
+#   `programs.plasma.kwin.scripts.polonium`.
 #
 # Como:
 # - Ativa apenas quando env == "kde" (coexistência com o stack Hyprland legado).
-# - O Krohnkite é instalado no nível do sistema para que o KWin enxergue o
-#   KWin/Script em $XDG_DATA_DIRS; a ativação declarativa é feita no Home Manager
-#   (desktop/kde/tiling.nix) via kwinrc.
+# - O Polonium é instalado no nível do sistema para que o KWin enxergue o
+#   KWin/Script em $XDG_DATA_DIRS/share/kwin/scripts/; a ativação declarativa
+#   é feita no Home Manager (desktop/kde/tiling.nix) via plasma-manager.
 #
 # Riscos:
+# - Polonium é Wayland-only. Hosts em X11 não terão tiling funcional.
+# - Requer KWin 6.4+ (Plasma 6.4+).
 # - Não habilitar GDM/greetd/gnome aqui (o branch kde em ../default.nix já os força off).
 # =============================================================================
 {
@@ -150,9 +155,11 @@ in
 
     # Pacotes de sistema do ambiente KDE.
     environment.systemPackages = with pkgs; [
-      # Krohnkite (KWin/Script de tiling) — instalado a nível de sistema para
-      # ficar visível ao KWin; habilitado declarativamente no HM (kwinrc).
-      kdePackages.krohnkite
+      # Polonium (KWin/Script de tiling) — substituto do Krohnkite.
+      # Instalado em share/kwin/scripts/polonium/ para o KWin enxergar.
+      # Habilitado declarativamente no HM via plasma-manager
+      # (programs.plasma.kwin.scripts.polonium).
+      kryonix-polonium
 
       # Cursor Bibata (usado pelo SDDM/greeter e disponível ao sistema).
       bibata-cursors

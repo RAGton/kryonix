@@ -8,10 +8,10 @@
 #
 # Por quê:
 # - Default do Plasma 6 é ClickToFocus + FocusStealingPreventionLevel=1, o que
-#   causa duas queixas reais no fluxo Kryonix sob tiling Krohnkite:
+#   causa duas queixas reais no fluxo Kryonix sob tiling Polonium:
 #     1. Mover o mouse para outra janela não muda o foco — exige clique.
 #     2. Programa recém-aberto fica "atrás" e sem foco (focus stealing).
-# - Sob WM tiling (Krohnkite), foco-segue-mouse é o esperado, e janelas novas
+# - Sob WM tiling (Polonium), foco-segue-mouse é o esperado, e janelas novas
 #   devem entrar ativas no tile recém-criado.
 #
 # Como:
@@ -19,7 +19,7 @@
 #   FocusPolicy=FocusFollowsMouse, AutoRaise=false (não levanta janelas
 #   cobertas sem ação explícita), FocusStealingPreventionLevel=0 (qualquer
 #   janela nova pode pegar foco).
-# - tiling.nix toca [Plugins] e [Script-krohnkite] no mesmo configFile.kwinrc;
+# - tiling.nix toca [Plugins] e [Script-polonium] no mesmo configFile.kwinrc;
 #   HM mescla atributos sem conflito (sets diferentes).
 #
 # Notas:

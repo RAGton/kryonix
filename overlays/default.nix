@@ -303,6 +303,10 @@
         inherit kryonixAssets;
       };
 
+      # Polonium (KWin/Script de tiling) — substituto do Krohnkite no KDE Plasma 6.
+      # Plasma-manager tem suporte first-class via programs.plasma.kwin.scripts.polonium.
+      kryonix-polonium = final.callPackage ../packages/kryonix-polonium.nix { };
+
       # Backend D-Bus da Kryonix Bar (org.kryonix.Bar). UI (QML) virá depois.
       kryonix-bar-backend = final.callPackage ../packages/kryonix-bar { };
     };

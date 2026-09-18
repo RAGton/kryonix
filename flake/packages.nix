@@ -31,6 +31,7 @@ lib.forAllSystems (
     kryonixSddmTheme = pkgs.callPackage ../packages/kryonix-sddm-theme.nix {
       inherit kryonixBranding kryonixAssets;
     };
+    kryonixPolonium = pkgs.callPackage ../packages/kryonix-polonium.nix { };
     kryonixDarwinMenu = pkgs.callPackage ../packages/darwinmenu.nix { };
     kryonixWallpapers = pkgs.callPackage ../packages/kryonix-wallpapers.nix {
       inherit kryonixAssets;
@@ -55,6 +56,7 @@ lib.forAllSystems (
     kryonix-plasma-theme = kryonixPlasmaTheme;
     kryonix-carbon = kryonixCarbon;
     kryonix-sddm-theme = kryonixSddmTheme;
+    kryonix-polonium = kryonixPolonium;
     kryonix-darwinmenu = kryonixDarwinMenu;
     kryonix-wallpapers = kryonixWallpapers;
     "deno-cache-only" = denoCacheOnly;
