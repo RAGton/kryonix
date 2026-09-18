@@ -15,7 +15,7 @@ A estrutura de diretórios foi pensada para maximizar reuso e separação de con
 ├── features/             # (LEGACY/COMPAT) Combinações coesas de módulos a serem migradas
 ├── profiles/             # Casos de uso de alto nível que ativam features (ex: glacier-ai, laptop)
 ├── packages/             # Derivações customizadas de pacotes (ex: kryonix-cli, kryonix-brain-lightrag)
-├── desktop/              # Configuração visual do sistema (Hyprland/KDE)
+├── desktop/              # Configuração visual do sistema (KDE Plasma 6 + KWin)
 ├── hosts/                # Definições base e ISO (common, inspiron base, iso)
 ├── overlays/             # Patches sobre o nixpkgs
 ├── lib/                  # Funções puras Nix

@@ -26,7 +26,7 @@ kryonix/
 ├── packages/             # Pacotes e derivações próprias
 ├── overlays/             # Overlays do Nixpkgs
 ├── lib/                  # Opções públicas kryonix.* e helpers
-├── desktop/              # Configurações de ambientes gráficos (KDE Plasma, Hyprland)
+├── desktop/              # Configuração do ambiente gráfico (KDE Plasma 6 + KWin)
 ├── docs/                 # Documentação técnica, especificações e histórico
 └── scripts/              # Scripts operacionais e de manutenção
 ```

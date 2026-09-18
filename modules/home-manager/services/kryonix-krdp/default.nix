@@ -6,19 +6,12 @@
 #   sessão Plasma Wayland, expondo um monitor virtual via RDP em 127.0.0.1:3389.
 #
 # Por quê:
-# - Substitui o kryonix-wayvnc no ambiente KDE: wayvnc só funciona com
-#   compositores wlroots (Hyprland/Sway) e é incompatível com o KWin/Plasma.
-#   O KRDP é a solução nativa de desktop remoto do Plasma 6.
+# - O KRDP é a solução nativa de desktop remoto do Plasma 6.
 #
 # Como:
 # - krdpserver com `--virtual-monitor` (headless) + `--plasma`, ouvindo apenas
-#   no loopback (como o wayvnc fazia). Credenciais lidas de um EnvironmentFile
+#   no loopback. Credenciais lidas de um EnvironmentFile
 #   (KRDP_USERNAME / KRDP_PASSWORD) — NÃO passamos a senha por argumento.
-#
-# ⚠️  NÃO VALIDADO em hardware: o caminho headless (sessão Plasma + monitor
-#     virtual + RDP) precisa de verificação presencial no glacier. Mantenha
-#     acesso por console/SSH ao aplicar. Rollback: reverter o host/usuário para
-#     o stack Hyprland + kryonix-wayvnc.
 #
 # Pré-requisitos (no host):
 # - Sessão Plasma Wayland em execução (ex.: SDDM autologin) para o krdpserver

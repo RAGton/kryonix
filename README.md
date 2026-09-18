@@ -35,7 +35,7 @@ Este repo é consumido como flake input pelo downstream [`kryonixos`](../kryonix
 | [`packages/`](./packages) | **Pacotes Próprios** | Derivações Nix para utilitários do sistema (`kryonix-hardware-probe`, `aura`, temas, wallpapers). |
 | [`overlays/`](./overlays) | **Overlays Nixpkgs** | Overlays customizados e injeções no Nixpkgs upstream. |
 | [`lib/`](./lib) | **Biblioteca e Opções** | Definições das opções declarativas `kryonix.*` ([`lib/options.nix`](./lib/options.nix)). |
-| [`desktop/`](./desktop) | **Ambientes Gráficos** | Configurações do KDE Plasma 6 (`desktop/kde/`) e Hyprland (`desktop/hyprland/`). |
+| [`desktop/`](./desktop) | **Ambiente Gráfico** | Configuração oficial do KDE Plasma 6 + KWin tiling Krohnkite ([`desktop/kde/`](./desktop/kde)). |
 | [`docs/`](./docs) | **Documentação Central** | Todos os manuais, especificações (`docs/specs/`), skills e histórico (`docs/archive/`). |
 | [`scripts/`](./scripts) | **Scripts e Automação** | Scripts operacionais e scripts de manutenção (`scripts/maintenance/`). |
 | [`AGENTS.md`](./AGENTS.md) | **Diretriz Única de IA** | Documento único e consolidado para agentes e assistentes de código. |
@@ -276,7 +276,7 @@ A documentação canônica vive no **Vault Obsidian** (`github:RAGton/kryonix-va
 ├── packages/                      # 30+ pacotes próprios (Rust + Nix)
 ├── overlays/                      # extensões ao nixpkgs
 ├── lib/                           # helpers Nix compartilhados
-├── desktop/                       # configs KDE Plasma 6 (migração de Hyprland)
+├── desktop/                       # configs KDE Plasma 6 + KWin tiling Krohnkite
 ├── hosts/                         # hosts pré-configurados (ISO)
 ├── specs/                         # specs funcionais (markdown)
 ├── docs/                          # docs legados (consolidados no vault)

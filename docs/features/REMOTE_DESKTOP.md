@@ -1,6 +1,6 @@
-# Remote Desktop (VNC) no Kryonix
+# Remote Desktop (VNC / RDP) no Kryonix
 
-O Kryonix utiliza o **wayvnc** para prover acesso remoto declarativo em sessões Wayland/Hyprland.
+O Kryonix utiliza **KRDP** (para sessões KDE Plasma) e **wayvnc** para prover acesso remoto declarativo em sessões Wayland.
 
 ## Arquitetura
 
@@ -47,13 +47,7 @@ kryonix-remote-desktop 10.0.0.2
 
 ## Acesso Headless
 
-Se você precisar iniciar uma sessão VNC sem um monitor físico conectado, você pode criar um output virtual no Hyprland:
-
-```bash
-hyprctl output create headless
-```
-
-O `wayvnc` irá capturar automaticamente o output disponível. Se houver múltiplos, ele pode precisar de configuração extra via `--output` no arquivo de serviço (futura implementação se necessário).
+No KDE Plasma 6, o KRDP (`services.kryonix-krdp`) permite criar monitores virtuais automaticamente via `--virtual-monitor`.
 
 ## Segurança (Importante!)
 

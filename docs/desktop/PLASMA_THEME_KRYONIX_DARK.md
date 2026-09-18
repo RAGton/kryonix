@@ -55,7 +55,7 @@ kryonix home        # ou kryonix test/boot conforme o fluxo do host
   esquema azul BonaFides do `theme.nix` prevalece. Nada muda no host atual.
 - Chaves desconhecidas no `.colors` são ignoradas pelo KWin; no pior caso o
   Plasma cai no esquema default — sem quebra de sessão.
-- **Não remove** Hyprland/Caelestia nem o tema BonaFides: lookAndFeel, Kvantum e
+- **Não remove** o tema BonaFides: lookAndFeel, Kvantum e
   decoração Aurorae continuam vindo do `bonafides-theme`.
 
 ## Rollback

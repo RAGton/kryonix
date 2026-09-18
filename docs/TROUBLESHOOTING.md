@@ -18,7 +18,7 @@ Ao encontrar um erro, siga o método:
 ### 1. Build do Inspiron Puxando Cadeia Pesada (Deno / rusty-v8)
 **Sintoma:** Ao compilar o host `inspiron`, dependências pesadas e lentas (`rusty-v8`, `deno`, `yt-dlp`, `mpv-with-scripts`, `kalarm`) são requisitadas, atrasando o setup.
 **Ação:** Analise de onde vem a requisição da dependência (`nix why-depends .#nixosConfigurations.inspiron.config.system.build.toplevel <drv>`).
-**Correção:** Remova o serviço/pacote problemático do perfil do inspiron, isolando-o ao `glacier` se for apenas um recurso servidor; evite remover `Caelestia` ou `Hyprland` inteiros como "solução rápida".
+**Correção:** Remova o serviço/pacote problemático do perfil do inspiron, isolando-o ao `glacier` se for apenas um recurso servidor.
 
 ### 2. Caelestia - Erro de Literal Inválido em postPatch
 **Sintoma:** O patch falha exibindo `1: command not found`.

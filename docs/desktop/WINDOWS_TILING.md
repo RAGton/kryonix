@@ -1,7 +1,7 @@
 # Desktop: Tiling no Windows
 
 Padronização **opcional** do fluxo de janelas em mosaico do Kryonix no Windows,
-espelhando o tiling do KDE/Hyprland no Linux. São apenas arquivos de referência
+espelhando o tiling do KDE Plasma 6 no Linux. São apenas arquivos de referência
 — **não afetam o build NixOS** e nada é aplicado automaticamente no Windows.
 
 Os configs versionados ficam em [`windows/`](../../windows/README.md).
@@ -45,9 +45,9 @@ arquivo versionado. Use zonas de grade + snap `Win+Shift+setas`.
 ## Mapa de teclas (cross-OS)
 
 No Windows, `Win+letra` é reservado pelo SO, então usamos `Alt`. A lógica vim
-**HJKL** é idêntica ao KDE (`desktop/kde/keybinds.nix`) e ao Hyprland.
+**HJKL** é idêntica ao KDE (`desktop/kde/keybinds.nix`).
 
-| Ação                 | Linux (KDE/Hyprland)     | Windows (Komorebi/GlazeWM) |
+| Ação                 | Linux (KDE Plasma 6)     | Windows (Komorebi/GlazeWM) |
 | -------------------- | ------------------------ | -------------------------- |
 | Foco                 | `Meta + H/J/K/L`         | `Alt + H/J/K/L`            |
 | Mover janela         | `Meta + Shift + H/J/K/L` | `Alt + Shift + H/J/K/L`    |

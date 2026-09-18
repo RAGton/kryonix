@@ -87,15 +87,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Caelestia Shell
-    # Fonte padrão: GitHub pinado no lock do flake.
-    # Desenvolvimento local: use `--override-input caelestia-shell path:../caelestia-shell`
-    # a partir do diretório do checkout que contém este flake.
-    caelestia-shell = {
-      url = "github:caelestia-dots/shell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # OpenAI Codex CLI (coding agent que roda localmente)
     codex = {
       url = "github:openai/codex";

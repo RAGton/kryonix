@@ -8,8 +8,7 @@ let
   cfg = config.kryonix.desktop.wallpaper.animated;
   env = config.kryonix.desktop.environment;
   isKde = env == "kde";
-  isHyprland = env == "hyprland";
-  supportsEnv = isKde || isHyprland;
+  supportsEnv = isKde;
 in
 {
   options.kryonix.desktop.wallpaper.animated = {
@@ -78,7 +77,7 @@ in
         assertions = [
           {
             assertion = supportsEnv;
-            message = "kryonix.desktop.wallpaper.animated.enable requer kryonix.desktop.environment = 'kde' ou 'hyprland'.";
+            message = "kryonix.desktop.wallpaper.animated.enable requer kryonix.desktop.environment = 'kde'.";
           }
         ];
 

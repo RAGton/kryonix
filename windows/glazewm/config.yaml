@@ -2,7 +2,7 @@
 # windows/glazewm/config.yaml — Tiling WM para Windows (GlazeWM, estilo i3)
 #
 # Bordas/cores nos tokens Kryonix (accent #38BDF8, border #334155).
-# Mapa de teclas alinhado ao KDE/Hyprland (Alt+HJKL no Windows).
+# Mapa de teclas alinhado ao KDE Plasma 6 (Alt+HJKL no Windows).
 # Instale em: %USERPROFILE%\.glzr\glazewm\config.yaml
 # =============================================================================
 

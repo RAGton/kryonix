@@ -1,8 +1,7 @@
 # Kryonix — Tiling no Windows
 
 Configs **opcionais e versionáveis** para reproduzir, no Windows, o fluxo de
-janelas em mosaico (tiling) do Kryonix no Linux (KDE Plasma + Krohnkite /
-Hyprland). Não fazem parte do build NixOS — são apenas arquivos de referência.
+janelas em mosaico (tiling) do Kryonix no Linux (KDE Plasma + Krohnkite / KWin). Não fazem parte do build NixOS — são apenas arquivos de referência.
 
 > Nenhum binário é versionado e nada altera o Windows automaticamente. Você
 > instala e aplica manualmente.
@@ -62,9 +61,9 @@ e o snap com `Win+Shift+setas`.
 
 O modificador muda entre plataformas (no Windows, `Win+letra` é reservado pelo SO,
 então usamos `Alt`). A lógica vim **HJKL** é a mesma do KDE
-(`desktop/kde/keybinds.nix`) e do Hyprland.
+(`desktop/kde/keybinds.nix`).
 
-| Ação                  | Linux (KDE/Hyprland)      | Windows (Komorebi/GlazeWM) |
+| Ação                  | Linux (KDE Plasma 6)      | Windows (Komorebi/GlazeWM) |
 | --------------------- | ------------------------- | -------------------------- |
 | Foco                  | `Meta + H/J/K/L`          | `Alt + H/J/K/L`            |
 | Mover janela          | `Meta + Shift + H/J/K/L`  | `Alt + Shift + H/J/K/L`    |

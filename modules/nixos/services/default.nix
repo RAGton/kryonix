@@ -4,7 +4,7 @@
 # Data: 2026-03-12
 #
 # O que é:
-# - Serviços/pacotes de suporte para sessão Hyprland + shell Wayland do projeto.
+# - Serviços/pacotes de suporte para o desktop do projeto.
 #
 # Por quê:
 # - Garante lock/logout/notificações/clipboard/screenshot consistentes em todos
@@ -35,10 +35,6 @@
   services.gvfs.enable = true;
 
   environment.systemPackages = with pkgs; [
-    hyprlock
-    wlogout
-    swaynotificationcenter
-    swaybg
     cliphist
     grim
     slurp

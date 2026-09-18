@@ -39,8 +39,8 @@
     # Desktop environments
     # =========================
     desktop = {
-      hyprland = {
-        enable = lib.mkEnableOption "Hyprland compositor (legacy/coexistence)";
+      plasma = {
+        enable = lib.mkEnableOption "KDE Plasma 6 Wayland desktop environment";
       };
     };
 

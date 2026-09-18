@@ -27,9 +27,9 @@
 
 let
   desktopConfigured =
-    (config.services.displayManager.gdm.enable or false)
+    (config.services.displayManager.sddm.enable or false)
+    || (config.services.displayManager.gdm.enable or false)
     || (config.services.greetd.enable or false)
-    || (config.programs.hyprland.enable or false)
     || (config.services.desktopManager.plasma6.enable or false);
 in
 {
@@ -45,7 +45,6 @@ in
       environment = lib.mkOption {
         type = lib.types.nullOr (
           lib.types.enum [
-            "hyprland"
             "kde"
           ]
         );
@@ -54,15 +53,8 @@ in
           Ambiente de desktop a usar.
 
           Opções:
-          - "hyprland": stack legado (Hyprland + Caelestia + SDDM). Mantido durante a
-            migração para coexistência/rollback.
-          - "kde": ambiente principal de longo prazo — KDE Plasma 6 Wayland + SDDM +
-            KWin/Krohnkite + Albert (ver modules/nixos/desktop/kde e desktop/kde).
-          - null: sem desktop (headless/servidor)
-
-          A arquitetura é extensível: adicionar um novo ambiente = novo valor neste enum
-          + novo branch em modules/nixos/desktop/default.nix + novo diretório desktop/<env>.
-          O módulo compartilhado do desktop habilita o stack correspondente.
+          - "kde": ambiente principal oficial — KDE Plasma 6 Wayland + SDDM + KWin (com Krohnkite tiling).
+          - null: sem desktop (headless/servidor).
         '';
       };
 
@@ -144,7 +136,7 @@ in
       {
         assertion = config.kryonix.desktop.environment == null || desktopConfigured;
         message = ''
-          O ambiente de desktop requer Hyprland e GDM habilitados.
+          O ambiente de desktop requer KDE Plasma 6 e SDDM habilitados.
           Se estiver usando kryonix.desktop.environment, verifique se o módulo compartilhado de desktop foi importado.
         '';
       }
@@ -153,7 +145,7 @@ in
     # Warnings para opções definidas mas sem efeito (transição v1→v2)
     warnings = lib.optional (config.kryonix.desktop.environment != null && !desktopConfigured) ''
       kryonix.desktop.environment está definido como "${config.kryonix.desktop.environment}", mas o desktop
-      ainda não foi materializado em Hyprland + GDM.
+      ainda não foi materializado em KDE Plasma 6 + SDDM.
       Verifique se hosts/common está importando modules/nixos/desktop corretamente.
     '';
   };

@@ -16,7 +16,7 @@ A ISO `glacier-live` é projetada para ser um ambiente de diagnóstico leve e co
 - **Ferramentas**: git, curl, wget, vim, jq, rsync.
 
 ## O que NÃO está incluído (por design)
-- Hyprland / Interface gráfica pesada.
+- Interface gráfica pesada (KDE Plasma).
 - Stack de IA (Ollama, Kryonix Brain).
 - Steam / Gaming.
 - Flatpak.

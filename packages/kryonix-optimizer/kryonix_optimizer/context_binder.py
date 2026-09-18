@@ -16,7 +16,7 @@ def get_process_cwd(pid: int) -> str:
         return ""
 
 async def update_os_context(active_window_data: bytes):
-    """Interpreta o estado do Hyprland e exporta a telemetria semântica atual do SO."""
+    """Interpreta o estado da janela ativa e exporta a telemetria semântica atual do SO."""
     try:
         if not active_window_data:
             return

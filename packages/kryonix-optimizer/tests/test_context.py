@@ -9,10 +9,10 @@ async def test_context_generation_success(tmp_path, monkeypatch):
     test_context_file = tmp_path / "kryonix_context.json"
     monkeypatch.setattr("kryonix_optimizer.context_binder.CONTEXT_FILE", test_context_file)
     
-    # Payload simulado do Hyprland activewindow
-    hyprland_mock_output = b'{"pid": 1234, "class": "vscodium", "title": "default.nix - kryonix"}'
+    # Payload simulado de active window
+    mock_active_window = b'{"pid": 1234, "class": "vscodium", "title": "default.nix - kryonix"}'
     
-    await update_os_context(hyprland_mock_output)
+    await update_os_context(mock_active_window)
     
     assert test_context_file.exists()
     with open(test_context_file) as f:

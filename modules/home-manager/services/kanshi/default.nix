@@ -9,7 +9,7 @@
 #
 # Como:
 # - Habilita `services.kanshi` e define `settings` com perfis e outputs.
-# - Usa `systemdTarget = "hyprland-session.target"` para iniciar junto da sessão Hyprland.
+# - Usa `systemdTarget = "graphical-session.target"` para iniciar junto da sessão gráfica.
 #
 # Riscos:
 # - `criteria = "*"` pode aplicar regras em monitores inesperados.
@@ -20,7 +20,7 @@
   # Gerencia o serviço do kanshi via Home Manager.
   services.kanshi = {
     enable = false;
-    systemdTarget = "hyprland-session.target";
+    systemdTarget = "graphical-session.target";
     settings = [
       {
         profile.name = "casa";

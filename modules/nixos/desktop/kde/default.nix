@@ -10,7 +10,7 @@
 #   no engine; hosts apenas selecionam `kryonix.desktop.environment = "kde"`.
 #
 # Como:
-# - Ativa apenas quando env == "kde" (coexistência com o stack Hyprland legado).
+# - Ativa apenas quando env == "kde".
 # - O Krohnkite é instalado no nível do sistema para que o KWin enxergue o
 #   KWin/Script em $XDG_DATA_DIRS; a ativação declarativa é feita no Home Manager
 #   (desktop/kde/tiling.nix) via kwinrc.

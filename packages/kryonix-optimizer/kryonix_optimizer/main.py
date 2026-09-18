@@ -11,10 +11,10 @@ MEMORY_THRESHOLD_PCT = 90.0
 CHECK_INTERVAL_SECS = 30  # Reduzido para 30s para tornar o context binder mais responsivo
 LOCAL_OLLAMA_URL = "http://localhost:11434/api/generate"
 
-async def get_hyprland_active_window() -> bytes:
+async def get_active_window() -> bytes:
     try:
         proc = await asyncio.create_subprocess_exec(
-            "hyprctl", "activewindow", "-j",
+            "qdbus", "org.kde.KWin", "/KWin", "org.kde.KWin.activeWindow",
             stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         stdout, _ = await proc.communicate()
@@ -30,7 +30,7 @@ async def collect_top_processes():
             info = proc.info
             ram_gb = info['memory_info'].rss / (1024 ** 3)
             # Ignora processos vitais do sistema operacional base
-            if info['name'] in ('hyprland', 'Xorg', 'systemd', 'waybar', 'pipewire'):
+            if info['name'] in ('kwin_wayland', 'plasmashell', 'sddm', 'Xorg', 'systemd', 'pipewire'):
                 continue
             
             # Calcula tempo ocioso aproximado baseado nas estatísticas do processo
@@ -106,7 +106,7 @@ async def main():
     print("[INFO] Inicializando Kryonix RAM Optimizer & Context Binder Daemon...")
     while True:
         try:
-            focus_data = await get_hyprland_active_window()
+            focus_data = await get_active_window()
             await update_os_context(focus_data)
 
             mem = psutil.virtual_memory()

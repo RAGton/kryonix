@@ -18,8 +18,6 @@ let
           enable = false;
         };
       };
-  env = if osConfig != null then osConfig.kryonix.desktop.environment else "";
-  isHyprland = env == "hyprland";
   fallbackWallpaper =
     if cfg.fallback != null then
       cfg.fallback
@@ -71,27 +69,6 @@ in
 
       Service = {
         ExecStart = waywallenExec;
-        Restart = "on-failure";
-        RestartSec = "5s";
-      };
-
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
-    };
-
-    systemd.user.services.kryonix-waywallen-layer-shell = lib.mkIf isHyprland {
-      Unit = {
-        Description = "Kryonix Waywallen layer-shell display";
-        After = [
-          "graphical-session.target"
-          "kryonix-waywallen.service"
-        ];
-        PartOf = [ "graphical-session.target" ];
-      };
-
-      Service = {
-        ExecStart = "${pkgs.kryonix-waywallen}/bin/waywallen-layer-shell --name kryonix";
         Restart = "on-failure";
         RestartSec = "5s";
       };

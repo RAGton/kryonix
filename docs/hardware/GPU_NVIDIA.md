@@ -96,13 +96,12 @@ PRIME (NVIDIA + Intel/AMD iGPU) é um caso específico que exije configuração
 adicional de `hardware.nvidia.prime.*`. Será implementado em PR futuro,
 quando houver hardware para testar.
 
-## Observações para Wayland/KDE/Hyprland
+## Observações para Wayland/KDE Plasma 6
 
-- NVIDIA com `modesetting.enable = true` funciona com KDE Plasma 6 Wayland.
+- NVIDIA com `modesetting.enable = true` funciona perfeitamente com KDE Plasma 6 Wayland.
 - `open = true` requer RTX 20/GTX 16 ou mais novo. Para GPUs mais antigas,
   usar `open = false`.
-- Se usar Hyprland, pode ser necessário configurar `env = WLR_NO_HARDWARE_CURSORS`.
-- Para KDE, o driver NVIDIA proprietário com modesetting é o caminho recomendado.
+- O driver NVIDIA com modesetting é o caminho recomendado para KDE Plasma 6.
 
 ## Observações para RTX 4060 / Glacier
 

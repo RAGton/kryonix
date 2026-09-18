@@ -28,11 +28,11 @@ Esta página consolida o estado real e auditado do projeto Kryonix. O que não c
 - **Brain MCP Server:** Parcial 🚧 (Protocolo desenhado, scripts Python existem, mas necessita validação de deploy seguro)
 - **Segurança (Políticas, Sandboxing):** Parcial 🚧 (enforcement local implementado; prova de host pendente)
 
-## Desktop & Experiência (Caelestia / Hyprland)
-- **Hyprland Core (Wayland):** Implementado ✅
-- **KDE Plasma (Alternativa Estável):** Implementado ✅
-- **Caelestia Launcher (Live JSON confs):** Implementado ✅ (Usa `user/caelestia/` no downstream)
-- **App Wrappers (Performance):** Implementado ✅ (`desktop/hyprland/wrappers.nix`)
+## Desktop & Experiência (KDE Plasma 6)
+- **KDE Plasma 6 (Wayland):** Implementado ✅ (Ambiente oficial exclusivo)
+- **KWin Window Manager + Krohnkite Tiling:** Implementado ✅ (`desktop/kde/tiling.nix`)
+- **SDDM & KScreenLocker:** Implementado ✅ (`modules/nixos/desktop/sddm/` e `desktop/kde/lockscreen.nix`)
+- **Keybinds & Helpers:** Implementado ✅ (`desktop/kde/keybinds.nix` e `keybind-helper.nix`)
 - **Aura (Roteador de IA Desktop):** Quebrado ❌ (Depende do `hermes`, que foi aposentado)
 - **Kora (Assistente de Voz):** Roadmap / Aposentado 🛤️
 

@@ -56,9 +56,8 @@ in
       {
         assertion = !(cfg.theme.preset == "kryonix-clean" && !isKde);
         message = ''
-          kryonix.desktop.sddm.theme.preset = "kryonix-clean" ainda está
-          integrado apenas ao fluxo KDE. Em Hyprland, o default atual continua
-          sendo o tema astronaut.
+          kryonix.desktop.sddm.theme.preset = "kryonix-clean" requer
+          o ambiente KDE Plasma 6 (kryonix.desktop.environment = "kde").
         '';
       }
     ];

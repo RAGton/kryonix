@@ -316,7 +316,6 @@
     kryonix-disk-planner = final.callPackage ../packages/kryonix-disk-planner.nix { };
     kryxd = inputs.kryxd.packages.${final.system}.kryxd;
     kryonix-optimizer = final.callPackage ../packages/kryonix-optimizer { };
-    kryonix-monitors = final.callPackage ../packages/kryonix-monitors.nix { };
     kryx = inputs.kryx-cli.packages.${final.system}.default;
   };
 }

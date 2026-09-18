@@ -103,7 +103,7 @@ sudo nixos-install --flake .#inspiron
 - [ ] `/RAG-DATA` acessível
 - [ ] Swap ativo (`cat /proc/swaps`)
 - [ ] UUIDs conferem com `hardware-configuration.nix`
-- [ ] Hyprland/Caelestia session funcional
+- [ ] KDE Plasma 6 (Wayland) + KWin session funcional
 - [ ] Tailscale conectado
 - [ ] SSH funcional
 

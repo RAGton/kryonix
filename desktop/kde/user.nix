@@ -1,7 +1,7 @@
 # =============================================================================
 # desktop/kde/user.nix — Orquestrador KDE Plasma 6 (Home Manager)
 #
-# Puro roteador de imports, espelhando desktop/hyprland/user.nix. Cada camada é
+# Puro roteador de imports do ambiente KDE Plasma 6. Cada camada é
 # declarativa via plasma-manager (programs.plasma.*).
 #
 # Camadas implementadas:
@@ -12,7 +12,7 @@
 #                        Dolphin otimizado, blur, transparência)
 #   scheme.nix         — color-scheme "Kryonix Dark" opt-in (tokens próprios)
 #   tiling.nix         — Krohnkite (kwinrc), 10 desktops virtuais, scratchpad
-#   focus.nix          — Foco-segue-mouse + zero focus-stealing (aproxima Hyprland)
+#   focus.nix          — Foco-segue-mouse + zero focus-stealing
 #   lockscreen.nix     — KScreenLocker Kryonix (wallpaper, autolock, lock on resume)
 #   keybinds.nix       — injeção dos atalhos no Plasma (shortcuts/hotkeys/spectacle)
 #   keybind-helper.nix — Kryonix Keybind Helper (janela com todos os atalhos)

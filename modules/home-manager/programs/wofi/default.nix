@@ -4,20 +4,8 @@
 #
 # O que é:
 # - Configuração declarativa do launcher Wofi.
-#
-# Por quê:
-# - Mantém o launcher disponível mesmo quando Caelestia é o launcher principal.
-#
-# Como:
-# - Habilita Wofi de forma declarativa e deixa o atalho principal para o shell.
-#
-# Riscos:
-# - Se habilitado junto de outro launcher, gera duplicação de atalhos/fluxo.
 # ==============================================================================
 { config, lib, ... }:
-let
-  shellBackend = config.kryonix.shell.backend or null;
-in
 {
   config = {
     programs.wofi = {
@@ -39,7 +27,7 @@ in
         allow_markup = true;
         allow_images = true;
         image_size = 28;
-        normal_window = false; # flutuante (sem decoração Hyprland)
+        normal_window = false; # flutuante
         layer = "overlay"; # sobre tudo
 
         # Navegação estilo Vim
@@ -59,7 +47,7 @@ in
         gtk_dark = true;
       };
 
-      # CSS: TokyoNight Storm — alinhado com a paleta do DMS/Hyprland
+      # CSS: TokyoNight Storm
       style = ''
         /* ── Variáveis ─────────────────────────────────────── */
         @define-color bg0     #1a1b26;   /* fundo principal */

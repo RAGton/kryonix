@@ -34,11 +34,7 @@ O daemon user sobe como:
 waywallen --ui <...>/waywallen-ui --plugin <...>/share/waywallen [--plugin <open-wallpaper-engine>]
 ```
 
-No Hyprland, o backend de display sobe como:
-
-```bash
-waywallen-layer-shell --name kryonix
-```
+No KDE Plasma, a exibição é feita via plasmoid `kryonix-waywallen-display-kde`.
 
 ## Limites atuais
 

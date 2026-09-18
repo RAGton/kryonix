@@ -6,7 +6,7 @@
 # - Define um wallpaper padrão e uma lista (galeria) de wallpapers do usuário.
 #
 # Por quê
-# - Padroniza wallpaper entre ambientes (KDE/Hyprland) de forma declarativa.
+# - Padroniza wallpaper no KDE de forma declarativa.
 #
 # Como
 # - Expõe `options.wallpaper` e `options.wallpapers`.
@@ -26,7 +26,7 @@
     description = ''
       Caminho do wallpaper padrão. Quando `null`, nenhum arquivo é escrito
       em `~/.config/wallpaper.png` (útil para hosts que definem wallpaper
-      por outros meios — KDE/Hyprland).
+      por outros meios — KDE).
     '';
   };
 

@@ -1,38 +1,8 @@
-# Atalhos Globais (Hyprland / Caelestia)
+# Atalhos Globais (KDE Plasma 6)
 
-Os atalhos do sistema estão centralizados em `desktop/hyprland/core/keybinds.nix`.
-O modificador primário (`$mainMod`) é a tecla **SUPER/WIN**.
-
-## Principais Operações de Janela
-- `SUPER + Q`: Fechar janela atual.
-- `SUPER + F`: Tela Cheia (Fullscreen).
-- `SUPER + V`: Trocar modo floating/tiling.
-- `SUPER + Mouse Esquerdo (arrastar)`: Mover janela flutuante.
-- `SUPER + Mouse Direito (arrastar)`: Redimensionar janela flutuante.
-
-## Launchers e Ferramentas
-- `SUPER + Espaço`: Abrir o Caelestia Launcher (Substitui ROFI/Wofi).
-- `SUPER + Enter`: Abrir terminal padrão (Kitty).
-- `SUPER + E`: Abrir gerenciador de arquivos (Dolphin).
-
-## Gestão de Workspaces
-- `SUPER + [1-9]`: Mudar para o workspace 1 a 9.
-- `SUPER + SHIFT + [1-9]`: Mover janela atual para o workspace 1 a 9.
-- `SUPER + Scroll`: Navegar entre workspaces.
-
-## Mídia e Volume
-Teclas multimídia padrão (XF86Audio*) funcionam globalmente (Volume Up, Down, Mute, Play/Pause).
-
-## Integração IA
-- *(Roadmap)* `SUPER + A`: Invoca o Kryonix Brain (Antigo atalho do Kora/Aura).
-
----
-
-# Atalhos Globais (KDE Plasma)
-
-Ambiente principal. Atalhos centralizados em `desktop/kde/keybinds.nix`
+Ambiente oficial do Kryonix. Atalhos centralizados em `desktop/kde/keybinds.nix`
 (aplicados via plasma-manager: `kglobalshortcutsrc` + `hotkeys.commands`).
-O modificador primário é a tecla **Meta/SUPER/WIN**. Tiling via **Krohnkite**.
+O modificador primário é a tecla **Meta/SUPER/WIN**. Tiling gerenciado via **Krohnkite** (KWin).
 
 ## Janelas
 - `Meta + Q`: Fechar janela.
@@ -54,8 +24,8 @@ O modificador primário é a tecla **Meta/SUPER/WIN**. Tiling via **Krohnkite**.
 - `Meta + S` / `Meta + Shift + S`: Scratchpad (desktop 10).
 
 ## Launchers e Apps
-- `Meta + A`: Wofi (launcher de aplicativos).
-- `Meta + T` / `Meta + Return`: Terminal (Warp via wrapper Kryonix).
+- `Meta + A`: Wofi / Rofi (launcher de aplicativos).
+- `Meta + T` / `Meta + Return`: Terminal (`warp-terminal`).
 - `Meta + Shift + T`: Terminal flutuante.
 - `Meta + O`: Dolphin · `Meta + N`: Zen Browser · `Meta + R`: VSCode.
 - `Meta + /` ou `Meta + F1`: Kryonix Keybind Helper (lista de atalhos).

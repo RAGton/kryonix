@@ -182,24 +182,8 @@ in
         id = "desktop.plasma";
         label = "KDE Plasma";
         category = "desktop";
-        description = "Ambiente gráfico completo KDE Plasma 6 Wayland";
+        description = "Ambiente gráfico completo KDE Plasma 6 Wayland (KWin Krohnkite tiling)";
         risk = "medium";
-        conflicts = [ "desktop.hyprland" ];
-        requires = [ "desktop.audio" ];
-        requiresReboot = true;
-        affects = [
-          "desktop"
-          "boot"
-        ];
-      })
-
-      (mkFeature {
-        id = "desktop.hyprland";
-        label = "Hyprland";
-        category = "desktop";
-        description = "Hyprland compositor Wayland (legado/coexistência)";
-        risk = "medium";
-        conflicts = [ "desktop.plasma" ];
         requires = [ "desktop.audio" ];
         requiresReboot = true;
         affects = [

@@ -5,10 +5,9 @@ Theme. Tema de login nao controla painel, widgets ou layout da sessao Plasma.
 
 ## Estado atual
 
-- display manager usado hoje: `SDDM`;
-- KDE usa SDDM Wayland no modulo `modules/nixos/desktop/kde/default.nix`;
-- Hyprland continua com seu fluxo atual de SDDM + tema astronaut;
-- tema proprio legado existente: `kryonix-aurora`;
+- display manager usado: `SDDM` (Wayland);
+- KDE usa SDDM Wayland no módulo `modules/nixos/desktop/kde/default.nix`;
+- tema próprio legado existente: `kryonix-aurora`;
 - novo preset opt-in: `kryonix-clean`.
 
 ## Package

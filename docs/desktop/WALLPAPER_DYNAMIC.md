@@ -12,7 +12,6 @@ estatico atual por default e sem acoplar Plasma, SDDM e branding.
 - plugin Wallpaper Engine: `open-wallpaper-engine` opt-in
 - Steam: opt-in
 - KDE Plasma: suportado via plasmoid `org.waywallen.kde`
-- Hyprland: preparado via `waywallen-layer-shell`
 
 ## Opcoes
 
@@ -31,7 +30,6 @@ kryonix.desktop.wallpaper.dynamic = {
 - `enable = false`: nada muda no wallpaper atual.
 - `enable = true`: instala Waywallen e sobe o daemon via `systemd --user`.
 - Em KDE, instala tambem o plasmoid `org.waywallen.kde`.
-- Em Hyprland, sobe tambem `waywallen-layer-shell`.
 - O plugin `open-wallpaper-engine` so entra quando `wallpaperEngine.enable = true`.
 - `steam.enable = true` ativa `programs.steam.enable` e `hardware.graphics.enable32Bit`
   por `mkDefault`, sem mexer no perfil gamer global.
@@ -68,7 +66,6 @@ Nao executar `switch` automaticamente. Depois do rebuild do host:
 
 ```bash
 systemctl --user status kryonix-waywallen.service
-systemctl --user status kryonix-waywallen-layer-shell.service
 ```
 
 No KDE, adicionar o wallpaper/plugin `org.waywallen.kde` pela interface do

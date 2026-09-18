@@ -1,7 +1,7 @@
 # =============================================================================
 # windows/komorebi/whkdrc — Atalhos de teclado para Komorebi (via whkd)
 #
-# Espelha o mapa de teclas do KDE/Hyprland do Kryonix (Meta+HJKL no Linux →
+# Espelha o mapa de teclas do KDE Plasma 6 do Kryonix (Meta+HJKL no Linux →
 # Alt+HJKL no Windows, já que Win+letras são reservados pelo Windows).
 # Instale com: whkd --config %USERPROFILE%\.config\whkdrc
 # =============================================================================

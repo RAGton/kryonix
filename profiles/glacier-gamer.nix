@@ -4,7 +4,7 @@
 # O que é:
 # - Habilita o stack completo de gaming no Glacier.
 # - Inclui: Steam, Gamescope, GameMode, MangoHud, Lutris, Wine, Heroic, OpenRGB.
-# - Também habilita workstation (desktop Hyprland/Caelestia + apps produtividade).
+# - Também habilita workstation (desktop KDE Plasma + apps produtividade).
 # - GPU totalmente disponível para jogos quando Ollama está parado.
 #
 # Por quê:

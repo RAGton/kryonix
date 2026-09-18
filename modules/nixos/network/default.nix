@@ -4,7 +4,7 @@
 # Data: 2026-03-12
 #
 # O que é:
-# - Camada de rede para uso desktop em Hyprland.
+# - Camada de rede para uso desktop.
 #
 # Por quê:
 # - Mantém conforto de gerenciamento Wi-Fi/VPN equivalente ao ambiente anterior,

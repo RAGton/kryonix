@@ -143,21 +143,7 @@
         imports = [ ../modules/home-manager/common ];
       };
 
-    # Desktop Hyprland completo (user.nix como orquestrador)
-    hyprland =
-      { nhModules, ... }:
-      {
-        imports = [ ../desktop/hyprland/user.nix ];
-      };
-
-    # Integração Caelestia Shell (scheme, settings, activation)
-    caelestia =
-      { ... }:
-      {
-        imports = [ ../desktop/hyprland/rice/caelestia-config.nix ];
-      };
-
-    # Desktop KDE Plasma 6 completo (ambiente principal de longo prazo).
+    # Desktop KDE Plasma 6 completo (ambiente principal oficial com KWin tiling Krohnkite).
     # Traz o módulo HM do plasma-manager + o orquestrador desktop/kde/user.nix.
     kde =
       { ... }:
@@ -166,13 +152,6 @@
           inputs.plasma-manager.homeModules.plasma-manager
           ../desktop/kde/user.nix
         ];
-      };
-
-    # Shell backend option (kryonix.shell.backend)
-    shell-backend =
-      { ... }:
-      {
-        imports = [ ../desktop/hyprland/shell-backend.nix ];
       };
 
     # Default: base HM comum

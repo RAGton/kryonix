@@ -16,13 +16,11 @@
 # Por que funciona:
 # - A sessão deve ter class=user e type=wayland para que logind crie
 #   uma sessão válida com seat0 anexado.
-# - Sem isso, UWSM herda uma sessão "manager" sem seat e Hyprland falha.
 # - O PAM é configurado com os parâmetros corretos para pam_systemd.so.
 #
 # Notas:
 # - O rice DMS (DankMaterialShell) é carregado pelo usuário via Home Manager.
 # - O usuário "greeter" é criado automaticamente pelo módulo greetd do NixOS.
-# - UWSM é usado para iniciar Hyprland quando programs.hyprland.withUWSM = true.
 # =============================================================================
 {
   config,
@@ -61,11 +59,10 @@ in
 
     command = lib.mkOption {
       type = lib.types.str;
-      default = "uwsm start hyprland-uwsm.desktop";
+      default = "startplasma-wayland";
       description = ''
         Comando da sessão lançado após o login.
-        Padrão: "uwsm start hyprland-uwsm.desktop" (requerido quando programs.hyprland.withUWSM = true).
-        Use "Hyprland" apenas se withUWSM = false.
+        Padrão: "startplasma-wayland".
       '';
     };
 
@@ -104,8 +101,7 @@ in
     # - Seat: seat0
     #
     # Isso é necessário porque as opções estruturadas do NixOS (startSession = true)
-    # não permitem especificar esses parâmetros. Sem eles, a sessão não funciona
-    # com UWSM e Hyprland.
+    # não permitem especificar esses parâmetros.
     #
     # Referência: docs/GREETD_FINAL_SOLUTION.md
     # ==========================================================================

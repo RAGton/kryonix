@@ -66,7 +66,7 @@ fn main() {
             admin: true,
         },
         features: FeaturesConfig {
-            desktop: "hyprland-caelestia".to_string(),
+            desktop: "kde-plasma".to_string(),
             nvidia: "auto".to_string(),
             zram: true,
             brain_client: true,

@@ -167,7 +167,7 @@
     # Evita matar processos críticos do sistema
     extraArgs = [
       "--avoid"
-      "^(Xorg|Hyprland|gdm)$"
+      "^(Xorg|kwin_wayland|plasmashell|sddm)$"
       "--prefer"
       "^(firefox|chromium|chrome|electron)$"
     ];
@@ -284,7 +284,6 @@
   environment.localBinInPath = true;
 
   # Carteira de senhas padrão do projeto: GNOME Keyring via PAM + Secret Service.
-  # O foco público do repo é Hyprland + GDM, então não mantemos mais branch de KDE/KWallet aqui.
   services.gnome.gnome-keyring.enable = lib.mkDefault true;
   services.gnome.gcr-ssh-agent.enable = lib.mkDefault false;
   programs.seahorse.enable = lib.mkDefault true;
@@ -293,7 +292,7 @@
   services.printing.enable = true;
 
   # devmon depende de udevil, que frequentemente quebra build em toolchains novos.
-  # No stack Hyprland/GDM, o fluxo recomendado para dispositivos removíveis é via udisks2 + gvfs.
+  # O fluxo recomendado para dispositivos removíveis é via udisks2 + gvfs.
   services.devmon.enable = lib.mkDefault false;
   services.udisks2.enable = lib.mkDefault true;
   services.gvfs.enable = lib.mkDefault true;

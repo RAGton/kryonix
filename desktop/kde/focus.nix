@@ -2,9 +2,8 @@
 # desktop/kde/focus.nix — Política de foco do KWin (Plasma 6, Home Manager)
 #
 # O que é:
-# - Configura o comportamento de foco do KWin (kwinrc, seção [Windows]) para
-#   aproximar a experiência do Hyprland: foco segue o mouse e janelas novas
-#   nunca perdem foco para a janela ativa anterior.
+# - Configura o comportamento de foco do KWin (kwinrc, seção [Windows]):
+#   foco segue o mouse e janelas novas entram ativas no tile recém-criado.
 #
 # Por quê:
 # - Default do Plasma 6 é ClickToFocus + FocusStealingPreventionLevel=1, o que

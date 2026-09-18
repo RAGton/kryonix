@@ -1,8 +1,6 @@
 # Desktop: KDE Plasma
 
-O KDE Plasma 6 (Wayland) é o ambiente de desktop principal de longo prazo do
-Kryonix. Coexiste com o stack legado Hyprland/Caelestia via seleção por host —
-nenhum substitui o outro.
+O KDE Plasma 6 (Wayland) é o ambiente de desktop oficial do Kryonix, com KWin como window manager e tiling dinâmico via Krohnkite.
 
 ## Seleção (opt-in por host)
 
@@ -10,7 +8,7 @@ O ambiente é escolhido pela opção enum `kryonix.desktop.environment`
 (`lib/options.nix`):
 
 ```nix
-kryonix.desktop.environment = "kde";       # ou "hyprland", ou null (headless)
+kryonix.desktop.environment = "kde";       # ou null (headless)
 ```
 
 - `hosts/inspiron/default.nix` seleciona `"kde"`.

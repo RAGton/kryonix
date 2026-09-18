@@ -38,12 +38,12 @@ Este documento lista os próximos passos e metas do projeto Kryonix. O foco atua
 
 ---
 
-## Milestone v0.8.0: Desktop Experience (Caelestia V2)
+## Milestone v0.8.0: Desktop Experience (KDE Plasma 6)
 
 - [ ] Remoção completa da dependência do módulo `hermes` obsoleto.
 - [ ] Novo roteador de inteligência (`aura`) funcional.
-- [ ] Otimização profunda do Hyprland (remoção de stutters e redução de uso de GPU em efeitos de blur).
-- [ ] Integração do Caelestia Launcher com a busca nativa do Brain.
+- [ ] Otimização contínua do KDE Plasma 6 + KWin (Krohnkite tiling e atalhos globais).
+- [ ] Integração do launcher com a busca nativa do Brain.
 
 ---
 

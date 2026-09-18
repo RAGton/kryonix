@@ -8,7 +8,7 @@ Kryonix não é apenas um repositório NixOS. É um **engine** (motor) para cons
 - Módulos e features reutilizáveis.
 - Infraestrutura de IA (LightRAG, Ollama, Neo4j) via `kryonix-brain`.
 - Perfis de uso (Workstation, Server, Gamer).
-- Experiência de desktop (Caelestia / Hyprland).
+- Experiência de desktop (KDE Plasma 6 + KWin tiling).
 - Um instalador TUI e ISO autônomos.
 
 ## O Que o Kryonix NÃO É
@@ -47,5 +47,5 @@ O projeto segue um modelo estrito de "Dual-Flake":
 - `features/`: Combinações de alto nível (ex: `ai.nix`, `gaming.nix`).
 - `profiles/`: Arquétipos de uso (ex: `glacier-ai.nix`, `laptop.nix`).
 - `packages/`: Pacotes empacotados pelo Kryonix (ex: `kryonix-brain-lightrag`, `kryonix-cli`).
-- `desktop/`: Configurações de ambiente gráfico (Hyprland/KDE).
+- `desktop/`: Configuração de ambiente gráfico (KDE Plasma 6 + KWin).
 - `hosts/`: Definições básicas e a ISO do instalador.

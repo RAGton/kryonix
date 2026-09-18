@@ -43,8 +43,7 @@ in
 
   # --- GTK escuro coerente (apps GTK sob o Plasma) -------------------------
   # Também provê o conteúdo de gtk-3.0/settings.ini esperado pelos perfis que
-  # marcam `.force = true` (ex.: users/shared/dev-workstation.nix), antes provido
-  # pelo stack GTK do Hyprland.
+  # marcam `.force = true` (ex.: users/shared/dev-workstation.nix).
   gtk = {
     enable = true;
     gtk2.force = true;

@@ -10,7 +10,7 @@
     enable = true;
     colorScheme = "dark";
 
-    # Tema padrão do stack Hyprland/DMS: base GNOME/Libadwaita.
+    # Tema GTK alinhado ao KDE Breeze-Dark.
     theme = lib.mkDefault {
       name = "Breeze-Dark";
       package = pkgs.kdePackages.breeze-gtk;

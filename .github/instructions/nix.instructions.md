@@ -6,7 +6,7 @@ Mantenha a modelagem do repositório: `hosts/` definem máquina, `profiles/` com
 
 Não espalhe lógica de feature dentro de host quando um módulo ou profile já resolve.
 
-Hyprland é o desktop atual. Caelestia é o shell/rice principal. DMS é legado.
+KDE Plasma 6 (Wayland) + KWin (tiling Krohnkite) é o ambiente desktop oficial exclusivo.
 
 Em árvore suja, prefira `path:$PWD` nas validações Nix para incluir arquivos ainda não rastreados.
 

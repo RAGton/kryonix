@@ -7,7 +7,7 @@
 # - Padronização de layout BR-ABNT2 para o stack gráfico.
 #
 # Por quê:
-# - Evita divergências entre hosts no Hyprland e em apps XWayland/X11.
+# - Evita divergências entre hosts no desktop e em apps XWayland/X11.
 # ==============================================================================
 { lib, ... }:
 {

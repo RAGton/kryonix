@@ -12,11 +12,11 @@ O Inspiron atua como a **Workstation principal (Client)** do projeto. É a inter
 
 ## Serviços e Features Esperadas (Profile)
 - **Profile:** Utiliza `profiles/laptop.nix` e `profiles/workstation-gamer.nix`
-- **Ambiente Gráfico:** Caelestia (Hyprland rice) via Wayland.
+- **Ambiente Gráfico:** KDE Plasma 6 (Wayland) com KWin (tiling Krohnkite).
 - **Integração IA:** Acessa o Kryonix Brain no Glacier como **client** puro. Usa um túnel SSH (gerenciado pelo módulo home-manager de brain-tunnel).
 - **VRAM/GPU:** Configurado com balanceamento térmico (Intel CPU/GPU genérica para laptops).
 
 ## O que está implementado vs Roadmap
-- Ambiente gráfico Caelestia e wrappers: Implementado.
+- Ambiente gráfico KDE Plasma 6 e KWin tiling: Implementado.
 - Túnel SSH p/ Brain no Glacier: Implementado.
 - Configuração de áudio isolado Kora: Roadmap/Legado.

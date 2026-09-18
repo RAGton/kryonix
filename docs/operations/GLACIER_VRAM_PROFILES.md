@@ -64,4 +64,4 @@ kryonix.services.brain.vram = {
 ## 🚑 Troubleshooting
 
 - **Ollama não inicia**: Verifique `systemctl status ollama-vram-check`. Se falhou, rode `vram-audit` para ver quem está ocupando a GPU.
-- **VRAM presa**: Alguns processos do GNOME/Hyprland podem reter VRAM mesmo após fechar janelas. Use `vram-clear --confirm` para limpar sessões inativas.
+- **VRAM presa**: Alguns processos gráficos podem reter VRAM mesmo após fechar janelas. Use `vram-clear --confirm` para limpar sessões inativas.

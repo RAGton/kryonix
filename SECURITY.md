@@ -20,4 +20,4 @@ I will try to acknowledge valid reports within 7 days and follow up with status 
 ## Scope
 
 This repository only covers issues caused by the configuration and automation shipped here.
-Upstream bugs in Nixpkgs, Home Manager, Hyprland, KDE, or third-party applications may still be documented here, but they are not fixed on the same timeline.
+Upstream bugs in Nixpkgs, Home Manager, KDE Plasma, or third-party applications may still be documented here, but they are not fixed on the same timeline.
