@@ -1,37 +1,62 @@
-# Kryonix Core Agent Context
+# 🤖 Diretrizes de Governança e Arquitetura para Agentes de IA
 
-Este repositório contém apenas o core/motor da distro Kryonix.
+Este é o documento único de referência para assistentes de IA (Antigravity, Codex, Claude, Gemini, etc.) que operam neste repositório.
 
-## Regra principal
+---
 
-O core deve permanecer limpo, sem contexto pesado de IA, prompts, skills, workflows ou memória operacional de agentes.
+## 🎯 Arquitetura Dual-Flake
 
-## Contexto completo de desenvolvimento
+1. **Este repositório (`kryonix`) é o MOTOR (Upstream):**
+   - Fornece módulos NixOS (`modules/nixos`), Home Manager (`modules/home-manager`), perfis (`profiles/`), pacotes (`packages/`), overlays e biblioteca (`lib/`).
+   - Deve ser genérico, portável e reutilizável por qualquer máquina ou usuário.
+2. **O repositório downstream (`kryonixos`) é a INSTÂNCIA:**
+   - Contém hosts físicos reais, hardware específico, partições ativas e identidades de usuários.
 
-O contexto completo para Aura, Codex, Claude, prompts, skills, workflows e automação multi-repo vive em:
+---
 
-https://github.com/RAGton/kryonix-dev
+## 🏗️ Estrutura e Camadas de Responsabilidade
 
-Workspace local recomendado:
-
-```bash
-/home/rocha/kryonix/kryonix-dev
+```
+kryonix/
+├── flake.nix             # Ponto de entrada do Flake
+├── flake/                # Roteamento e dados (lib, packages, overlays, checks)
+├── hosts/                # Definições base e ISO (common, iso)
+├── modules/              # Módulos NixOS, Home Manager e Darwin
+├── profiles/             # Perfis modulares reutilizáveis (laptop, dev, gaming...)
+├── packages/             # Pacotes e derivações próprias
+├── overlays/             # Overlays do Nixpkgs
+├── lib/                  # Opções públicas kryonix.* e helpers
+├── desktop/              # Configurações de ambientes gráficos (KDE Plasma, Hyprland)
+├── docs/                 # Documentação técnica, especificações e histórico
+└── scripts/              # Scripts operacionais e de manutenção
 ```
 
-## Regras para agentes
+### 1. Camada de Host (`hosts/`)
+- Foco: Hardware, Kernel, Bootloader, Particionamento.
+- Regra: Pacotes de usuário ou ferramentas de desenvolvimento pertencem aos perfis (`profiles/`), não aos hosts.
 
-* Não desenvolver diretamente em `/etc/kryonix`.
-* Usar `/home/rocha/kryonix/kryonix-dev` como workspace.
-* Não criar Git submodules dentro do core.
-* Dependências externas devem ser consumidas via flake inputs.
+### 2. Camada de Perfis (`profiles/`)
+- Foco: Conjuntos lógicos de funcionalidades (ex.: `dev`, `laptop`, `desktop`).
+- Regra: O host apenas ativa perfis; a composição das ferramentas vive no perfil.
 
-## Versionamento e release
+### 3. Camada de Módulos (`modules/`)
+- Foco: Lógica declarativa e opções NixOS / Home Manager.
+- Regra: Garanta retrocompatibilidade e use `lib.mkIf` / `lib.mkDefault`.
 
-Este repo segue a **diretriz canônica unificada** do ecossistema Kryonix:
+---
 
-- **SSOT canônico:** [[kryonix-vault/02-Areas/Kryonix/canonical/release-process.md]]
-- **Skill procedural:** `~/.hermes/skills/kryonix-versioning.md`
-- **Manifesto:** `flake.nix` (atributo `version`)
-- **Tag prefix:** `v` (e.g., `v1.0.0`)
+## 🛡️ Regras de Ouro e Boas Práticas
 
-Antes de qualquer bump de versão, carregue a skill e siga o procedimento SSOT.
+1. **Validação Obrigatória:**
+   - Sempre valide sintaxe e avalie toplevels antes de concluir (`nix flake check` ou `nix eval`).
+   - Use `--extra-experimental-features "nix-command flakes"`.
+2. **Código Ativo > Documentação Legada:**
+   - Sempre inspecione o código em execução antes de assumir estados descritos em notas antigas.
+3. **Segurança e Segredos:**
+   - **NUNCA** comite chaves privadas, tokens ou arquivos de segredos no repositório ou na Nix Store.
+   - Use opções do NixOS para apontar caminhos de runtime.
+4. **Sem Poluição na Raiz:**
+   - Não crie pastas ou arquivos avulsos de rascunho na raiz do repositório.
+   - Documentações, notas e especificações devem viver estritamente dentro de `docs/`.
+5. **Declaratividade:**
+   - Prefira opções customizadas sob o namespace `kryonix.*` (`lib/options.nix`).

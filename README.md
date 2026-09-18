@@ -24,6 +24,22 @@ O motor é composto por:
 
 Este repo é consumido como flake input pelo downstream [`kryonixos`](../kryonixos/) (hosts reais) e pelo installer daemon [`kryxd`](../kryxd/) (UI + Axum).
 
+## 🗺️ Mapa do Repositório (Onde Fica Cada Coisa)
+
+| Diretório | Responsabilidade | O que você encontra aqui |
+|---|---|---|
+| [`flake.nix`](./flake.nix) | **Ponto de entrada único** | Inputs do Nixpkgs, Home Manager, pinagens e declaração de outputs. |
+| [`modules/`](./modules) | **Lógica e Módulos do Sistema** | • `modules/nixos/`: serviços, áudio, rede, branding, features canônicas.<br>• `modules/home-manager/`: configurações de usuário, shell, programas.<br>• `modules/kernel/`: kernels do sistema (Zen, CachyOS). |
+| [`profiles/`](./profiles) | **Perfis Modulares** | Agrupamentos lógicos (`laptop.nix`, `desktop.nix`, `dev/`, `gaming`, etc.). O host apenas ativa o perfil. |
+| [`hosts/`](./hosts) | **Bases de Hosts** | `hosts/common/` (comum a todos os hosts), `hosts/inspiron/` e `hosts/iso/`. |
+| [`packages/`](./packages) | **Pacotes Próprios** | Derivações Nix para utilitários do sistema (`kryonix-hardware-probe`, `aura`, temas, wallpapers). |
+| [`overlays/`](./overlays) | **Overlays Nixpkgs** | Overlays customizados e injeções no Nixpkgs upstream. |
+| [`lib/`](./lib) | **Biblioteca e Opções** | Definições das opções declarativas `kryonix.*` ([`lib/options.nix`](./lib/options.nix)). |
+| [`desktop/`](./desktop) | **Ambientes Gráficos** | Configurações do KDE Plasma 6 (`desktop/kde/`) e Hyprland (`desktop/hyprland/`). |
+| [`docs/`](./docs) | **Documentação Central** | Todos os manuais, especificações (`docs/specs/`), skills e histórico (`docs/archive/`). |
+| [`scripts/`](./scripts) | **Scripts e Automação** | Scripts operacionais e scripts de manutenção (`scripts/maintenance/`). |
+| [`AGENTS.md`](./AGENTS.md) | **Diretriz Única de IA** | Documento único e consolidado para agentes e assistentes de código. |
+
 ## Status
 
 **experimental**: features estão sendo migradas para o registry canônico (`kryonix.features.*`). Algumas features legadas (`gamer`, `profile-gamer`, pasta `features/` antiga) foram descontinuadas em favor das canônicas (`gaming`, `desktop.*`, `development.*`). Veja o catálogo de features no Vault: [`EXISTING_FEATURES_CATALOG.md`](https://github.com/RAGton/kryonix-vault/blob/main/02-Areas/Kryonix/canonical/EXISTING_FEATURES_CATALOG.md).
