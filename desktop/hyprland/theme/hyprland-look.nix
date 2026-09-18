@@ -30,7 +30,7 @@ in
         enabled = true;
         range = 12;
         render_power = 2;
-        color = "rgba(00d4ff18)"; # sombra ciano
+        color = "rgba(${p.hud1}18)"; # sombra ciano — usa paleta Kryonix
       };
     };
 

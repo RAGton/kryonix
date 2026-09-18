@@ -19,9 +19,15 @@
 
 {
   options.wallpaper = lib.mkOption {
-    type = lib.types.path;
-    default = ./default.nix;
-    description = "Caminho do wallpaper padrão.";
+    type = lib.types.nullOr lib.types.path;
+    # Antes: default = ./default.nix; (auto-referência circular — apontava para este próprio arquivo .nix)
+    # Agora: null — usuários/hosts devem setar explicitamente.
+    default = null;
+    description = ''
+      Caminho do wallpaper padrão. Quando `null`, nenhum arquivo é escrito
+      em `~/.config/wallpaper.png` (útil para hosts que definem wallpaper
+      por outros meios — KDE/Hyprland).
+    '';
   };
 
   options.wallpapers = lib.mkOption {
@@ -31,7 +37,10 @@
   };
 
   config = {
-    home.file.".config/wallpaper.png".source = config.wallpaper;
+    # Só escreve o wallpaper padrão quando explicitamente fornecido.
+    home.file.".config/wallpaper.png" = lib.mkIf (config.wallpaper != null) {
+      source = config.wallpaper;
+    };
 
     # Galeria de wallpapers: adiciona todos os arquivos declarados em `wallpapers`.
     # Obs.: nomes repetidos (mesmo basename) vão colidir.

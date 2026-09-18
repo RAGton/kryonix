@@ -34,8 +34,11 @@
     kryonix-darwinmenu
   ];
 
-  # NOTA: QT_QPA_PLATFORMTHEME é definido em kvantum.nix ("kvantum"), parte da
-  # estética Kryonix Glass. Não definir aqui para evitar definição dupla.
+  # NOTA: QT_QPA_PLATFORMTHEME deve apontar para "kvantum" (estética BonaFides
+  # Glass) mas o módulo kvantum.nix ainda não foi portado. Mantemos o default
+  # do KDE ("kde") para evitar fallback errado em apps Qt. Quando kvantum.nix
+  # for implementado, sobrescrever aqui deve ser feito em user.nix via
+  # `home.sessionVariables.QT_QPA_PLATFORMTHEME = "kvantum";`.
 
   # Desativa o indexador Baloo
   programs.plasma.configFile."baloofilerc"."Basic Settings"."Indexing-Enabled" = false;

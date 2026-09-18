@@ -22,9 +22,16 @@ in
     };
 
     path = lib.mkOption {
-      type = lib.types.path;
-      default = ../../../../desktop/wallpapers/animated/kryonix-test-loop.mp4;
-      description = "Caminho absoluto do arquivo MP4/WebM do wallpaper animado.";
+      type = lib.types.nullOr lib.types.path;
+      # Antes: ../../../../desktop/wallpapers/animated/kryonix-test-loop.mp4
+      # Apontava para um arquivo inexistente (path quebrado).
+      # Agora: null — usuário precisa fornecer seu próprio MP4/WebM.
+      default = null;
+      description = ''
+        Caminho do arquivo MP4/WebM do wallpaper animado.
+        Quando `null`, o daemon `kryonix-waywallen` usa o fallback estático
+        (definido em `fallback` ou em `kryonix-branding`).
+      '';
     };
 
     fpsLimit = lib.mkOption {

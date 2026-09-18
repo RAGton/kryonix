@@ -1,7 +1,7 @@
 { pkgs, ... }:
 let
   p = import ./palette.nix;
-  font = "JetBrains Mono Nerd Font";
+  font = "JetBrainsMono Nerd Font";
 in
 {
   home.packages = [
@@ -152,7 +152,7 @@ in
           font_family = font;
 
           # Placeholder HUD
-          placeholder_text = "<span foreground='##${p.fg2}'>[ AUTHENTICATE ]</span>";
+          placeholder_text = "<span foreground='#${p.fg2}'>[ AUTHENTICATE ]</span>";
 
           # Feedback visual
           fail_color = "rgb(${p.red})";

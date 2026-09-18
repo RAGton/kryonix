@@ -67,7 +67,10 @@ in
             ThemeDir = "/run/current-system/sw/share/sddm/themes";
             CursorTheme = "Bibata-Modern-Ice";
             CursorSize = 24;
-            ThemeConfig = "/etc/kryonix/assets/sddm/astronaut-theme.conf";
+            # ThemeConfig intencionalmente NÃO definido — usa o config padrão
+            # do pacote `sddm-astronaut`. Apontar para
+            # `/etc/kryonix/assets/sddm/astronaut-theme.conf` quebra o tema em
+            # sistemas sem o arquivo (deploy não provisionado).
           };
           General = {
             Font = "CaskaydiaCove Nerd Font";
@@ -98,7 +101,13 @@ in
       serviceConfig = {
         Type = "oneshot";
         ExecStart = pkgs.writeShellScript "sddm-random-wallpaper" ''
+          # Ordem de prioridade:
+          #   1. /etc/kryonix/assets/wallpaper (deploy)
+          #   2. Pack oficial do Nix store (fallback garantido)
           WALL_DIR="/etc/kryonix/assets/wallpaper"
+          if [ ! -d "$WALL_DIR" ]; then
+            WALL_DIR="${pkgs.kryonix-wallpapers}/share/wallpapers/kryonix-aurora"
+          fi
           LINK="/var/lib/sddm/current-wallpaper"
           img=$(ls "$WALL_DIR"/*.{png,jpg,webp} 2>/dev/null | shuf -n1)
           [ -n "$img" ] && ln -sf "$img" "$LINK" && echo "SDDM wallpaper: $img"

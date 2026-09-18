@@ -30,9 +30,11 @@
 #   exibida no painel de Lock & Login e o wallpaper real. Forçamos via
 #   configFile para casar com o Image.
 # =============================================================================
-{ ... }:
+{ pkgs, ... }:
 let
-  lockWallpaper = ../../assets/wallpaper/landscape.png;
+  # Lockscreen wallpaper: usa o wallpaper oficial do pack Kryonix.
+  # Antes apontava para `../../assets/wallpaper/landscape.png` (path inexistente).
+  lockWallpaper = "${pkgs.kryonix-wallpapers}/share/wallpapers/kryonix-aurora/kryonix-dark-4k.png";
 in
 {
   programs.plasma.kscreenlocker = {

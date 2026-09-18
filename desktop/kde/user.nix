@@ -4,19 +4,26 @@
 # Puro roteador de imports, espelhando desktop/hyprland/user.nix. Cada camada é
 # declarativa via plasma-manager (programs.plasma.*).
 #
+# Camadas implementadas:
 #   default.nix        — base da sessão Plasma/Wayland + pacotes
-#   launcher.nix       — fuzzel (Wayland-nativo, layer-shell) — resolve foco de teclado
-#   theme.nix          — camada visual (BonaFides Dark, blur, transparência, cursor Nordzy,
-#                        painel floating-island, Dolphin otimizado)
-#   scheme.nix         — color-scheme "Kryonix Dark" opt-in (tokens próprios), sem
-#                        remover BonaFides; ativado por kryonix.desktop.kde.theme.colorScheme
-#   kvantum.nix        — tema Kvantum BonaFides + QT_QPA_PLATFORMTHEME
-#   tiling.nix         — Krohnkite (kwinrc), 10 desktops virtuais, scratchpad, borderless
+#   rofi.nix           — launcher Rofi (rofi-wayland)
+#   ai-tools.nix       — integrações com ferramentas de IA
+#   theme.nix          — camada visual (cursor Bibata, painel floating-island,
+#                        Dolphin otimizado, blur, transparência)
+#   scheme.nix         — color-scheme "Kryonix Dark" opt-in (tokens próprios)
+#   tiling.nix         — Krohnkite (kwinrc), 10 desktops virtuais, scratchpad
 #   focus.nix          — Foco-segue-mouse + zero focus-stealing (aproxima Hyprland)
 #   lockscreen.nix     — KScreenLocker Kryonix (wallpaper, autolock, lock on resume)
-#   keymap.nix         — fonte única de verdade dos atalhos (consumida pelo helper)
 #   keybinds.nix       — injeção dos atalhos no Plasma (shortcuts/hotkeys/spectacle)
 #   keybind-helper.nix — Kryonix Keybind Helper (janela com todos os atalhos)
+#   multimonitor.nix   — regras de monitor (krfb, fallback xrandr)
+#
+# Pendências conhecidas:
+#   - keymap.nix existe mas ainda não é importado aqui (camada declarativa única
+#     de atalhos planejada; hoje vive dentro de keybinds.nix).
+#   - launcher.nix (fuzzel layer-shell) e kvantum.nix (BonaFides + QT_QPA_PLATFORMTHEME)
+#     ainda não foram portados para cá. Enquanto isso, QT_QPA_PLATFORMTHEME
+#     é forçado para "kde" em default.nix para evitar fallback errado.
 # =============================================================================
 { ... }:
 {
