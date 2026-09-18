@@ -24,14 +24,23 @@
   ...
 }:
 let
-  antigravityPackage =
-    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.default.override
-      {
+  antigravityPackages =
+    let
+      agPkgs = inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system};
+      baseApp = agPkgs.default.override {
         extraBwrapArgs = [
           "--bind-try /etc/kryonix/ /etc/kryonix/"
           "--symlink kryonix /etc/node"
         ];
       };
+      ideApp = agPkgs.google-antigravity-ide;
+      cliApp = agPkgs.google-antigravity-cli;
+    in
+    [
+      baseApp
+      ideApp
+      cliApp
+    ];
 in
 {
   imports = [
@@ -44,7 +53,6 @@ in
       }
     )
     ../programs/aerospace
-    ../programs/tilix
     ../programs/warp-terminal
     ../programs/albert
     ../programs/ai-workstation
@@ -152,6 +160,5 @@ in
     python3Packages.virtualenv
 
     ripgrep
-    antigravityPackage
-  ];
+  ] ++ antigravityPackages;
 }

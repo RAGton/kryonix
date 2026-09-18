@@ -4,9 +4,45 @@
   pkgs,
   ...
 }:
+let
+  kryonixTerminal = pkgs.writeShellApplication {
+    name = "kryonix-terminal";
+    runtimeInputs = [
+      pkgs.bash
+      pkgs.coreutils
+      pkgs.warp-terminal
+    ];
+    text = ''
+      set -euo pipefail
+
+      # Warp Terminal é o terminal padrão.
+      if command -v uwsm >/dev/null 2>&1; then
+        exec uwsm app -- warp-terminal "$@"
+      fi
+      exec warp-terminal "$@"
+    '';
+  };
+
+  ragTerminalCompat = pkgs.writeShellApplication {
+    name = "rag-terminal";
+    runtimeInputs = [ kryonixTerminal ];
+    text = ''
+      set -euo pipefail
+
+      printf '%s\n' "rag-terminal is deprecated, use kryonix-terminal" >&2
+      exec kryonix-terminal "$@"
+    '';
+  };
+in
 {
   config = lib.mkIf (!pkgs.stdenv.isDarwin) {
-    home.packages = [ pkgs.warp-terminal ];
+    home.packages = [
+      pkgs.warp-terminal
+      kryonixTerminal
+      ragTerminalCompat
+    ];
+
+    home.sessionVariables.TERMINAL = "warp-terminal";
 
     # Ajustes leves:
     # - Desliga auto-indexação de codebase do Agent Mode (pode ser pesada)

@@ -22,7 +22,7 @@
 
       # Antigravity (AI) e terminais
       windowrule = match:class ^(antigravity|Antigravity)$, opacity 0.92 0.88
-      windowrule = match:class ^(Alacritty|kitty|tilix|foot)$, opacity 0.90 0.85
+      windowrule = match:class ^(Alacritty|kitty|warp-terminal|dev\.warp\.Warp|foot)$, opacity 0.90 0.85
     '';
   };
 }
