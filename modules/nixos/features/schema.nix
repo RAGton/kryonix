@@ -36,15 +36,6 @@
     };
 
     # =========================
-    # Desktop environments
-    # =========================
-    desktop = {
-      plasma = {
-        enable = lib.mkEnableOption "KDE Plasma 6 Wayland desktop environment";
-      };
-    };
-
-    # =========================
     # Hardware profiles
     # =========================
     hardware = {
