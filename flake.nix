@@ -146,7 +146,7 @@
     # Refs: V22b (semver), V34a (kryx-cli semver stabilization), V36b (check),
     #       stash-fix (kryx-cli#b371468).
     kryx-cli = {
-      url = "github:RAGton/kryx-cli/v0.3.2";
+      url = "github:RAGton/kryx-cli/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
