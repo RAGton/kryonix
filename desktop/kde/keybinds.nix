@@ -80,12 +80,18 @@ let
     }) range
   );
 
-  # Limpa os atalhos default do task manager (Meta+1..0 ativam entradas por padrão).
+  # Limpa os atalhos default do task manager em todas as variações de nomes (lowercase e titlecase)
   clearTaskEntries = lib.listToAttrs (
-    map (i: {
-      name = "Activate Task Manager Entry ${toString i}";
-      value = [ ];
-    }) range
+    lib.concatMap (i: [
+      {
+        name = "activate task manager entry ${toString i}";
+        value = [ ];
+      }
+      {
+        name = "Activate Task Manager Entry ${toString i}";
+        value = [ ];
+      }
+    ]) range
   );
 
   # Meta+Ctrl+1..0 → mover janela para o desktop N e segui-la (via wrapper).
@@ -184,6 +190,17 @@ in
         "next activity" = "none";
         "manage activities" = "none";
       };
+
+      # ---- KRunner ----
+      "org.kde.krunner.desktop" = {
+        "_launch" = [
+          "Alt+Space"
+          "Meta+Space"
+          "Meta+A"
+          "Search"
+        ];
+        "RunClipboard" = "Shift+Alt+Space";
+      };
     };
 
     # =====================================================================
@@ -216,10 +233,11 @@ in
         keys = [ "Meta+Shift+Return" ];
         command = "${kdeTerminal}";
       };
-      "rofi-launcher" = {
-        name = "Rofi Application Launcher";
+      "krunner-launcher" = {
+        name = "KRunner Application Launcher";
         key = "Meta+A";
-        command = "rofi -show drun -theme kryonix";
+        keys = [ "Meta+Space" "Alt+Space" ];
+        command = "krunner";
       };
       "dolphin" = {
         name = "Dolphin";

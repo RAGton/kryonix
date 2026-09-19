@@ -29,7 +29,6 @@
 {
   imports = [
     ./default.nix
-    ./rofi.nix
     ./ai-tools.nix
     ./theme.nix
     ./scheme.nix

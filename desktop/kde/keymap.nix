@@ -14,14 +14,8 @@
   # ---------------- Launchers & IA ----------------
   {
     group = "Launchers & IA";
-    keys = "Meta+A";
-    desc = "Wofi Launcher";
-  }
-  {
-    group = "Launchers & IA";
-    keys = "Meta+Shift+A";
-    desc = "Wofi: dmenu mode";
-    reserved = true;
+    keys = "Meta+A / Alt+Space";
+    desc = "KRunner Launcher";
   }
 
   # ---------------- Ajuda ----------------

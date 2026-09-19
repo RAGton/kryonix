@@ -72,7 +72,6 @@ in
     ../programs/lazygit
     ../programs/neovim
     ../programs/obs-studio
-    ../programs/rofi
     ../programs/saml2aws
     ../programs/starship
     ../programs/telegram
@@ -89,7 +88,6 @@ in
     ../services/kryonix-krdp
     ../services/kryonix-glacier-vnc-tunnel
     ../services/kryonix-ollama-tunnel
-    ../services/kryonix-waywallen
     ../services/kryonix-bar.nix
   ];
 
