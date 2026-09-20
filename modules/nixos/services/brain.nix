@@ -505,7 +505,7 @@ in
       createHome = true;
       homeMode = "0770";
     };
-    users.users.rocha.extraGroups = [ "kryonix" ];
+    users.users.${userConfig.name}.extraGroups = [ "kryonix" ];
     users.users.ollama.extraGroups = mkIf cfg.ollama.enable [ "kryonix" ];
 
     # Brain API e Ollama só acessíveis via LAN e Tailscale (tailscale0).
