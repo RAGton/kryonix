@@ -111,6 +111,8 @@ let
     pname = "edna-assets";
     version = "1.0.0";
 
+    src = ./.;
+
     dontUnpack = true;
     dontConfigure = true;
     dontBuild = true;
@@ -288,7 +290,7 @@ let
       ButtonSize=Normal
       EOF
 
-            # 7. Wallpapers (Wallpapers diurno e noturno)
+            # 7. Wallpapers (Wallpapers diurno e noturno em 8K Glassmorphism)
             cat << 'EOF' > "$out/share/wallpapers/Edna/metadata.json"
       {
           "KPlugin": {
@@ -297,22 +299,12 @@ let
           }
       }
       EOF
-            # SVG decorativo/fallback para dia e noite
-            cat << 'EOF' > "$out/share/wallpapers/Edna/Edna-Day.svg"
-      <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
-        <rect width="1920" height="1080" fill="#f5f7fa"/>
-        <circle cx="960" cy="540" r="300" fill="#5c6bc0" opacity="0.15"/>
-        <text x="960" y="550" font-family="sans-serif" font-size="48" fill="#402a36" text-anchor="middle">Edna Light Wallpaper</text>
-      </svg>
-      EOF
-
-            cat << 'EOF' > "$out/share/wallpapers/Edna/Edna-Night.svg"
-      <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
-        <rect width="1920" height="1080" fill="#1e202c"/>
-        <circle cx="960" cy="540" r="300" fill="#5c6bc0" opacity="0.25"/>
-        <text x="960" y="550" font-family="sans-serif" font-size="48" fill="#e1e3eb" text-anchor="middle">Edna Dark Wallpaper</text>
-      </svg>
-      EOF
+            if [ -f "$src/wallpapers/Edna-Day.png" ]; then
+              cp "$src/wallpapers/Edna-Day.png" "$out/share/wallpapers/Edna/Edna-Day.png"
+            fi
+            if [ -f "$src/wallpapers/Edna-Night.png" ]; then
+              cp "$src/wallpapers/Edna-Night.png" "$out/share/wallpapers/Edna/Edna-Night.png"
+            fi
 
             runHook postInstall
     '';
