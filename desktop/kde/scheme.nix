@@ -137,6 +137,9 @@ in
 
   programs.plasma = {
     workspace.colorScheme = "KryonixDark";
-    configFile.kdeglobals.General.AccentColor = accent;
+    configFile.kdeglobals.General = {
+      AccentColor = accent;
+      ColorScheme = "KryonixDark";
+    };
   };
 }

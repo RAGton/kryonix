@@ -247,10 +247,16 @@ in
         BrowseThroughArchives = true;
       };
 
-      # --- Kryonix Glass: accent azul Kryonix (#38BDF8) --------------------
+      # --- Kryonix Glass: accent azul Kryonix (#38BDF8) e ColorScheme ----
       kdeglobals.General = {
         accentColorFromWallpaper = false;
         AccentColor = "56,189,248";
+        ColorScheme = "KryonixDark";
+      };
+
+      # --- KRunner centralizado flutuante --------------------------------
+      krunnerrc.General = {
+        FreeFloating = true;
       };
 
       # --- Sessão limpa (sem restaurar janelas da última sessão) ------------
