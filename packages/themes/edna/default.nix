@@ -299,12 +299,9 @@ let
           }
       }
       EOF
-            if [ -f "$src/wallpapers/Edna-Day.png" ]; then
-              cp "$src/wallpapers/Edna-Day.png" "$out/share/wallpapers/Edna/Edna-Day.png"
-            fi
-            if [ -f "$src/wallpapers/Edna-Night.png" ]; then
-              cp "$src/wallpapers/Edna-Night.png" "$out/share/wallpapers/Edna/Edna-Night.png"
-            fi
+      if [ -d "$src/wallpapers" ]; then
+        cp -r "$src/wallpapers/"*.png "$out/share/wallpapers/Edna/" 2>/dev/null || true
+      fi
 
             runHook postInstall
     '';
