@@ -61,7 +61,6 @@ in
     home.packages = [
       ednaAssets
       ednaSwitcher
-      pkgs.kdePackages.kvantum
     ];
 
     # Configuração Declarativa de UI (GTK e Qt/Kvantum)
@@ -108,18 +107,16 @@ in
     };
 
     # Configuração NATIVA do KDE Plasma 6 ("Alternar para o modo escuro à noite")
-    # Configura kdeglobals (ColorScheme/DarkColorScheme) e kwinrc (NightColor)
-    xdg.configFile = lib.mkIf cfg.usePlasmaNative {
-      "kdeglobals-edna-native" = {
-        target = "kdeglobals";
-        text = ''
-          [General]
-          ColorScheme=Edna-Light
-          DarkColorScheme=Edna
-
-          [DayNight]
-          Active=true
-        '';
+    # Configura kdeglobals (ColorScheme/DarkColorScheme) via plasma-manager
+    programs.plasma.configFile = lib.mkIf cfg.usePlasmaNative {
+      kdeglobals = {
+        General = {
+          ColorScheme = lib.mkForce "Edna-Light";
+          DarkColorScheme = lib.mkForce "Edna";
+        };
+        DayNight = {
+          Active = lib.mkForce true;
+        };
       };
     };
 
