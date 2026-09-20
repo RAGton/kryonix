@@ -201,6 +201,11 @@ in
         ];
         "RunClipboard" = "Shift+Alt+Space";
       };
+
+      # ---- Desativar atalho legado do rofi-launcher ----
+      "plasma-manager-commands.desktop" = {
+        "rofi-launcher" = "none";
+      };
     };
 
     # =====================================================================
