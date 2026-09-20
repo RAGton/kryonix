@@ -34,13 +34,25 @@ in
     dayTime = lib.mkOption {
       type = lib.types.str;
       default = "07:00";
-      description = "Horário de acionamento do tema Edna Light no formato OnCalendar do Systemd (ex: 07:00).";
+      description = "Horário de acionamento do tema Edna Light no formato OnCalendar do Systemd ou horário de término da luz noturna (ex: 07:00).";
     };
 
     nightTime = lib.mkOption {
       type = lib.types.str;
       default = "19:00";
-      description = "Horário de acionamento do tema Edna Dark no formato OnCalendar do Systemd (ex: 19:00).";
+      description = "Horário de acionamento do tema Edna Dark no formato OnCalendar do Systemd ou horário de início da luz noturna (ex: 19:00).";
+    };
+
+    usePlasmaNative = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Ativa a funcionalidade nativa do KDE Plasma 6 de alternar para o modo escuro à noite (kdeglobals / NightColor).";
+    };
+
+    useSystemdTimer = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Ativa o serviço e timer do Systemd para alternância completa via script edna-switcher (Kvantum/Konsole/Aurorae/GTK).";
     };
   };
 
@@ -95,8 +107,24 @@ in
       ".config/Kvantum/Edna-Light".source = "${ednaAssets}/share/Kvantum/Edna-Light";
     };
 
+    # Configuração NATIVA do KDE Plasma 6 ("Alternar para o modo escuro à noite")
+    # Configura kdeglobals (ColorScheme/DarkColorScheme) e kwinrc (NightColor)
+    xdg.configFile = lib.mkIf cfg.usePlasmaNative {
+      "kdeglobals-edna-native" = {
+        target = "kdeglobals";
+        text = ''
+          [General]
+          ColorScheme=Edna-Light
+          DarkColorScheme=Edna
+
+          [DayNight]
+          Active=true
+        '';
+      };
+    };
+
     # Automação via Systemd User Services e Timers
-    systemd.user.services = {
+    systemd.user.services = lib.mkIf cfg.useSystemdTimer {
       edna-theme-light = {
         Unit = {
           Description = "Ativar Tema Edna Light (Dia)";
@@ -151,7 +179,7 @@ in
       };
     };
 
-    systemd.user.timers = {
+    systemd.user.timers = lib.mkIf cfg.useSystemdTimer {
       edna-theme-light = {
         Unit = {
           Description = "Timer Diurno do Tema Edna (${cfg.dayTime})";
