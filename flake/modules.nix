@@ -154,6 +154,13 @@
         ];
       };
 
+    # Tema Edna (Light & Dark) com transição automatizada via Systemd
+    ednaTheme =
+      { ... }:
+      {
+        imports = [ ../modules/home-manager/features/edna-theme.nix ];
+      };
+
     # Default: base HM comum
     default =
       { nhModules, ... }:

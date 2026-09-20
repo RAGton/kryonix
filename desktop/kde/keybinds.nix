@@ -241,7 +241,10 @@ in
       "krunner-launcher" = {
         name = "KRunner Application Launcher";
         key = "Meta+A";
-        keys = [ "Meta+Space" "Alt+Space" ];
+        keys = [
+          "Meta+Space"
+          "Alt+Space"
+        ];
         command = "dbus-send --type=method_call --dest=org.kde.krunner /App org.kde.krunner.App.display";
       };
       "dolphin" = {

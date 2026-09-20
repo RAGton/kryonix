@@ -15,5 +15,6 @@
     ./dev.nix
     ./desktop.nix
     ./obsidian.nix
+    ./edna-theme.nix
   ];
 }

@@ -28,6 +28,7 @@ lib.forAllSystems (
       inherit kryonixBranding;
     };
     kryonixCarbon = pkgs.callPackage ../packages/themes/kryonix-carbon { };
+    ednaPkgs = pkgs.callPackage ../packages/themes/edna { };
     kryonixSddmTheme = pkgs.callPackage ../packages/kryonix-sddm-theme.nix {
       inherit kryonixBranding kryonixAssets;
     };
@@ -55,6 +56,8 @@ lib.forAllSystems (
     kryonix-waywallen-display-kde = kryonixWaywallenDisplayKde;
     kryonix-plasma-theme = kryonixPlasmaTheme;
     kryonix-carbon = kryonixCarbon;
+    edna-assets = ednaPkgs.edna-assets;
+    edna-switcher = ednaPkgs.edna-switcher;
     kryonix-sddm-theme = kryonixSddmTheme;
     kryonix-polonium = kryonixPolonium;
     kryonix-darwinmenu = kryonixDarwinMenu;
