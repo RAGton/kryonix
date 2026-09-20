@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  userConfig ? { name = "garton"; },
   ...
 }:
 let
@@ -205,7 +206,7 @@ in
       repositories = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
-        example = [ "/home/rocha/kryonix/kryonix-dev/repos/kryonix" ];
+        example = [ "/home/${userConfig.name}/kryonix/kryonix-dev/repos/kryonix" ];
         description = ''
           Allowlist de repositórios absolutos aceitos pelo dispatcher
           kryonix-mcp-git-readonly. Cada execução enxerga somente o repositório

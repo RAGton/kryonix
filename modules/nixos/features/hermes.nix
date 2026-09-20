@@ -17,7 +17,7 @@ let
     else if hasWorkspace then
       "${cfg.workspacePath}/.hermes/data"
     else
-      "/home/rocha/.hermes/data"; # Fallback
+      "/home/${userConfig.name}/.hermes/data"; # Fallback
 
   volumeMode = if cfg.readOnly then "ro" else "rw";
 in
