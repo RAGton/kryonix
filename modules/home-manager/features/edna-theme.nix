@@ -61,7 +61,7 @@ in
     home.packages = [
       ednaAssets
       ednaSwitcher
-      pkgs.kvantum
+      pkgs.kdePackages.kvantum
     ];
 
     # Configuração Declarativa de UI (GTK e Qt/Kvantum)
@@ -69,7 +69,7 @@ in
       enable = true;
       theme = {
         name = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
-        package = ednaAssets;
+        package = lib.mkForce ednaAssets;
       };
     };
 
