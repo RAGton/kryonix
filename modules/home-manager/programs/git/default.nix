@@ -121,7 +121,7 @@
 
       "glacier-publico" = {
         Hostname = "168.227.127.73";
-        User = "rocha";
+        User = userConfig.name;
         Port = 2224;
         IdentityFile = [
           "~/.ssh/id_ed25519"
@@ -134,7 +134,7 @@
 
       "glacier-public" = {
         Hostname = "168.227.127.73";
-        User = "rocha";
+        User = userConfig.name;
         Port = 2224;
         IdentityFile = [
           "~/.ssh/id_ed25519"

@@ -158,6 +158,7 @@ in
       with pkgs;
       lib.flatten [
         (lib.optional cfg.mangohud.enable mangohud)
+        (lib.optional cfg.mangohud.enable goverlay)
         (lib.optional cfg.lutris.enable lutris)
         (lib.optional cfg.heroic.enable heroic)
         (lib.optional cfg.sunshine.enable sunshine)
@@ -176,6 +177,14 @@ in
           cfg.nvtop.enable && isNvidia && pkgs ? nvtopPackages && pkgs.nvtopPackages ? nvidia
         ) pkgs.nvtopPackages.nvidia)
       ];
+
+    # =========================
+    # Environment Variables
+    # =========================
+    environment.sessionVariables = {
+      # Garante que jogos SDL usem Wayland quando possível, reduzindo input lag
+      SDL_VIDEODRIVER = "wayland,x11";
+    };
 
     # =========================
     # Performance Optimizations

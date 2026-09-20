@@ -13,6 +13,7 @@
 {
   config,
   lib,
+  userConfig ? { name = "garton"; },
   ...
 }:
 
@@ -72,7 +73,7 @@ in
       "d ${stateDir}/brain/ingest/processed 0775 ${brainCfg.user} ${brainCfg.group} - -"
       "d ${stateDir}/brain/ingest/failed 0775 ${brainCfg.user} ${brainCfg.group} - -"
       "d ${stateDir}/brain/ingest/quarantine 0775 ${brainCfg.user} ${brainCfg.group} - -"
-      "d ${stateDir}/vault 2775 rocha ${brainCfg.group} - -"
+      "d ${stateDir}/vault 2775 ${userConfig.name} ${brainCfg.group} - -"
       "d ${stateDir}/ollama 0755 ollama ollama - -"
       "d ${stateDir}/ollama/models 0755 ollama ollama - -"
       "d /var/log/kryonix 0755 ${brainCfg.user} ${brainCfg.group} - -"

@@ -189,8 +189,8 @@ in
         type = lib.types.listOf lib.types.str;
         default = [ ];
         example = [
-          "/home/rocha/kryonix/kryonix-dev/repos/kryonix"
-          "/home/rocha/kryonix/kryonix-dev/repos/kryonix-vault"
+          "/home/${userConfig.name}/kryonix/kryonix-dev/repos/kryonix"
+          "/home/${userConfig.name}/kryonix/kryonix-dev/repos/kryonix-vault"
         ];
         description = ''
           Diretórios absolutos expostos ao servidor em mounts read-only. O
