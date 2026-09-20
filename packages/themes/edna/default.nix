@@ -94,12 +94,23 @@ let
     fi
 
     # 7. Wallpaper do Plasma Desktop
-    WALLPAPER_PATH="$HOME/.local/share/wallpapers/Edna/$WALLPAPER_NAME.jpg"
+    WALLPAPER_PATH="$HOME/.local/share/wallpapers/Edna/$WALLPAPER_NAME.png"
     if [ ! -f "$WALLPAPER_PATH" ]; then
-      WALLPAPER_PATH="$HOME/.local/share/wallpapers/Edna/$WALLPAPER_NAME.png"
+      WALLPAPER_PATH="$HOME/.local/share/wallpapers/Edna/$WALLPAPER_NAME.jpg"
+    fi
+    if [ ! -f "$WALLPAPER_PATH" ]; then
+      if [ "$MODE" = "light" ]; then
+        WALLPAPER_PATH="$HOME/.local/share/wallpapers/Edna/Cartoon-Floating-Islands.png"
+      else
+        WALLPAPER_PATH="$HOME/.local/share/wallpapers/Edna/Cartoon-Lofi-Night.png"
+      fi
+    fi
+    if [ ! -f "$WALLPAPER_PATH" ]; then
+      WALLPAPER_PATH=$(find "$HOME/.local/share/wallpapers/Edna" -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.svg" \) 2>/dev/null | head -n 1 || true)
     fi
 
-    if [ -f "$WALLPAPER_PATH" ] && command -v plasma-apply-wallpaperimage >/dev/null 2>&1; then
+    if [ -n "$WALLPAPER_PATH" ] && [ -f "$WALLPAPER_PATH" ] && command -v plasma-apply-wallpaperimage >/dev/null 2>&1; then
+      echo "[edna-switcher] Aplicando wallpaper: $WALLPAPER_PATH"
       plasma-apply-wallpaperimage "$WALLPAPER_PATH" || true
     fi
 

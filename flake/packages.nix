@@ -37,12 +37,15 @@ lib.forAllSystems (
     kryonixWallpapers = pkgs.callPackage ../packages/kryonix-wallpapers.nix {
       inherit kryonixAssets;
     };
+    byterover = pkgs.callPackage ../packages/byterover.nix { };
     kryx = inputs.kryx-cli.packages.${system}.default;
     denoCacheOnly = lib.mkDenoCacheOnly pkgs;
   in
   {
     default = kryx;
     kryx = kryx;
+    byterover = byterover;
+    brv = byterover;
     kryonix-home = kryonixHome;
     kryonix-brain-lightrag = kryonixBrainLightrag;
     kryonix-hardware-probe = kryonixHardwareProbe;
