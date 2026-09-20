@@ -68,7 +68,7 @@ in
     gtk = {
       enable = true;
       theme = {
-        name = if cfg.defaultVariant == "light" then "Edna-Light" else "Edna";
+        name = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
         package = ednaAssets;
       };
     };
