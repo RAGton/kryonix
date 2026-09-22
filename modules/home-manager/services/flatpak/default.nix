@@ -53,6 +53,18 @@ in
 
       uninstallUnmanaged = true;
       update.auto.enable = true;
+
+      overrides = {
+        "com.anydesk.Anydesk" = {
+          # Fix para Plasma 6 / Wayland: forçar X11
+          Context.sockets = [ "x11" "fallback-x11" ];
+          # Tentar evitar fallback para renderizadores quebrados
+          Environment = {
+            "GDK_BACKEND" = "x11";
+            "QT_QPA_PLATFORM" = "xcb";
+          };
+        };
+      };
     };
 
     home.packages = [ pkgs.flatpak ];
