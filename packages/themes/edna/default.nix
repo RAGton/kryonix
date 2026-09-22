@@ -19,6 +19,18 @@ let
     #!/usr/bin/env bash
     set -euo pipefail
 
+    # Limpeza de temas legados/manuais para evitar conflitos com Nix Store
+    # Apaga apenas se for um diretório real (mutável) e não um symlink.
+    for dir in "$HOME/.local/share/plasma/look-and-feel/com.github.PaulXFCE.Edna" \
+               "$HOME/.local/share/plasma/look-and-feel/com.github.PaulXFCE.Edna-Light" \
+               "$HOME/.local/share/aurorae/themes/Edna" \
+               "$HOME/.local/share/aurorae/themes/Edna-Light"; do
+      if [ -d "$dir" ] && [ ! -L "$dir" ]; then
+        echo "[edna-switcher] Aviso: Removendo tema legado local (mutável) para evitar conflito com NixStore: $dir"
+        rm -rf "$dir"
+      fi
+    done
+
     MODE="''${1:-auto}"
 
     if [ "$MODE" = "auto" ]; then

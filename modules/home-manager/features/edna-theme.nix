@@ -87,36 +87,12 @@ in
     };
 
     # Instalação declarativa dos assets nos diretórios do usuário (~/.local/share, ~/.config, ~/.themes)
-    xdg.dataFile = {
-      "plasma/look-and-feel/com.github.PaulXFCE.Edna".source =
-        "${ednaAssets}/share/plasma/look-and-feel/com.github.PaulXFCE.Edna";
-      "plasma/look-and-feel/com.github.PaulXFCE.Edna-Light".source =
-        "${ednaAssets}/share/plasma/look-and-feel/com.github.PaulXFCE.Edna-Light";
-      "color-schemes/Edna.colors".source = "${ednaAssets}/share/color-schemes/Edna.colors";
-      "color-schemes/Edna-Light.colors".source = "${ednaAssets}/share/color-schemes/Edna-Light.colors";
-      "Kvantum/Edna".source = "${ednaAssets}/share/Kvantum/Edna";
-      "Kvantum/Edna-Light".source = "${ednaAssets}/share/Kvantum/Edna-Light";
-      "themes/Edna".source = "${ednaAssets}/share/themes/Edna";
-      "themes/Edna-Light".source = "${ednaAssets}/share/themes/Edna-Light";
-      "konsole/Edna.colorscheme".source = "${ednaAssets}/share/konsole/Edna.colorscheme";
-      "konsole/Edna-Light.colorscheme".source = "${ednaAssets}/share/konsole/Edna-Light.colorscheme";
-      "konsole/Edna.profile".source = "${ednaAssets}/share/konsole/Edna.profile";
-      "konsole/Edna-Light.profile".source = "${ednaAssets}/share/konsole/Edna-Light.profile";
-      "aurorae/themes/Edna".source = "${ednaAssets}/share/aurorae/themes/Edna";
-      "aurorae/themes/Edna-Light".source = "${ednaAssets}/share/aurorae/themes/Edna-Light";
-      "wallpapers/Edna".source = "${ednaAssets}/share/wallpapers/Edna";
-    };
-
-    home.file = {
-      ".themes/Edna".source = "${ednaAssets}/share/themes/Edna";
-      ".themes/Edna-Light".source = "${ednaAssets}/share/themes/Edna-Light";
-      ".config/Kvantum/Edna".source = "${ednaAssets}/share/Kvantum/Edna";
-      ".config/Kvantum/Edna-Light".source = "${ednaAssets}/share/Kvantum/Edna-Light";
-    };
+    # As declarações xdg.dataFile e home.file manuais foram removidas para evitar duplicidade.
+    # O pacote `ednaAssets` adicionado em `home.packages` já as disponibiliza via XDG_DATA_DIRS.
 
     # Configuração NATIVA do KDE Plasma 6 ("Alternar para o modo escuro à noite")
-    # Configura kdeglobals (ColorScheme/DarkColorScheme) via plasma-manager
-    programs.plasma.configFile = lib.mkIf cfg.usePlasmaNative {
+    # Configura kdeglobals (ColorScheme/DarkColorScheme) via plasma-manager apenas se o script systemd NÃO for o responsável.
+    programs.plasma.configFile = lib.mkIf (cfg.usePlasmaNative && !cfg.useSystemdTimer) {
       kdeglobals = {
         General = {
           ColorScheme = lib.mkForce "Edna-Light";
@@ -131,21 +107,25 @@ in
     };
 
     # Forçar Look And Feel, Color Scheme e Workspace via Plasma-Manager nativo
-    programs.plasma.workspace = {
-      theme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
-      colorScheme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
-      lookAndFeel = lib.mkForce (
-        if cfg.defaultVariant == "light" then
-          "com.github.PaulXFCE.Edna-Light"
-        else
-          "com.github.PaulXFCE.Edna"
-      );
-      iconTheme = lib.mkForce "Papirus-Dark";
-      cursor = {
-        theme = lib.mkForce "Bibata-Modern-Ice";
-        size = lib.mkForce 24;
-      };
-    };
+    programs.plasma.workspace = lib.mkMerge [
+      {
+        iconTheme = lib.mkForce "Papirus-Dark";
+        cursor = {
+          theme = lib.mkForce "Bibata-Modern-Ice";
+          size = lib.mkForce 24;
+        };
+      }
+      (lib.mkIf (!cfg.useSystemdTimer) {
+        theme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
+        colorScheme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
+        lookAndFeel = lib.mkForce (
+          if cfg.defaultVariant == "light" then
+            "com.github.PaulXFCE.Edna-Light"
+          else
+            "com.github.PaulXFCE.Edna"
+        );
+      })
+    ];
 
     # (Removido: scripts de ativação home.activation.clearKdeCache e removeMutableKdeState)
     # A deleção agressiva desses caches e de kdeglobals em tempo real estava corrompendo a sessão Wayland
