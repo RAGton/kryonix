@@ -19,17 +19,9 @@ let
     #!/usr/bin/env bash
     set -euo pipefail
 
-    # Limpeza de temas legados/manuais para evitar conflitos com Nix Store
-    # Apaga apenas se for um diretório real (mutável) e não um symlink.
-    for dir in "$HOME/.local/share/plasma/look-and-feel/com.github.PaulXFCE.Edna" \
-               "$HOME/.local/share/plasma/look-and-feel/com.github.PaulXFCE.Edna-Light" \
-               "$HOME/.local/share/aurorae/themes/Edna" \
-               "$HOME/.local/share/aurorae/themes/Edna-Light"; do
-      if [ -d "$dir" ] && [ ! -L "$dir" ]; then
-        echo "[edna-switcher] Aviso: Removendo tema legado local (mutável) para evitar conflito com NixStore: $dir"
-        rm -rf "$dir"
-      fi
-    done
+    # Limpeza de temas legados foi removida.
+    # O usuário precisa instalar o Edna e Edna-Light via KDE Store (Get New Themes)
+    # pois este pacote não contém os SVGs oficiais por limitações de licenciamento/download.
 
     MODE="''${1:-auto}"
 
@@ -190,45 +182,10 @@ let
       EOF
 
             # 2. Look and Feel
-            cat << 'EOF' > "$out/share/plasma/look-and-feel/com.github.PaulXFCE.Edna/metadata.json"
-      {
-          "KPlugin": {
-              "Name": "Edna",
-              "Description": "Edna Dark Theme Look and Feel",
-              "Id": "com.github.PaulXFCE.Edna",
-              "ServiceTypes": ["Plasma/LookAndFeel"]
-          }
-      }
-      EOF
-            cat << 'EOF' > "$out/share/plasma/look-and-feel/com.github.PaulXFCE.Edna/contents/defaults"
-      [kdeglobals][General]
-      ColorScheme=Edna
-      EOF
-
-            cat << 'EOF' > "$out/share/plasma/look-and-feel/com.github.PaulXFCE.Edna-Light/metadata.json"
-      {
-          "KPlugin": {
-              "Name": "Edna Light",
-              "Description": "Edna Light Theme Look and Feel",
-              "Id": "com.github.PaulXFCE.Edna-Light",
-              "ServiceTypes": ["Plasma/LookAndFeel"]
-          }
-      }
-      EOF
-            cat << 'EOF' > "$out/share/plasma/look-and-feel/com.github.PaulXFCE.Edna-Light/contents/defaults"
-      [kdeglobals][General]
-      ColorScheme=Edna-Light
-      EOF
+            # Removido Look and Feel fake para não sobrepor o Edna oficial instalado pelo usuário.
 
             # 3. Kvantum Themes
-            cat << 'EOF' > "$out/share/Kvantum/Edna/Edna.kvconfig"
-      [General]
-      theme=Edna
-      EOF
-            cat << 'EOF' > "$out/share/Kvantum/Edna-Light/Edna-Light.kvconfig"
-      [General]
-      theme=Edna-Light
-      EOF
+            # Removidos kvconfigs fake para não quebrar o Kvantum caso o usuário instale os SVGs via KDE Store.
 
             # 4. GTK Themes
             cat << 'EOF' > "$out/share/themes/Edna/index.theme"
@@ -301,17 +258,7 @@ let
       EOF
 
             # 6. Aurorae Window Decoration
-            cat << 'EOF' > "$out/share/aurorae/themes/Edna/auroraerc"
-      [General]
-      TitleAlignment=Center
-      ButtonSize=Normal
-      EOF
-
-            cat << 'EOF' > "$out/share/aurorae/themes/Edna-Light/auroraerc"
-      [General]
-      TitleAlignment=Center
-      ButtonSize=Normal
-      EOF
+            # Removidas decorações Aurorae fake para permitir que as do KDE Store funcionem.
 
             # 7. Wallpapers (Wallpapers diurno e noturno em 8K Glassmorphism)
             cat << 'EOF' > "$out/share/wallpapers/Edna/metadata.json"
