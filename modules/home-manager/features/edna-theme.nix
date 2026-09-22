@@ -120,6 +120,34 @@ in
       };
     };
 
+    # Forçar Look And Feel, Color Scheme e Workspace via Plasma-Manager nativo
+    programs.plasma.workspace = {
+      theme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
+      colorScheme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
+      lookAndFeel = lib.mkForce (if cfg.defaultVariant == "light" then "com.github.PaulXFCE.Edna-Light" else "com.github.PaulXFCE.Edna");
+    };
+
+    # Scripts de Ativação do Home Manager para sanear o cache e estado imperativo do KDE
+    home.activation.removeMutableKdeState = lib.hm.dag.entryBefore ["linkGeneration"] ''
+      # Faz backup e remove os arquivos de estado mutáveis que o KDE tenta gerenciar imperativamente,
+      # evitando conflitos antes que o Home Manager crie os symlinks read-only.
+      for file in "$HOME/.config/kdeglobals" "$HOME/.config/plasmarc" "$HOME/.config/Trolltech.conf"; do
+        if [ -f "$file" ] && [ ! -L "$file" ]; then
+          mv "$file" "$file.bak"
+        fi
+      done
+    '';
+
+    home.activation.clearKdeCache = lib.hm.dag.entryAfter ["linkGeneration"] ''
+      # Limpeza agressiva de todos os caches estáticos e shaders do Plasma/Mesa
+      # para garantir que as alterações visuais do Edna carreguem limpas e não bugadas.
+      rm -rf "$HOME/.cache/plasma"*
+      rm -f "$HOME/.cache/icon-cache.kcache"
+      rm -rf "$HOME/.cache/krunner"*
+      rm -rf "$HOME/.cache/mesa_shader_cache"
+      rm -rf "$HOME/.cache/nvidia/GLCache"
+    '';
+
     # Automação via Systemd User Services e Timers
     systemd.user.services = lib.mkIf cfg.useSystemdTimer {
       edna-theme-light = {
