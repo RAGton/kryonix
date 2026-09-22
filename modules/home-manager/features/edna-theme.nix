@@ -70,6 +70,14 @@ in
         name = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
         package = lib.mkForce ednaAssets;
       };
+      iconTheme = {
+        name = lib.mkForce "Papirus-Dark";
+        package = lib.mkForce pkgs.papirus-icon-theme;
+      };
+      cursorTheme = {
+        name = lib.mkForce "Bibata-Modern-Ice";
+        package = lib.mkForce pkgs.bibata-cursors;
+      };
     };
 
     qt = {
@@ -113,6 +121,8 @@ in
         General = {
           ColorScheme = lib.mkForce "Edna-Light";
           DarkColorScheme = lib.mkForce "Edna";
+          AccentColor = lib.mkForce "";
+          accentColorFromWallpaper = lib.mkForce false;
         };
         DayNight = {
           Active = lib.mkForce true;
@@ -124,7 +134,17 @@ in
     programs.plasma.workspace = {
       theme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
       colorScheme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");
-      lookAndFeel = lib.mkForce (if cfg.defaultVariant == "light" then "com.github.PaulXFCE.Edna-Light" else "com.github.PaulXFCE.Edna");
+      lookAndFeel = lib.mkForce (
+        if cfg.defaultVariant == "light" then
+          "com.github.PaulXFCE.Edna-Light"
+        else
+          "com.github.PaulXFCE.Edna"
+      );
+      iconTheme = lib.mkForce "Papirus-Dark";
+      cursor = {
+        theme = lib.mkForce "Bibata-Modern-Ice";
+        size = lib.mkForce 24;
+      };
     };
 
     # (Removido: scripts de ativação home.activation.clearKdeCache e removeMutableKdeState)
