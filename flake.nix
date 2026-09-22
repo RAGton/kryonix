@@ -167,6 +167,11 @@
       url = "github:xddxdd/nix-cachyos-kernel";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # MCP-NixOS (Model Context Protocol server for NixOS resources)
+    mcp-nixos = {
+      url = "github:utensils/mcp-nixos";
+    };
   };
 
   # =============================

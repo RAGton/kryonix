@@ -321,5 +321,6 @@
     kryxd = inputs.kryxd.packages.${final.system}.kryxd;
     kryonix-optimizer = final.callPackage ../packages/kryonix-optimizer { };
     kryx = inputs.kryx-cli.packages.${final.system}.default;
+    mcp-nixos = inputs.mcp-nixos.packages.${final.system}.mcp-nixos;
   };
 }
