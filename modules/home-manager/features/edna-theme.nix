@@ -114,6 +114,7 @@ in
           theme = lib.mkForce "Bibata-Modern-Ice";
           size = lib.mkForce 24;
         };
+        wallpaper = lib.mkForce null;
       }
       (lib.mkIf (!cfg.useSystemdTimer) {
         theme = lib.mkForce (if cfg.defaultVariant == "light" then "Edna-Light" else "Edna");

@@ -185,7 +185,9 @@ let
             # Removido Look and Feel fake para não sobrepor o Edna oficial instalado pelo usuário.
 
             # 3. Kvantum Themes
-            # Removidos kvconfigs fake para não quebrar o Kvantum caso o usuário instale os SVGs via KDE Store.
+            if [ -d "$src/Kvantum" ]; then
+              cp -r "$src/Kvantum" "$out/share/"
+            fi
 
             # 4. GTK Themes
             cat << 'EOF' > "$out/share/themes/Edna/index.theme"
