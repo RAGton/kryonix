@@ -20,7 +20,9 @@
   config,
   lib,
   pkgs,
-  userConfig ? { name = "garton"; },
+  userConfig ? {
+    name = "garton";
+  },
   ...
 }:
 

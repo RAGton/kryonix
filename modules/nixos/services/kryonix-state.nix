@@ -13,7 +13,9 @@
 {
   config,
   lib,
-  userConfig ? { name = "garton"; },
+  userConfig ? {
+    name = "garton";
+  },
   ...
 }:
 

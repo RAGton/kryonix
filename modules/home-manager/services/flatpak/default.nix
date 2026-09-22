@@ -57,7 +57,10 @@ in
       overrides = {
         "com.anydesk.Anydesk" = {
           # Fix para Plasma 6 / Wayland: forçar X11
-          Context.sockets = [ "x11" "fallback-x11" ];
+          Context.sockets = [
+            "x11"
+            "fallback-x11"
+          ];
           # Tentar evitar fallback para renderizadores quebrados
           Environment = {
             "GDK_BACKEND" = "x11";
