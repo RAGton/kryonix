@@ -158,7 +158,7 @@
     # Pinned em `v0.1.0` tag semver (V36b). Sintaxe `refs/tags/`
     # explicita porque `git+https://` assume `refs/heads/` (V37a).
     kryonix-assets = {
-      url = "git+https://github.com/RAGton/kryonix-assets.git?ref=refs/tags/v0.1.0";
+      url = "git+https://github.com/RAGton/kryonix-assets.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

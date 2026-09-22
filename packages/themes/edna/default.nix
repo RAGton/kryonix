@@ -9,6 +9,8 @@
   lib,
   stdenvNoCC,
   writeShellScriptBin,
+  coreutils,
+  kryonixAssets,
   fetchFromGitHub ? null,
   kdePackages ? null,
   glib ? null,
@@ -184,9 +186,9 @@ let
             # 2. Look and Feel
             # Removido Look and Feel fake para não sobrepor o Edna oficial instalado pelo usuário.
 
-            # 3. Kvantum Themes
-            if [ -d "$src/Kvantum" ]; then
-              cp -r "$src/Kvantum" "$out/share/"
+            # 3. Kvantum Themes (via flake input)
+            if [ -d "${kryonixAssets}/themes/edna/Kvantum" ]; then
+              cp -r "${kryonixAssets}/themes/edna/Kvantum" "$out/share/"
             fi
 
             # 4. GTK Themes

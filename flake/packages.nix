@@ -28,7 +28,9 @@ lib.forAllSystems (
       inherit kryonixBranding;
     };
     kryonixCarbon = pkgs.callPackage ../packages/themes/kryonix-carbon { };
-    ednaPkgs = pkgs.callPackage ../packages/themes/edna { };
+    ednaPkgs = pkgs.callPackage ../packages/themes/edna {
+      kryonixAssets = inputs.kryonix-assets;
+    };
     kryonixSddmTheme = pkgs.callPackage ../packages/kryonix-sddm-theme.nix {
       inherit kryonixBranding kryonixAssets;
     };

@@ -335,16 +335,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1784655392,
-        "narHash": "sha256-7yBfRr/y4/xxI8iSsBgHuaJle7bBK3NTYp/RbQ1tQ4U=",
-        "ref": "refs/tags/v0.1.0",
-        "rev": "f6b87b31247909c2b35f32ddc0eb8bcd5408ede5",
-        "revCount": 9,
+        "lastModified": 1790101205,
+        "narHash": "sha256-uLD6CSj79C0KPq2HndlHSsYNvjDg8xD0aT6FldB1QqU=",
+        "ref": "refs/heads/main",
+        "rev": "8d8560e1cbcb4d6e0a3f33cfc206f4db2a561181",
+        "revCount": 12,
         "type": "git",
         "url": "https://github.com/RAGton/kryonix-assets.git"
       },
       "original": {
-        "ref": "refs/tags/v0.1.0",
         "type": "git",
         "url": "https://github.com/RAGton/kryonix-assets.git"
       }
