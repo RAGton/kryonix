@@ -12,8 +12,9 @@
 }:
 let
   cfg = config.kryonix.home.features.ednaTheme;
-
-  ednaPkgs = pkgs.callPackage ../../../packages/themes/edna { };
+  ednaPkgs = pkgs.callPackage ../../../packages/themes/edna { 
+    kryonixAssets = pkgs.kryonixAssets; 
+  };
   ednaAssets = ednaPkgs.edna-assets;
   ednaSwitcher = ednaPkgs.edna-switcher;
 in

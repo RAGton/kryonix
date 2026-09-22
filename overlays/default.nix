@@ -284,6 +284,7 @@
       # macOS Tahoe Liquid Glass theme (v0.47.2 LTS) — opt-in, NÃO default.
       # Ativado apenas quando kryonix.desktop.kde.theme.preset = "tahoe-liquid".
       macos-tahoe-liquid-theme = final.callPackage ../packages/macos-tahoe-liquid.nix { };
+      kryonixAssets = kryonixAssets;
       kryonix-branding = final.callPackage ../packages/kryonix-branding.nix { inherit kryonixAssets; };
       kryonix-waywallen = final.callPackage ../packages/kryonix-waywallen.nix { };
       kryonix-open-wallpaper-engine = final.callPackage ../packages/kryonix-open-wallpaper-engine.nix { };
