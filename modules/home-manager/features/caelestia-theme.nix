@@ -25,13 +25,13 @@ in
     };
 
     home.sessionVariables = {
-      QML2_IMPORT_PATH = "${caelestiaPkg}/lib/qt6/qml:\${QML2_IMPORT_PATH:-}";
+      QML2_IMPORT_PATH = lib.mkForce "${caelestiaPkg}/lib/qt6/qml:\${QML2_IMPORT_PATH:-}";
       CAELESTIA_LIB_DIR = "${caelestiaPkg}/lib/caelestia";
       CAELESTIA_BIN_DIR = "${caelestiaPkg}/bin";
     };
 
     systemd.user.sessionVariables = {
-      QML2_IMPORT_PATH = "${caelestiaPkg}/lib/qt6/qml";
+      QML2_IMPORT_PATH = lib.mkForce "${caelestiaPkg}/lib/qt6/qml";
       CAELESTIA_LIB_DIR = "${caelestiaPkg}/lib/caelestia";
       CAELESTIA_BIN_DIR = "${caelestiaPkg}/bin";
     };
