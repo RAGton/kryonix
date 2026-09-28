@@ -174,7 +174,7 @@ in
           Description = "Inicialização Automática do Tema Edna";
         };
         Service = {
-          Type = "oneshot";
+          Type = "simple";
           ExecStart = "${ednaSwitcher}/bin/edna-switcher auto";
           Environment = [
             "DISPLAY=:0"
