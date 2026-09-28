@@ -63,5 +63,31 @@ in
     programs.plasma.workspace = {
       iconTheme = lib.mkForce "yet-another-monochrome-icon-set";
     };
+
+    home.file.".local/share/warp-terminal/themes/caelestia.yaml".text = ''
+      accent: '#89b4fa'
+      background: '#11111B99'
+      details: darker
+      foreground: '#cdd6f4'
+      terminal_colors:
+        normal:
+          black: '#45475a'
+          red: '#f38ba8'
+          green: '#a6e3a1'
+          yellow: '#f9e2af'
+          blue: '#89b4fa'
+          magenta: '#f5c2e7'
+          cyan: '#94e2d5'
+          white: '#bac2de'
+        bright:
+          black: '#585b70'
+          red: '#f38ba8'
+          green: '#a6e3a1'
+          yellow: '#f9e2af'
+          blue: '#89b4fa'
+          magenta: '#f5c2e7'
+          cyan: '#94e2d5'
+          white: '#a6adc8'
+    '';
   };
 }

@@ -72,11 +72,11 @@ let
       value =
         if i == 10 then
           [
-            "Meta+Shift+0"
-            "Meta+Shift+S"
+            "Meta+Ctrl+0"
+            "Meta+Ctrl+S"
           ]
         else
-          "Meta+Shift+${digit i}";
+          "Meta+Ctrl+${digit i}";
     }) range
   );
 
@@ -94,13 +94,13 @@ let
     ]) range
   );
 
-  # Meta+Ctrl+1..0 → mover janela para o desktop N e segui-la (via wrapper).
+  # Meta+Shift+1..0 → mover janela para o desktop N e segui-la (via wrapper).
   moveFollowCommands = lib.listToAttrs (
     map (i: {
       name = "kryonix-move-follow-${toString i}";
       value = {
         name = "Mover janela e seguir → desktop ${toString i}";
-        key = "Meta+Ctrl+${digit i}";
+        key = "Meta+Shift+${digit i}";
         command = "${moveFollow} ${toString i}";
       };
     }) range
