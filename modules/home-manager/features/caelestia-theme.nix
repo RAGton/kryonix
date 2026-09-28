@@ -16,6 +16,7 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [
       caelestiaPkg
+      pkgs.quickshell
     ];
 
     qt = {
@@ -35,6 +36,47 @@ in
       CAELESTIA_LIB_DIR = "${caelestiaPkg}/lib/caelestia";
       CAELESTIA_BIN_DIR = "${caelestiaPkg}/bin";
     };
+
+    systemd.user.services.caelestia-shell = {
+      Unit = {
+        Description = "Caelestia Shell";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+        Before = [ "xdg-desktop-autostart.target" ];
+      };
+      Service = {
+        Type = "exec";
+        ExecStart = "${pkgs.quickshell}/bin/quickshell -n -p ${caelestiaPkg}/share/quickshell/caelestia/shell.qml";
+        Environment = [
+          "PATH=${caelestiaPkg}/bin:${pkgs.quickshell}/bin:/run/current-system/sw/bin:/run/wrappers/bin"
+          "QML2_IMPORT_PATH=${caelestiaPkg}/lib/qt6/qml"
+          "CAELESTIA_LIB_DIR=${caelestiaPkg}/lib/caelestia"
+          "CAELESTIA_BIN_DIR=${caelestiaPkg}/bin"
+          "CAELESTIA_SHELL_CONFIG=${caelestiaPkg}/share/quickshell/caelestia/shell.qml"
+          "QS_NO_RELOAD_POPUP=1"
+          "QS_DROP_EXPENSIVE_FONTS=1"
+          "QS_DISABLE_CRASH_HANDLER=1"
+          "QSG_RENDER_LOOP=threaded"
+          "QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000"
+        ];
+        Restart = "on-failure";
+        RestartSec = "5s";
+        TimeoutStopSec = "5s";
+        Slice = "session.slice";
+      };
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+    };
+
+    xdg.dataFile."applications/quickshell.desktop".text = ''
+      [Desktop Entry]
+      Type=Application
+      Name=Quickshell
+      NoDisplay=true
+      Exec=${pkgs.quickshell}/bin/quickshell
+      X-KDE-Wayland-Interfaces=zkde_screencast_unstable_v1,org_kde_plasma_window_management
+    '';
 
     programs.plasma.configFile = {
       kwinrc = {
