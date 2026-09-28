@@ -17,7 +17,7 @@ stdenv.mkDerivation rec {
     owner = "ladybug-me";
     repo = "caelestia-kde";
     rev = "v${version}";
-    sha256 = "1r7g9b1d21pl371wqxgpgdgfwpc3afa3nahk7rjfh5r2krqabqmv";
+    hash = "sha256-81CAH1hgnaik84lhc8kjE5gw61M4qUHQ6g7vM1OG3r4=";
     fetchSubmodules = true;
   };
 
