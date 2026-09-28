@@ -8,6 +8,7 @@
   qt6,
   jq,
   python3,
+  pkgs,
 }:
 
 let
@@ -37,7 +38,15 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ makeWrapper qt6.wrapQtAppsHook autoPatchelfHook ];
-  buildInputs = [ qt6.qtbase stdenv.cc.cc.lib ];
+  buildInputs = [
+    qt6.qtbase
+    qt6.qtdeclarative
+    stdenv.cc.cc.lib
+    pkgs.networkmanager
+    pkgs.libqalculate
+    pkgs.kdePackages.kwindowsystem
+    pkgs.kdePackages.kguiaddons
+  ];
 
   dontBuild = true;
   dontConfigure = true;
