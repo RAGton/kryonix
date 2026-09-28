@@ -4,6 +4,7 @@
   fetchFromGitHub,
   fetchurl,
   makeWrapper,
+  autoPatchelfHook,
   qt6,
   jq,
   python3,
@@ -27,8 +28,8 @@ stdenv.mkDerivation rec {
     sha256 = "04pi1yzs5fwv8bix42pdl3mm6jv8wxyaxdcj35vznhq20nq4525r";
   };
 
-  nativeBuildInputs = [ makeWrapper qt6.wrapQtAppsHook ];
-  buildInputs = [ qt6.qtbase ];
+  nativeBuildInputs = [ makeWrapper qt6.wrapQtAppsHook autoPatchelfHook ];
+  buildInputs = [ qt6.qtbase stdenv.cc.cc.lib ];
 
   dontBuild = true;
   dontConfigure = true;

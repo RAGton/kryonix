@@ -27,6 +27,7 @@
     ./etcher.nix
     ./ntfs.nix
     ./hermes.nix
+    ./caelestia-theme.nix
   ];
 
   environment.etc."kryonix/features.json".text = builtins.toJSON {
