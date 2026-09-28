@@ -19,12 +19,6 @@ in
       pkgs.quickshell
     ];
 
-    qt = {
-      enable = true;
-      platformTheme = "kvantum";
-      style = "kvantum";
-    };
-
     environment.sessionVariables = {
       QML2_IMPORT_PATH = lib.mkForce "${caelestiaPkg}/lib/qt6/qml:\${QML2_IMPORT_PATH:-}";
       CAELESTIA_LIB_DIR = "${caelestiaPkg}/lib/caelestia";
