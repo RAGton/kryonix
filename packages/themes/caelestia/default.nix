@@ -28,6 +28,7 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ makeWrapper qt6.wrapQtAppsHook ];
+  buildInputs = [ qt6.qtbase ];
 
   dontBuild = true;
   dontConfigure = true;
