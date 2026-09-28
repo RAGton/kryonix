@@ -10,6 +10,14 @@
   python3,
 }:
 
+let
+  icons = fetchFromGitHub {
+    owner = "gettbitgirl";
+    repo = "Yet-Another-Monochrome-Icon-Set";
+    rev = "78561e9088b9884e471f87ac08c82045e30207f5";
+    hash = "sha256-AxMm55hGa+p9TahweDy6aDgqk0jUpYn3eC6CkQ1OVMs=";
+  };
+in
 stdenv.mkDerivation rec {
   pname = "caelestia-kde";
   version = "2.5.0";
@@ -18,8 +26,8 @@ stdenv.mkDerivation rec {
     owner = "ladybug-me";
     repo = "caelestia-kde";
     rev = "v${version}";
-    hash = "sha256-81CAH1hgnaik84lhc8kjE5gw61M4qUHQ6g7vM1OG3r4=";
-    fetchSubmodules = true;
+    hash = "sha256-u+KlcJ4iF+hkPhMqO5RTg13uXnv3dczDGfQG0cJK7+Q=";
+    fetchSubmodules = false;
   };
 
   # Prebuilt Qt6.11 shell plugins
