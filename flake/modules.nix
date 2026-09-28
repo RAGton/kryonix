@@ -154,11 +154,11 @@
         ];
       };
 
-    # Tema Edna (Light & Dark) com transição automatizada via Systemd
-    ednaTheme =
+    # Tema Caelestia KDE com QML shell e KWin Blur
+    caelestiaTheme =
       { ... }:
       {
-        imports = [ ../modules/home-manager/features/edna-theme.nix ];
+        imports = [ ../modules/home-manager/features/caelestia-theme.nix ];
       };
 
     # Default: base HM comum
