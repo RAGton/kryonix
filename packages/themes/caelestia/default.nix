@@ -70,7 +70,7 @@ stdenv.mkDerivation rec {
 
     # Icons
     mkdir -p $out/share/quickshell/caelestia/assets/icons/yet-another-monochrome-icon-set
-    cp -r src/yet-another-monochrome-icon-set/* $out/share/quickshell/caelestia/assets/icons/yet-another-monochrome-icon-set/
+    cp -r ${icons}/* $out/share/quickshell/caelestia/assets/icons/yet-another-monochrome-icon-set/
 
     # Lockscreen greeter
     cp -r src/kde/shells/caelestia.desktop/* $out/share/plasma/shells/caelestia.desktop/
