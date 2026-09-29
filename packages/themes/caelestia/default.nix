@@ -46,6 +46,18 @@ stdenv.mkDerivation rec {
     pkgs.libqalculate
     pkgs.kdePackages.kwindowsystem
     pkgs.kdePackages.kguiaddons
+    pkgs.kdePackages.kglobalaccel
+    pkgs.kdePackages.kconfig
+    pkgs.kdePackages.networkmanager-qt
+    pkgs.kdePackages.pulseaudio-qt
+    pkgs.lm_sensors
+    pkgs.pipewire
+    pkgs.fftw
+  ];
+
+  autoPatchelfIgnoreMissingDeps = [
+    "libcava.so"
+    "libaubio.so.5"
   ];
 
   dontBuild = true;
